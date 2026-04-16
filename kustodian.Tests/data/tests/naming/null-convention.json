@@ -1,0 +1,13 @@
+{
+  "id": "NAM-00b",
+  "name": "Naming convention: null convention skips the check entirely",
+  "input": {
+    "query": "DeviceEvents | extend computed = strcat(DeviceId, \"_x\") | project Timestamp, ReportId, DeviceId, computed",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "namingConvention": null
+  },
+  "expected": {
+    "messages": []
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "id": "IPV4_RARE",
+  "name": "Ipv4 Rare",
+  "input": {
+    "query": "// Author: Alex Teixeira (alex@opstune.com)\n// Query walkthrough: https://ateixei.medium.com/f5bfdc0d55d6?source=friends_link&sk=7f5d56cf3a85c126992ce866dd864b86\nlet ExcludedNets = datatable(ExcludedNet: string) \n\u202f \u202f ['100.0.0.0/16', '200.200.200.0/24']; \nsearch in (DeviceNetworkEvents) \"tcp\" and \"connectionsuccess\" and \"public\" \n// Set the time scope\n| where Timestamp > ago(30d)\n// For this initial hunt, focus on plain IPv4 target resources only, no URLs\n| where isempty(RemoteUrl)\n// Consume the list of CIDRs to exclude (consider doing it after summarize as well)\n| evaluate ipv4_lookup(ExcludedNets, RemoteIP, ExcludedNet, return_unmatched = true)\n| where isempty(ExcludedNet)\n// What if a malicious process actually matches those?\n// So be sure to cover that with other use cases.\n| where not(InitiatingProcessFileName matches regex @'(?i)^(msedge|chrome|firefox)\\.exe$')\n| where (Protocol == \"Tcp\" and ActionType == \"ConnectionSuccess\" and RemoteIPType == \"Public\") and InitiatingProcessFileName endswith \".exe\" and not(RemotePort in (80, 443)) \n// Lower-case the process name to keep unique entries in the output\n| extend InitiatingProcessFileName=tolower(InitiatingProcessFileName)\n| summarize\n  Hashes=make_set(InitiatingProcessMD5),\n  DeviceCount=count_distinct(DeviceId),\n  SampleProcess=any(InitiatingProcessCommandLine),\n  SampleRemoteIP=any(RemoteIP),\n  Ports=make_set(RemotePort) by InitiatingProcessFileName\n// To make it even more strict, decrease the number to narrow the results\n| where DeviceCount < 4\n| extend RemoteIP_country = tostring(parse_json(geo_info_from_ip_address(SampleRemoteIP)).country) \n| sort by DeviceCount asc",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityExistence",
+        "message": "Missing required output columns: DeviceId, ReportId, Timestamp",
+        "affectedColumns": [
+          "DeviceId",
+          "ReportId",
+          "Timestamp"
+        ],
+        "start": null,
+        "end": null
+      }
+    ],
+    "outputColumns": [
+      {
+        "name": "InitiatingProcessFileName",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessFileName",
+          "operator": "extend",
+          "position": {
+            "abs": 1133,
+            "line": 18,
+            "column": 10
+          }
+        }
+      },
+      {
+        "name": "Hashes",
+        "type": "dynamic",
+        "provenance": {
+          "column": "Hashes",
+          "operator": "summarize",
+          "position": {
+            "abs": 1208,
+            "line": 20,
+            "column": 3
+          }
+        }
+      },
+      {
+        "name": "DeviceCount",
+        "type": "long",
+        "provenance": {
+          "column": "DeviceCount",
+          "operator": "summarize",
+          "position": {
+            "abs": 1249,
+            "line": 21,
+            "column": 3
+          }
+        }
+      },
+      {
+        "name": "SampleProcess",
+        "type": "string",
+        "provenance": {
+          "column": "SampleProcess",
+          "operator": "summarize",
+          "position": {
+            "abs": 1289,
+            "line": 22,
+            "column": 3
+          }
+        }
+      },
+      {
+        "name": "SampleRemoteIP",
+        "type": "string",
+        "provenance": {
+          "column": "SampleRemoteIP",
+          "operator": "summarize",
+          "position": {
+            "abs": 1340,
+            "line": 23,
+            "column": 3
+          }
+        }
+      },
+      {
+        "name": "Ports",
+        "type": "dynamic",
+        "provenance": {
+          "column": "Ports",
+          "operator": "summarize",
+          "position": {
+            "abs": 1372,
+            "line": 24,
+            "column": 3
+          }
+        }
+      },
+      {
+        "name": "RemoteIP_country",
+        "type": "string",
+        "provenance": {
+          "column": "RemoteIP_country",
+          "operator": "extend",
+          "position": {
+            "abs": 1535,
+            "line": 27,
+            "column": 10
+          }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "id": "NAM-00a",
+  "name": "Naming convention: computed column matching convention is not flagged",
+  "input": {
+    "query": "DeviceEvents | extend GoodCol = strcat(DeviceId, \"_x\") | project Timestamp, ReportId, DeviceId, GoodCol",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "namingConvention": "^[A-Z]"
+  },
+  "expected": {
+    "messages": []
+  }
+}

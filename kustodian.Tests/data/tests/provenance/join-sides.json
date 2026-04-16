@@ -1,0 +1,61 @@
+{
+  "id": "PRV-04",
+  "name": "Provenance: join attributes each output column to its originating side",
+  "input": {
+    "query": "let alerts = AlertInfo | project-rename AlertTime = Timestamp, AlertReportId = ReportId;\nDeviceEvents | join kind=inner alerts on DeviceId | project Timestamp, DeviceId, ReportId, AlertTime, AlertReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "AlertTime",
+        "provenance": {
+          "column": "AlertTime",
+          "operator": "project-rename",
+          "sources": [
+            {
+              "column": "Timestamp",
+              "table": "AlertInfo"
+            }
+          ]
+        }
+      },
+      {
+        "name": "AlertReportId",
+        "provenance": {
+          "column": "AlertReportId",
+          "operator": "project-rename",
+          "sources": [
+            {
+              "column": "ReportId",
+              "table": "AlertInfo"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

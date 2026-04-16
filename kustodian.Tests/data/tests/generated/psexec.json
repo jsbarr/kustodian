@@ -1,0 +1,79 @@
+{
+  "id": "PSEXEC",
+  "name": "Psexec",
+  "input": {
+    "query": "DeviceProcessEvents\n// Collect all executed psexec commands\n| where ProcessCommandLine contains \"psexec.exe\"\n// Extract the remove device\n| extend RemoteDevice = extract(@'\\\\\\\\(.*)c:', 1, ProcessCommandLine)\n// If in your device onboarding Enable-PsRemoting is executed filter the line below\n//| where not(ProcessCommandLine has_all ('powershell -command \"Enable-PsRemoting -Force\"', 'psexec.exe'))\n// Collect stats and lists with remote devices and executed commands\n| summarize TotalRemoteDevices = dcount(RemoteDevice), RemoteDeviceList = make_set(RemoteDevice), ExecutedCommands = make_set(ProcessCommandLine) by DeviceName\n| sort by TotalRemoteDevices",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityExistence",
+        "message": "Missing required output columns: DeviceId, ReportId, Timestamp",
+        "affectedColumns": [
+          "DeviceId",
+          "ReportId",
+          "Timestamp"
+        ],
+        "start": null,
+        "end": null
+      }
+    ],
+    "outputColumns": [
+      {
+        "name": "DeviceName",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceName",
+          "table": "DeviceProcessEvents",
+          "position": {
+            "abs": 0,
+            "line": 1,
+            "column": 1
+          }
+        }
+      },
+      {
+        "name": "TotalRemoteDevices",
+        "type": "long",
+        "provenance": {
+          "column": "TotalRemoteDevices",
+          "operator": "summarize",
+          "position": {
+            "abs": 480,
+            "line": 9,
+            "column": 13
+          }
+        }
+      },
+      {
+        "name": "RemoteDeviceList",
+        "type": "dynamic",
+        "provenance": {
+          "column": "RemoteDeviceList",
+          "operator": "summarize",
+          "position": {
+            "abs": 523,
+            "line": 9,
+            "column": 56
+          }
+        }
+      },
+      {
+        "name": "ExecutedCommands",
+        "type": "dynamic",
+        "provenance": {
+          "column": "ExecutedCommands",
+          "operator": "summarize",
+          "position": {
+            "abs": 566,
+            "line": 9,
+            "column": 99
+          }
+        }
+      }
+    ]
+  }
+}

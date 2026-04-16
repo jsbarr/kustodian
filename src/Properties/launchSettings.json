@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "kustodian": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:8080"
+    }
+  }
+}

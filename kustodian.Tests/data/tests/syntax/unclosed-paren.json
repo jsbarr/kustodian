@@ -1,0 +1,20 @@
+{
+  "id": "SYN-03",
+  "name": "Syntax error: unclosed parenthesis in where clause",
+  "input": {
+    "query": "DeviceEvents | where (Timestamp > ago(1d)",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "Expected: )",
+        "start": 41,
+        "end": 41
+      }
+    ]
+  }
+}

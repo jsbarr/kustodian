@@ -1,0 +1,35 @@
+﻿{
+  "id": "PRV-07",
+  "name": "Provenance: forked let reused on both sides of a join preserves DeviceEvents provenance",
+  "input": {
+    "query": "let events = DeviceEvents | project Timestamp, DeviceId, ReportId;\nlet left = events | where Timestamp > ago(1h);\nlet right = events | where Timestamp > ago(2h);\nleft | join kind=inner right on DeviceId | project Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      }
+    ]
+  }
+}

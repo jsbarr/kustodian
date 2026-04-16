@@ -1,0 +1,22 @@
+{
+  "id": "NAM-02",
+  "name": "Naming convention: multiple violating computed columns flagged together",
+  "input": {
+    "query": "DeviceEvents | extend badOne = \"x\", badTwo = 42 | project Timestamp, DeviceId, ReportId, badOne, badTwo",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "namingConvention": "^[A-Z]"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "WARN",
+        "type": "ColumnNamingConvention",
+        "affectedColumns": [
+          "badOne",
+          "badTwo"
+        ]
+      }
+    ]
+  }
+}

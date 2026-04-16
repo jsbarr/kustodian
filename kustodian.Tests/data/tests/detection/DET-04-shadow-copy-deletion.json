@@ -1,0 +1,54 @@
+{
+  "id": "DET-04",
+  "name": "Detection: shadow copy deletion — let with multi-element ransomware command list and has_any filter",
+  "input": {
+    "query": "let CommonRansomwareCommands = dynamic(['vssadmin.exe delete shadows /all /quiet', 'wmic.exe shadowcopy delete', 'wbadmin delete catalog -quiet', 'Get-WmiObject Win32_Shadowcopy | ForEach-Object {$_.Delete();}']);\nDeviceProcessEvents\n| where ProcessCommandLine has_any (CommonRansomwareCommands)\n| project Timestamp, ReportId, DeviceId, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": { "column": "Timestamp", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": { "column": "ReportId", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": { "column": "DeviceId", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "DeviceName",
+        "type": "string",
+        "provenance": { "column": "DeviceName", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "AccountName",
+        "type": "string",
+        "provenance": { "column": "AccountName", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "ProcessCommandLine",
+        "type": "string",
+        "provenance": { "column": "ProcessCommandLine", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "InitiatingProcessFileName",
+        "type": "string",
+        "provenance": { "column": "InitiatingProcessFileName", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "InitiatingProcessCommandLine",
+        "type": "string",
+        "provenance": { "column": "InitiatingProcessCommandLine", "table": "DeviceProcessEvents" }
+      }
+    ]
+  }
+}

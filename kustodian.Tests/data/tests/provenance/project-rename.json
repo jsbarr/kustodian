@@ -1,0 +1,41 @@
+{
+  "id": "PRV-02",
+  "name": "Provenance: project-rename preserves source table and original column name",
+  "input": {
+    "query": "DeviceEvents | project-rename DeviceIdentifier = DeviceId | project Timestamp, DeviceIdentifier, ReportId",
+    "impactedEntityField": "DeviceIdentifier",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceIdentifier",
+        "provenance": {
+          "column": "DeviceIdentifier",
+          "operator": "project-rename",
+          "sources": [
+            {
+              "column": "DeviceId",
+              "table": "DeviceEvents"
+            }
+          ]
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      }
+    ]
+  }
+}

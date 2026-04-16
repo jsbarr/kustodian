@@ -1,0 +1,35 @@
+﻿{
+  "id": "PRV-01",
+  "name": "Provenance: chained let statements preserve original table provenance",
+  "input": {
+    "query": "let s1 = DeviceEvents | project Timestamp, DeviceId, ReportId;\nlet s2 = s1 | where Timestamp > ago(1d);\ns2",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      }
+    ]
+  }
+}

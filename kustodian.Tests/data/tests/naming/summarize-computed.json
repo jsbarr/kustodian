@@ -1,0 +1,21 @@
+{
+  "id": "NAM-04",
+  "name": "Naming convention: computed summarize aggregate column flagged",
+  "input": {
+    "query": "DeviceEvents | summarize eventCount = count() by Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "namingConvention": "^[A-Z]"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "WARN",
+        "type": "ColumnNamingConvention",
+        "affectedColumns": [
+          "eventCount"
+        ]
+      }
+    ]
+  }
+}

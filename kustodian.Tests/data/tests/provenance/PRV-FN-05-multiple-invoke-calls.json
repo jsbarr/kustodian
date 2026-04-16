@@ -1,0 +1,37 @@
+{
+  "id": "PRV-FN-05",
+  "name": "Provenance: multiple sequential invoke calls each trace to their own invoke boundary",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke TagSeverity(5) | invoke TagLabel(\"critical\")",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId" },
+      { "name": "Timestamp" },
+      { "name": "ReportId" },
+      {
+        "name": "Severity",
+        "provenance": {
+          "column": "Severity",
+          "operator": "invoke",
+          "sources": [
+            { "column": "severity", "operator": "invoke" }
+          ]
+        }
+      },
+      {
+        "name": "Label",
+        "provenance": {
+          "column": "Label",
+          "operator": "invoke",
+          "sources": [
+            { "column": "label", "operator": "invoke" }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "id": "SCH-08",
+  "name": "Schema: inner join with let-bound renamed right side yields combined schema",
+  "input": {
+    "query": "let alerts = AlertInfo | project-rename AlertTime = Timestamp, AlertReportId = ReportId;\nDeviceEvents | join kind=inner alerts on DeviceId | project Timestamp, DeviceId, ReportId, AlertTime, AlertReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "AlertTime",
+        "type": "datetime",
+        "provenance": {
+          "column": "AlertTime",
+          "operator": "project-rename",
+          "sources": [
+            {
+              "column": "Timestamp",
+              "table": "AlertInfo"
+            }
+          ]
+        }
+      },
+      {
+        "name": "AlertReportId",
+        "type": "string",
+        "provenance": {
+          "column": "AlertReportId",
+          "operator": "project-rename",
+          "sources": [
+            {
+              "column": "ReportId",
+              "table": "AlertInfo"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

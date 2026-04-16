@@ -1,0 +1,49 @@
+{
+  "id": "PRV-09",
+  "name": "Provenance: multi-line extend — computed column on earlier line, grouped refs on later line",
+  "input": {
+    "query": "DeviceEvents\n| extend EventHour = bin(Timestamp, 1h)\n| project Timestamp, DeviceId, ReportId, EventHour",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "EventHour",
+        "provenance": {
+          "column": "EventHour",
+          "operator": "extend",
+          "position": { "abs": 22, "line": 2, "column": 10 },
+          "sources": [
+            { "column": "Timestamp", "table": "DeviceEvents" }
+          ]
+        }
+      }
+    ]
+  }
+}

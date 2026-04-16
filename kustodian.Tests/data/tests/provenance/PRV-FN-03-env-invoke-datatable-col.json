@@ -1,0 +1,25 @@
+{
+  "id": "PRV-FN-03",
+  "name": "Provenance: invoke FunctionWithJoin produces column with no upstream deps",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke FunctionWithJoin()",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId" },
+      { "name": "Timestamp" },
+      { "name": "ReportId" },
+      {
+        "name": "NewCol",
+        "provenance": {
+          "column": "NewCol",
+          "operator": "invoke",
+          "sources": null
+        }
+      }
+    ]
+  }
+}

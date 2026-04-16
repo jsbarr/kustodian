@@ -1,0 +1,62 @@
+{
+  "id": "SYN-04",
+  "name": "Syntax error: multiple misspelled operators produce distinct diagnostics",
+  "input": {
+    "query": "DeviceEvents | projec Timestamp | sumarise count() by DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "Query operator expected.",
+        "start": 15,
+        "end": 21
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "Expected: ;",
+        "start": 22,
+        "end": 31
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "The name 'Timestamp' does not refer to any known table, tabular variable or function.",
+        "start": 22,
+        "end": 31
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "Query operator expected.",
+        "start": 34,
+        "end": 42
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "Expected: ;",
+        "start": 43,
+        "end": 48
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "The aggregate function 'count' is not allowed in this context.",
+        "start": 43,
+        "end": 48
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "The incomplete fragment is unexpected.",
+        "start": 51,
+        "end": 53
+      }
+    ]
+  }
+}

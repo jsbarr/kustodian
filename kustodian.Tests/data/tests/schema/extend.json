@@ -1,0 +1,50 @@
+{
+  "id": "SCH-03",
+  "name": "Schema: extend adds computed column with inferred type",
+  "input": {
+    "query": "DeviceEvents | extend EventHour = bin(Timestamp, 1h) | project Timestamp, DeviceId, ReportId, EventHour",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "EventHour",
+        "type": "datetime",
+        "provenance": {
+          "column": "EventHour",
+          "operator": "extend",
+          "position": { "abs": 22, "line": 1, "column": 23 }
+        }
+      }
+    ]
+  }
+}

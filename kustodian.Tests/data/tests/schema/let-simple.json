@@ -1,0 +1,38 @@
+﻿{
+  "id": "SCH-06",
+  "name": "Schema: simple let-bound expression resolves to its projected column set",
+  "input": {
+    "query": "let events = DeviceEvents | project Timestamp, DeviceId, ReportId; events",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      }
+    ]
+  }
+}

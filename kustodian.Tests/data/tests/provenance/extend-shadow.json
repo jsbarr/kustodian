@@ -1,0 +1,36 @@
+{
+  "id": "PRV-14",
+  "name": "Provenance: extend redefining a column traces back to the original column of the same name",
+  "input": {
+    "query": "DeviceEvents | extend DeviceName = tolower(DeviceName) | project Timestamp, DeviceId, ReportId, DeviceName",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": { "column": "Timestamp", "table": "DeviceEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": { "column": "DeviceId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "ReportId",
+        "provenance": { "column": "ReportId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "DeviceName",
+        "provenance": {
+          "column": "DeviceName",
+          "operator": "extend",
+          "sources": [
+            { "column": "DeviceName", "table": "DeviceEvents" }
+          ]
+        }
+      }
+    ]
+  }
+}

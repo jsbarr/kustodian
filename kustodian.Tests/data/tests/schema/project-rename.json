@@ -1,0 +1,44 @@
+{
+  "id": "SCH-02",
+  "name": "Schema: project-rename produces renamed column with preserved type",
+  "input": {
+    "query": "DeviceEvents | project-rename DeviceIdentifier = DeviceId | project Timestamp, DeviceIdentifier, ReportId",
+    "impactedEntityField": "DeviceIdentifier",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceIdentifier",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceIdentifier",
+          "operator": "project-rename",
+          "sources": [
+            {
+              "column": "DeviceId",
+              "table": "DeviceEvents"
+            }
+          ]
+        }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      }
+    ]
+  }
+}

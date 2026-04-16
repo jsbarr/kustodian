@@ -1,0 +1,37 @@
+{
+  "id": "PRV-11",
+  "name": "Provenance: extend with multiple RHS column refs collects all as sources",
+  "input": {
+    "query": "DeviceEvents | extend Label = strcat(DeviceName, '-', tostring(ProcessId)) | project Timestamp, DeviceId, ReportId, Label",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": { "column": "Timestamp", "table": "DeviceEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": { "column": "DeviceId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "ReportId",
+        "provenance": { "column": "ReportId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "Label",
+        "provenance": {
+          "column": "Label",
+          "operator": "extend",
+          "sources": [
+            { "column": "DeviceName", "table": "DeviceEvents" },
+            { "column": "ProcessId", "table": "DeviceEvents" }
+          ]
+        }
+      }
+    ]
+  }
+}

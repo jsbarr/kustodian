@@ -1,0 +1,48 @@
+{
+  "id": "SYN-02",
+  "name": "Syntax error: missing pipe between statements (newline treated as separator)",
+  "input": {
+    "query": "DeviceEvents\nproject Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "Expected: ;",
+        "start": 12,
+        "end": 12
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "The operator cannot be the first operator in a query.",
+        "start": 13,
+        "end": 20
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "The name 'Timestamp' does not refer to any known column, table, variable or function.",
+        "start": 21,
+        "end": 30
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "The name 'DeviceId' does not refer to any known column, table, variable or function.",
+        "start": 32,
+        "end": 40
+      },
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "The name 'ReportId' does not refer to any known column, table, variable or function.",
+        "start": 42,
+        "end": 50
+      }
+    ]
+  }
+}

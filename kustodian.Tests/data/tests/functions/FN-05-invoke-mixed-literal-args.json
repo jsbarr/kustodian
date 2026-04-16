@@ -1,0 +1,19 @@
+{
+  "id": "FN-05",
+  "name": "Function: invoke Enrich with mixed literal args appends multiple columns",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke Enrich(\"network\", 5)",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId", "type": "string" },
+      { "name": "Timestamp", "type": "datetime" },
+      { "name": "ReportId", "type": "long" },
+      { "name": "Category", "type": "string" },
+      { "name": "Score", "type": "int" }
+    ]
+  }
+}

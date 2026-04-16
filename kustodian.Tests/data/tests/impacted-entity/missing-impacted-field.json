@@ -1,0 +1,20 @@
+{
+  "id": "IEF-02",
+  "name": "Missing required column: impacted entity field (DeviceId) omitted from project",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityExistence",
+        "affectedColumns": [
+          "DeviceId"
+        ]
+      }
+    ]
+  }
+}

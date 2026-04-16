@@ -1,0 +1,20 @@
+{
+  "id": "IEF-03",
+  "name": "Provenance mismatch: required columns sourced from different tables after join",
+  "input": {
+    "query": "DeviceEvents | join kind=inner AlertInfo on DeviceId | project Timestamp, ReportId=ReportId1, DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityConsistency",
+        "affectedColumns": [
+          "ReportId"
+        ]
+      }
+    ]
+  }
+}

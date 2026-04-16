@@ -1,0 +1,18 @@
+{
+  "id": "FN-01",
+  "name": "Function: invoke AddFlag with no extra args appends bool column",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke AddFlag()",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId", "type": "string" },
+      { "name": "Timestamp", "type": "datetime" },
+      { "name": "ReportId", "type": "long" },
+      { "name": "IsFlagged", "type": "bool" }
+    ]
+  }
+}

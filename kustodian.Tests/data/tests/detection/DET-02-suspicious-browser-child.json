@@ -1,0 +1,54 @@
+{
+  "id": "DET-02",
+  "name": "Detection: suspicious browser child process via two let-bound lists and case-insensitive in~ filter",
+  "input": {
+    "query": "let Browsers = dynamic(['Chrome.exe', 'Firefox.exe', 'msedge.exe', 'Brave.exe']);\nlet SuspiciousChildProcesses = dynamic(['cmd.exe', 'powershell.exe', 'bash.exe', 'mshta.exe', 'msiexec.exe', 'rundll32.exe']);\nDeviceProcessEvents\n| where InitiatingProcessFileName in~ (Browsers)\n| where FileName in~ (SuspiciousChildProcesses) or ProcessVersionInfoOriginalFileName in~ (SuspiciousChildProcesses)\n| project Timestamp, ReportId, DeviceId, DeviceName, ProcessCommandLine, InitiatingProcessCommandLine, AccountUpn, ProcessVersionInfoOriginalFileName",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": { "column": "Timestamp", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": { "column": "ReportId", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": { "column": "DeviceId", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "DeviceName",
+        "type": "string",
+        "provenance": { "column": "DeviceName", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "ProcessCommandLine",
+        "type": "string",
+        "provenance": { "column": "ProcessCommandLine", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "InitiatingProcessCommandLine",
+        "type": "string",
+        "provenance": { "column": "InitiatingProcessCommandLine", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "AccountUpn",
+        "type": "string",
+        "provenance": { "column": "AccountUpn", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "ProcessVersionInfoOriginalFileName",
+        "type": "string",
+        "provenance": { "column": "ProcessVersionInfoOriginalFileName", "table": "DeviceProcessEvents" }
+      }
+    ]
+  }
+}

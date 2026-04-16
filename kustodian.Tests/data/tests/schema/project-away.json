@@ -1,0 +1,526 @@
+﻿{
+  "id": "SCH-01",
+  "name": "Schema: project-away removes named columns from DeviceEvents schema",
+  "input": {
+    "query": "DeviceEvents | project-away InitiatingProcessId, InitiatingProcessFileName",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceName",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ActionType",
+        "type": "string",
+        "provenance": {
+          "column": "ActionType",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "FileName",
+        "type": "string",
+        "provenance": {
+          "column": "FileName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "FolderPath",
+        "type": "string",
+        "provenance": {
+          "column": "FolderPath",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "SHA1",
+        "type": "string",
+        "provenance": {
+          "column": "SHA1",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "SHA256",
+        "type": "string",
+        "provenance": {
+          "column": "SHA256",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "MD5",
+        "type": "string",
+        "provenance": {
+          "column": "MD5",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "FileSize",
+        "type": "long",
+        "provenance": {
+          "column": "FileSize",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "AccountDomain",
+        "type": "string",
+        "provenance": {
+          "column": "AccountDomain",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "AccountName",
+        "type": "string",
+        "provenance": {
+          "column": "AccountName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "AccountSid",
+        "type": "string",
+        "provenance": {
+          "column": "AccountSid",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "RemoteUrl",
+        "type": "string",
+        "provenance": {
+          "column": "RemoteUrl",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "RemoteDeviceName",
+        "type": "string",
+        "provenance": {
+          "column": "RemoteDeviceName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ProcessId",
+        "type": "long",
+        "provenance": {
+          "column": "ProcessId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ProcessCommandLine",
+        "type": "string",
+        "provenance": {
+          "column": "ProcessCommandLine",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ProcessCreationTime",
+        "type": "datetime",
+        "provenance": {
+          "column": "ProcessCreationTime",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ProcessTokenElevation",
+        "type": "string",
+        "provenance": {
+          "column": "ProcessTokenElevation",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "LogonId",
+        "type": "long",
+        "provenance": {
+          "column": "LogonId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "RegistryKey",
+        "type": "string",
+        "provenance": {
+          "column": "RegistryKey",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "RegistryValueName",
+        "type": "string",
+        "provenance": {
+          "column": "RegistryValueName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "RegistryValueData",
+        "type": "string",
+        "provenance": {
+          "column": "RegistryValueData",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "RemoteIP",
+        "type": "string",
+        "provenance": {
+          "column": "RemoteIP",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "RemotePort",
+        "type": "int",
+        "provenance": {
+          "column": "RemotePort",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "LocalIP",
+        "type": "string",
+        "provenance": {
+          "column": "LocalIP",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "LocalPort",
+        "type": "int",
+        "provenance": {
+          "column": "LocalPort",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "FileOriginUrl",
+        "type": "string",
+        "provenance": {
+          "column": "FileOriginUrl",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "FileOriginIP",
+        "type": "string",
+        "provenance": {
+          "column": "FileOriginIP",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessSHA1",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessSHA1",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessSHA256",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessSHA256",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessMD5",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessMD5",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessFileSize",
+        "type": "long",
+        "provenance": {
+          "column": "InitiatingProcessFileSize",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessFolderPath",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessFolderPath",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessCommandLine",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessCommandLine",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessCreationTime",
+        "type": "datetime",
+        "provenance": {
+          "column": "InitiatingProcessCreationTime",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessAccountDomain",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessAccountDomain",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessAccountName",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessAccountName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessAccountSid",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessAccountSid",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessAccountUpn",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessAccountUpn",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessAccountObjectId",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessAccountObjectId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessVersionInfoCompanyName",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessVersionInfoCompanyName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessVersionInfoProductName",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessVersionInfoProductName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessVersionInfoProductVersion",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessVersionInfoProductVersion",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessVersionInfoInternalFileName",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessVersionInfoInternalFileName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessVersionInfoOriginalFileName",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessVersionInfoOriginalFileName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessVersionInfoFileDescription",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessVersionInfoFileDescription",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessParentId",
+        "type": "long",
+        "provenance": {
+          "column": "InitiatingProcessParentId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessParentFileName",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessParentFileName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessParentCreationTime",
+        "type": "datetime",
+        "provenance": {
+          "column": "InitiatingProcessParentCreationTime",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessLogonId",
+        "type": "long",
+        "provenance": {
+          "column": "InitiatingProcessLogonId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "AppGuardContainerId",
+        "type": "string",
+        "provenance": {
+          "column": "AppGuardContainerId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "AdditionalFields",
+        "type": "string",
+        "provenance": {
+          "column": "AdditionalFields",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessSessionId",
+        "type": "long",
+        "provenance": {
+          "column": "InitiatingProcessSessionId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "IsInitiatingProcessRemoteSession",
+        "type": "bool",
+        "provenance": {
+          "column": "IsInitiatingProcessRemoteSession",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessRemoteSessionDeviceName",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessRemoteSessionDeviceName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessRemoteSessionIP",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessRemoteSessionIP",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "CreatedProcessSessionId",
+        "type": "long",
+        "provenance": {
+          "column": "CreatedProcessSessionId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "IsProcessRemoteSession",
+        "type": "bool",
+        "provenance": {
+          "column": "IsProcessRemoteSession",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ProcessRemoteSessionDeviceName",
+        "type": "string",
+        "provenance": {
+          "column": "ProcessRemoteSessionDeviceName",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ProcessRemoteSessionIP",
+        "type": "string",
+        "provenance": {
+          "column": "ProcessRemoteSessionIP",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ProcessUniqueId",
+        "type": "string",
+        "provenance": {
+          "column": "ProcessUniqueId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "InitiatingProcessUniqueId",
+        "type": "string",
+        "provenance": {
+          "column": "InitiatingProcessUniqueId",
+          "table": "DeviceEvents"
+        }
+      }
+    ]
+  }
+}

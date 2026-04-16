@@ -1,0 +1,35 @@
+﻿{
+  "id": "PRV-06",
+  "name": "Provenance: summarize arg_max(*) preserves DeviceEvents provenance on surviving columns",
+  "input": {
+    "query": "DeviceEvents | summarize arg_max(Timestamp, *) by DeviceId | project Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      }
+    ]
+  }
+}

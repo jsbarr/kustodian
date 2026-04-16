@@ -1,0 +1,18 @@
+{
+  "id": "FN-03",
+  "name": "Function: invoke TagLabel with string literal appends string column",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke TagLabel(\"suspicious\")",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId", "type": "string" },
+      { "name": "Timestamp", "type": "datetime" },
+      { "name": "ReportId", "type": "long" },
+      { "name": "Label", "type": "string" }
+    ]
+  }
+}

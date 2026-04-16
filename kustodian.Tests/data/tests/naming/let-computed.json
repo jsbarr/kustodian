@@ -1,0 +1,21 @@
+{
+  "id": "NAM-05",
+  "name": "Naming convention: computed column inside a let expression is flagged",
+  "input": {
+    "query": "let baseEvents = DeviceEvents | extend badComputed = strcat(FileName, DeviceId);\nbaseEvents | project Timestamp, DeviceId, ReportId, badComputed",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "namingConvention": "^[A-Z]"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "WARN",
+        "type": "ColumnNamingConvention",
+        "affectedColumns": [
+          "badComputed"
+        ]
+      }
+    ]
+  }
+}

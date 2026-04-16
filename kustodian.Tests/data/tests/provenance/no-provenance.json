@@ -1,0 +1,18 @@
+{
+  "id": "PRV-14",
+  "name": "Provenance: provenance=false omits provenance from output columns",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "provenance": false
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "Timestamp", "provenance": null },
+      { "name": "DeviceId", "provenance": null },
+      { "name": "ReportId", "provenance": null }
+    ]
+  }
+}

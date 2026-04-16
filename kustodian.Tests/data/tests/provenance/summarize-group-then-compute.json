@@ -1,0 +1,46 @@
+{
+  "id": "PRV-13",
+  "name": "Provenance: extend over summarize aggregate recurses through the aggregate, by-columns keep direct table lineage",
+  "input": {
+    "query": "DeviceEvents | summarize C = count() by Timestamp, DeviceId, ReportId | extend D = C * 2",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": { "column": "Timestamp", "table": "DeviceEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": { "column": "DeviceId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "ReportId",
+        "provenance": { "column": "ReportId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "C",
+        "provenance": {
+          "column": "C",
+          "operator": "summarize"
+        }
+      },
+      {
+        "name": "D",
+        "provenance": {
+          "column": "D",
+          "operator": "extend",
+          "sources": [
+            {
+              "column": "C",
+              "operator": "summarize"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

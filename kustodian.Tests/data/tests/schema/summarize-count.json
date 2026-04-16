@@ -1,0 +1,50 @@
+{
+  "id": "SCH-04",
+  "name": "Schema: summarize count() yields long aggregate column; grouping cols preserved",
+  "input": {
+    "query": "DeviceEvents | summarize EventCount = count() by Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "EventCount",
+        "type": "long",
+        "provenance": {
+          "column": "EventCount",
+          "operator": "summarize",
+          "position": { "abs": 25, "line": 1, "column": 26 }
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "id": "DET-01",
+  "name": "Detection: BloodHound process detection via let-bound dynamic list and has_any filter",
+  "input": {
+    "query": "let BloodhoundCommands = dynamic(['-collectionMethod', 'invoke-bloodhound', 'get-bloodHounddata']);\nDeviceProcessEvents\n| where ProcessCommandLine has_any (BloodhoundCommands)\n| project Timestamp, ReportId, DeviceId, DeviceName, AccountName, AccountDomain, ProcessCommandLine, FileName, InitiatingProcessCommandLine, InitiatingProcessFileName",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": { "column": "Timestamp", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": { "column": "ReportId", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": { "column": "DeviceId", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "DeviceName",
+        "type": "string",
+        "provenance": { "column": "DeviceName", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "AccountName",
+        "type": "string",
+        "provenance": { "column": "AccountName", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "AccountDomain",
+        "type": "string",
+        "provenance": { "column": "AccountDomain", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "ProcessCommandLine",
+        "type": "string",
+        "provenance": { "column": "ProcessCommandLine", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "FileName",
+        "type": "string",
+        "provenance": { "column": "FileName", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "InitiatingProcessCommandLine",
+        "type": "string",
+        "provenance": { "column": "InitiatingProcessCommandLine", "table": "DeviceProcessEvents" }
+      },
+      {
+        "name": "InitiatingProcessFileName",
+        "type": "string",
+        "provenance": { "column": "InitiatingProcessFileName", "table": "DeviceProcessEvents" }
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "PRV-10",
+  "name": "Provenance: summarize aggregate RHS column refs become sources",
+  "input": {
+    "query": "DeviceEvents | summarize Hosts = dcount(DeviceName), Size = max(FileSize) by Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": { "column": "Timestamp", "table": "DeviceEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": { "column": "DeviceId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "ReportId",
+        "provenance": { "column": "ReportId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "Hosts",
+        "provenance": {
+          "column": "Hosts",
+          "operator": "summarize",
+          "sources": [
+            { "column": "DeviceName", "table": "DeviceEvents" }
+          ]
+        }
+      },
+      {
+        "name": "Size",
+        "provenance": {
+          "column": "Size",
+          "operator": "summarize",
+          "sources": [
+            { "column": "FileSize", "table": "DeviceEvents" }
+          ]
+        }
+      }
+    ]
+  }
+}

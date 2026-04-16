@@ -1,0 +1,35 @@
+{
+  "id": "FN-07",
+  "name": "Function: invoke FileProfile with string column-name arg appends enrichment columns",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke FileProfile(\"InitiatingProcessSHA1\", 100)",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId", "type": "string" },
+      { "name": "Timestamp", "type": "datetime" },
+      { "name": "ReportId", "type": "long" },
+      { "name": "SHA1", "type": "string" },
+      { "name": "SHA256", "type": "string" },
+      { "name": "MD5", "type": "string" },
+      { "name": "FileSize", "type": "int" },
+      { "name": "GlobalPrevalence", "type": "int" },
+      { "name": "GlobalFirstSeen", "type": "datetime" },
+      { "name": "GlobalLastSeen", "type": "datetime" },
+      { "name": "Signer", "type": "string" },
+      { "name": "Issuer", "type": "string" },
+      { "name": "SignerHash", "type": "string" },
+      { "name": "IsCertificateValid", "type": "bool" },
+      { "name": "IsRootSignerMicrosoft", "type": "bool" },
+      { "name": "SignatureState", "type": "string" },
+      { "name": "IsExecutable", "type": "bool" },
+      { "name": "ThreatName", "type": "string" },
+      { "name": "Publisher", "type": "string" },
+      { "name": "SoftwareName", "type": "string" },
+      { "name": "ProfileAvailability", "type": "string" }
+    ]
+  }
+}

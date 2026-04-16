@@ -1,0 +1,49 @@
+{
+  "id": "DET-03",
+  "name": "Detection: scheduled task from AppData — extend with parse_json extracts computed task name column",
+  "input": {
+    "query": "let Filters = dynamic(['AppData', '%localappdata%', '%appdata%']);\nlet Exclusions = dynamic(['OneDriveStandaloneUpdater.exe', 'OneDriveLauncher.exe']);\nDeviceEvents\n| where ActionType in ('ScheduledTaskCreated', 'ScheduledTaskUpdated')\n| where AdditionalFields has_any (Filters)\n| extend ParsedFields = parse_json(AdditionalFields)\n| extend ScheduledTaskName = tostring(ParsedFields.TaskName)\n| where not(AdditionalFields has_any (Exclusions))\n| project Timestamp, ReportId, DeviceId, DeviceName, ActionType, InitiatingProcessAccountUpn, ScheduledTaskName",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": { "column": "Timestamp", "table": "DeviceEvents" }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": { "column": "ReportId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": { "column": "DeviceId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "DeviceName",
+        "type": "string",
+        "provenance": { "column": "DeviceName", "table": "DeviceEvents" }
+      },
+      {
+        "name": "ActionType",
+        "type": "string",
+        "provenance": { "column": "ActionType", "table": "DeviceEvents" }
+      },
+      {
+        "name": "InitiatingProcessAccountUpn",
+        "type": "string",
+        "provenance": { "column": "InitiatingProcessAccountUpn", "table": "DeviceEvents" }
+      },
+      {
+        "name": "ScheduledTaskName",
+        "type": "string",
+        "provenance": { "column": "ScheduledTaskName", "operator": "extend" }
+      }
+    ]
+  }
+}

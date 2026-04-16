@@ -1,0 +1,59 @@
+{
+  "id": "SCH-07",
+  "name": "Schema: chained let statements propagate and extend schema correctly",
+  "input": {
+    "query": "let s1 = DeviceEvents | project Timestamp, DeviceId, ReportId, FileName;\nlet s2 = s1 | where FileName != \"\";\nlet s3 = s2 | extend FileTag = \"document\";\ns3",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "type": "datetime",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents",
+          "position": { "abs": 9, "line": 1, "column": 10 }
+        }
+      },
+      {
+        "name": "DeviceId",
+        "type": "string",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents",
+          "position": { "abs": 9, "line": 1, "column": 10 }
+        }
+      },
+      {
+        "name": "ReportId",
+        "type": "long",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents",
+          "position": { "abs": 9, "line": 1, "column": 10 }
+        }
+      },
+      {
+        "name": "FileName",
+        "type": "string",
+        "provenance": {
+          "column": "FileName",
+          "table": "DeviceEvents",
+          "position": { "abs": 9, "line": 1, "column": 10 }
+        }
+      },
+      {
+        "name": "FileTag",
+        "type": "string",
+        "provenance": {
+          "column": "FileTag",
+          "operator": "extend",
+          "position": { "abs": 130, "line": 3, "column": 22 }
+        }
+      }
+    ]
+  }
+}

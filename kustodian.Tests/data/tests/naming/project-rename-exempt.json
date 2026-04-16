@@ -1,0 +1,13 @@
+{
+  "id": "NAM-03",
+  "name": "Naming convention: project-rename of source column is exempt due to non-empty provenance",
+  "input": {
+    "query": "DeviceEvents | project-rename badFileName = FileName | project Timestamp, DeviceId, ReportId, badFileName",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "namingConvention": "^[A-Z]"
+  },
+  "expected": {
+    "messages": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "PRV-12",
+  "name": "Provenance: chained computed columns recurse through intermediate extends",
+  "input": {
+    "query": "DeviceEvents | extend A = strlen(DeviceName) | extend B = A + 1 | project Timestamp, DeviceId, ReportId, B",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": { "column": "Timestamp", "table": "DeviceEvents" }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": { "column": "DeviceId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "ReportId",
+        "provenance": { "column": "ReportId", "table": "DeviceEvents" }
+      },
+      {
+        "name": "B",
+        "provenance": {
+          "column": "B",
+          "operator": "extend",
+          "sources": [
+            {
+              "column": "A",
+              "operator": "extend",
+              "sources": [
+                { "column": "DeviceName", "table": "DeviceEvents" }
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

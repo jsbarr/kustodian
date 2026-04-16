@@ -1,0 +1,35 @@
+﻿{
+  "id": "SCH-00",
+  "name": "Valid query: all columns present, no errors, correct provenance",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents"
+        }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents"
+        }
+      }
+    ]
+  }
+}

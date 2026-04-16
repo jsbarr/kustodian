@@ -1,0 +1,46 @@
+{
+  "id": "PRV-05",
+  "name": "Provenance: summarize grouping columns retain source; aggregates have ref only",
+  "input": {
+    "query": "DeviceEvents | summarize EventCount = count() by Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents",
+          "position": { "abs": 0, "line": 1, "column": 1 }
+        }
+      },
+      {
+        "name": "EventCount",
+        "provenance": {
+          "column": "EventCount",
+          "operator": "summarize",
+          "position": { "abs": 25, "line": 1, "column": 26 }
+        }
+      }
+    ]
+  }
+}

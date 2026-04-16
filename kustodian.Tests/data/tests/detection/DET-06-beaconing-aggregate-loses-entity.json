@@ -1,0 +1,18 @@
+{
+  "id": "DET-06",
+  "name": "Detection: C2 beaconing — summarize aggregates to per-IP view, dropping all required entity columns",
+  "input": {
+    "query": "let DeviceThreshold = 5;\nlet ConnectionThreshold = 25;\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where not(ipv4_is_private(RemoteIP))\n| where ActionType == 'ConnectionSuccessAggregatedReport'\n| extend Connections = toint(parse_json(AdditionalFields).uniqueEventsAggregated)\n| summarize TotalConnections = sum(Connections), UniqueDevices = dcount(DeviceId), Domains = make_set(RemoteUrl), AvgConnections = avg(Connections) by RemoteIP\n| where AvgConnections >= ConnectionThreshold and UniqueDevices <= DeviceThreshold\n| project RemoteIP, TotalConnections, UniqueDevices, Domains, AvgConnections",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityExistence",
+        "affectedColumns": ["DeviceId", "ReportId", "Timestamp"]
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "FN-02",
+  "name": "Function: invoke TagSeverity with int literal appends int column",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke TagSeverity(3)",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId", "type": "string" },
+      { "name": "Timestamp", "type": "datetime" },
+      { "name": "ReportId", "type": "long" },
+      { "name": "Severity", "type": "int" }
+    ]
+  }
+}

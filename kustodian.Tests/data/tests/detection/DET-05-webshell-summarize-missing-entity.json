@@ -1,0 +1,18 @@
+{
+  "id": "DET-05",
+  "name": "Detection: webshell — summarize by drops Timestamp and ReportId, triggering ImpactedEntityExistence error",
+  "input": {
+    "query": "let webservers = dynamic(['w3wp.exe', 'httpd.exe', 'nginx.exe', 'owstimer.exe', 'visualsvnserver.exe']);\nlet windowsShells = dynamic(['powershell.exe', 'powershell_ise.exe', 'cmd.exe']);\nlet exclusions = dynamic(['csc.exe', 'php-cgi.exe', 'vbc.exe', 'conhost.exe']);\nDeviceProcessEvents\n| where InitiatingProcessParentFileName in~ (webservers) or InitiatingProcessCommandLine has_any (webservers)\n| where InitiatingProcessFileName in~ (windowsShells)\n| where FileName !in~ (exclusions)\n| extend Reason = iff(InitiatingProcessParentFileName in~ (webservers), 'Suspicious web shell execution', 'Suspicious webserver process')\n| summarize TotalEvents = count() by FileName, DeviceId, DeviceName, Reason, InitiatingProcessParentFileName, InitiatingProcessCommandLine",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityExistence",
+        "affectedColumns": ["ReportId", "Timestamp"]
+      }
+    ]
+  }
+}

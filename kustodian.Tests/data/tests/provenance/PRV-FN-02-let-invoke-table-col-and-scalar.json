@@ -1,0 +1,40 @@
+{
+  "id": "PRV-FN-02",
+  "name": "Provenance: invoke let function traces table col to source and scalar param to invoke",
+  "input": {
+    "query": "let MyFunc = (T:(DeviceName:string), x:long, y:string) {T | extend MyNewCol = strcat(tostring(x), y), MyNewCol2 = strcat(DeviceName, y)};\nDeviceEvents | project Timestamp, DeviceId, ReportId, DeviceName | invoke MyFunc(123, \"abc\")",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "Timestamp" },
+      { "name": "DeviceId" },
+      { "name": "ReportId" },
+      { "name": "DeviceName" },
+      {
+        "name": "MyNewCol",
+        "provenance": {
+          "column": "MyNewCol",
+          "operator": "invoke",
+          "sources": [
+            { "column": "x", "operator": "invoke" },
+            { "column": "y", "operator": "invoke" }
+          ]
+        }
+      },
+      {
+        "name": "MyNewCol2",
+        "provenance": {
+          "column": "MyNewCol2",
+          "operator": "invoke",
+          "sources": [
+            { "column": "DeviceName", "table": "DeviceEvents" },
+            { "column": "y", "operator": "invoke" }
+          ]
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "id": "FN-06",
+  "name": "Function: invoke TagScore passing column ref as arg produces KS142 error",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke TagScore(ReportId)",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      { "level": "ERROR", "type": "Syntax", "message": "The name 'ReportId' does not refer to any known column, table, variable or function." }
+    ]
+  }
+}

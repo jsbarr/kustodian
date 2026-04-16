@@ -1,0 +1,20 @@
+{
+  "id": "SYN-05",
+  "name": "Syntax error: type mismatch in comparison operator surfaces as Syntax diagnostic",
+  "input": {
+    "query": "DeviceEvents | where DeviceId > 5",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "Syntax",
+        "message": "The operator '>' is not defined for the operand types string and long.",
+        "start": 30,
+        "end": 31
+      }
+    ]
+  }
+}

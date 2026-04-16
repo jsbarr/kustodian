@@ -1,0 +1,38 @@
+{
+  "id": "PRV-08",
+  "name": "Provenance: table reference on a later line — sourced columns resolve linecol past a newline",
+  "input": {
+    "query": "let T =\n    DeviceEvents;\nT | project Timestamp, DeviceId, ReportId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": {
+          "column": "Timestamp",
+          "table": "DeviceEvents",
+          "position": { "abs": 12, "line": 2, "column": 5 }
+        }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "table": "DeviceEvents",
+          "position": { "abs": 12, "line": 2, "column": 5 }
+        }
+      },
+      {
+        "name": "ReportId",
+        "provenance": {
+          "column": "ReportId",
+          "table": "DeviceEvents",
+          "position": { "abs": 12, "line": 2, "column": 5 }
+        }
+      }
+    ]
+  }
+}

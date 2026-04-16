@@ -1,0 +1,35 @@
+{
+  "id": "PRV-FN-04",
+  "name": "Provenance: invoke FunctionWithJoin column name conflict — pass-through retains source, conflict rename traces to invoke",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId, NewCol=RemotePort | invoke FunctionWithJoin()",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId" },
+      { "name": "Timestamp" },
+      { "name": "ReportId" },
+      {
+        "name": "NewCol",
+        "provenance": {
+          "column": "NewCol",
+          "operator": "project",
+          "sources": [
+            { "column": "RemotePort", "table": "DeviceNetworkEvents" }
+          ]
+        }
+      },
+      {
+        "name": "NewCol1",
+        "provenance": {
+          "column": "NewCol1",
+          "operator": "invoke",
+          "sources": null
+        }
+      }
+    ]
+  }
+}

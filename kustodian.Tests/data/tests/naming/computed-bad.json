@@ -1,0 +1,21 @@
+{
+  "id": "NAM-01",
+  "name": "Naming convention: computed column not matching convention is flagged",
+  "input": {
+    "query": "DeviceEvents | extend badCol = strcat(DeviceId, \"_x\") | project Timestamp, ReportId, DeviceId, badCol",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "namingConvention": "^[A-Z]"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "WARN",
+        "type": "ColumnNamingConvention",
+        "affectedColumns": [
+          "badCol"
+        ]
+      }
+    ]
+  }
+}

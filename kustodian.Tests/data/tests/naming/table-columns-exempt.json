@@ -1,0 +1,13 @@
+{
+  "id": "NAM-00c",
+  "name": "Naming convention: source table columns are exempt regardless of convention",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr",
+    "namingConvention": "^[A-Z]{10,}"
+  },
+  "expected": {
+    "messages": []
+  }
+}

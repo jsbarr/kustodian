@@ -1,0 +1,27 @@
+{
+  "id": "PRV-FN-01",
+  "name": "Provenance: invoke env function scalar param traces to invoke boundary",
+  "input": {
+    "query": "DeviceNetworkEvents | project DeviceId, Timestamp, ReportId | invoke TagSeverity(3)",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [],
+    "outputColumns": [
+      { "name": "DeviceId" },
+      { "name": "Timestamp" },
+      { "name": "ReportId" },
+      {
+        "name": "Severity",
+        "provenance": {
+          "column": "Severity",
+          "operator": "invoke",
+          "sources": [
+            { "column": "severity", "operator": "invoke" }
+          ]
+        }
+      }
+    ]
+  }
+}
