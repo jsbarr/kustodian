@@ -236,3 +236,7 @@ For each column in the result schema, `BuildProvenanceNode` traces it back to it
 - **Cycle guard** — a `path` set tracks the current recursion stack as a safeguard against infinite recursion. In practice this appears unreachable through valid KQL, because the SDK's sequential extend binding always resolves name references to pre-existing symbols rather than ones being defined in the same statement.
 
 The result for each output column is a `ProvenanceNode` tree showing the full derivation chain, and a flat `sourceMap` listing all the leaf table columns it ultimately depends on. The `sourceMap` is what the impacted entity consistency check uses to compare source table sets across `Timestamp`, `ReportId`, and the impacted entity field.
+
+# Known Issues
+
+**Invoke provenance limitation** — for columns introduced by `invoke`, provenance is traced into the function body by parsing it and walking `SimpleNamedExpression` nodes (explicit name assignments like `extend foo = expr`). Columns produced by operators that use implicit naming — e.g. `summarize count() by Category` producing `count_` — are not resolved further, because implicit column naming is determined by the SDK only during semantic analysis, not during parsing alone. The fix is to call `ParseAndAnalyze` on the function body using a `GlobalState` extended with the function's input table (whose schema is known from `ctx.ResultTable` at the call site). This would give full symbol binding inside the body, making the provenance trace complete for all invoke-introduced columns.

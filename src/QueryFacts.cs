@@ -7,7 +7,15 @@ record InvokeContext(
     string[] ScalarParamNames,
     int[] ScalarArgPositions,
     SyntaxNode BodySyntax,
-    IReadOnlyList<ColumnSymbol> SourceColumns);
+    TableSymbol? ResultTable);
+
+// Unified per-symbol metadata collected in a single AST walk.
+// NameDeclaration is column-only (tables have no declaration node in the query AST).
+// InvokeContext is set only for columns newly introduced by an invoke operator.
+record SymbolInfo(
+    int FirstPosition,
+    NameDeclaration? NameDeclaration = null,
+    InvokeContext? InvokeContext = null);
 
 public record QueryFacts(
     string Query,
@@ -26,14 +34,12 @@ public record QueryFacts(
         var resultTable = code.ResultType as TableSymbol;
 
         var columns = resultTable?.Columns ?? (IReadOnlyList<ColumnSymbol>)[];
-        // Pre-walk the AST once to build symbol-to-position and symbol-to-declaration lookups.
-        var (columnRefMap, tableRefMap, declMap) = BuildRefMaps(code.Syntax);
-        var invokeMap = BuildInvokeMap(code.Syntax);
+        var symbolInfoMap = BuildSymbolInfoMap(code.Syntax);
 
         var built = columns.Select(c =>
         {
             var leafSources = new HashSet<ColumnSymbol>();
-            var node = BuildProvenanceNode(c, globals, columnRefMap, tableRefMap, declMap, invokeMap, query, [], leafSources);
+            var node = BuildProvenanceNode(c, globals, symbolInfoMap, query, [], leafSources);
             return (c, node, leafSources);
         }).ToList();
 
@@ -50,10 +56,7 @@ public record QueryFacts(
     static ProvenanceNode BuildProvenanceNode(
         ColumnSymbol col,
         GlobalState globals,
-        Dictionary<ColumnSymbol, int> columnRefMap,
-        Dictionary<TableSymbol, int> tableRefMap,
-        Dictionary<ColumnSymbol, NameDeclaration> declMap,
-        Dictionary<ColumnSymbol, InvokeContext> invokeMap,
+        Dictionary<Symbol, SymbolInfo> symbolInfoMap,
         string query,
         HashSet<ColumnSymbol> path,
         HashSet<ColumnSymbol> leafSources)
@@ -65,23 +68,25 @@ public record QueryFacts(
         if (path.Contains(col))
             return new ProvenanceNode(Column: col.Name);
 
+        symbolInfoMap.TryGetValue(col, out var colInfo);
+
         // Invoke case: column was introduced by an invoke operator.
-        if (invokeMap.TryGetValue(col, out var ctx))
-            return BuildInvokeProvenance(col, ctx, globals, columnRefMap, tableRefMap, declMap, invokeMap, query, path, leafSources);
+        if (colInfo?.InvokeContext is { } ctx)
+            return BuildInvokeProvenance(col, ctx, globals, symbolInfoMap, query, path, leafSources);
 
         // Base case: column belongs to a real table — it's a leaf, no further recursion needed.
         var table = globals.GetTable(col);
         if (table != null)
         {
             leafSources.Add(col);
-            var pos = tableRefMap.TryGetValue(table, out var p) ? p : 0;
+            var pos = symbolInfoMap.TryGetValue(table, out var tblInfo) ? tblInfo.FirstPosition : 0;
             return new ProvenanceNode(Column: col.Name, Table: table.Name, Position: BuildPosition(query, pos));
         }
 
-        var op = GetEnclosingOperator(col, declMap);
-        var declPos = columnRefMap.TryGetValue(col, out var cp) ? cp : 0;
+        var op = GetEnclosingOperator(colInfo);
+        var declPos = colInfo?.FirstPosition ?? 0;
 
-        var originalColumns = GetProvenanceSources(col, declMap);
+        var originalColumns = GetProvenanceSources(col, colInfo);
         // No upstream sources found (e.g. a literal or aggregate with no column references).
         if (originalColumns.Count == 0)
             return new ProvenanceNode(Column: col.Name, Operator: op, Position: BuildPosition(query, declPos));
@@ -89,7 +94,7 @@ public record QueryFacts(
         // Recursive case: descend into each upstream column, collecting their provenance nodes.
         path.Add(col);
         var sources = originalColumns
-            .Select(orig => BuildProvenanceNode(orig, globals, columnRefMap, tableRefMap, declMap, invokeMap, query, path, leafSources))
+            .Select(orig => BuildProvenanceNode(orig, globals, symbolInfoMap, query, path, leafSources))
             .ToArray();
         path.Remove(col);
 
@@ -100,13 +105,11 @@ public record QueryFacts(
     // Prefers the Kusto SDK's built-in OriginalColumns, but this is only populated for certain operators like project-rename.
     // For more complex operators like extend, summarize, etc, falls back to walking the AST expression for any column name references
     // (e.g. `extend foo = bar + baz` → [bar, baz]).
-    static IReadOnlyList<ColumnSymbol> GetProvenanceSources(
-        ColumnSymbol col,
-        Dictionary<ColumnSymbol, NameDeclaration> declMap)
+    static IReadOnlyList<ColumnSymbol> GetProvenanceSources(ColumnSymbol col, SymbolInfo? info)
     {
         if (col.OriginalColumns.Count > 0) return col.OriginalColumns;
 
-        if (declMap.TryGetValue(col, out var decl) && decl.Parent is SimpleNamedExpression sne)
+        if (info?.NameDeclaration?.Parent is SimpleNamedExpression sne)
         {
             return sne.Expression
                 .GetDescendantsOrSelf<NameReference>()
@@ -120,10 +123,8 @@ public record QueryFacts(
     }
 
     // Returns the KQL operator keyword (e.g. "extend", "project") where this column was declared.
-    static string? GetEnclosingOperator(ColumnSymbol col, Dictionary<ColumnSymbol, NameDeclaration> declMap) =>
-        declMap.TryGetValue(col, out var decl)
-            ? decl.GetFirstAncestor<QueryOperator>()?.GetFirstToken()?.Text.ToLowerInvariant()
-            : null;
+    static string? GetEnclosingOperator(SymbolInfo? info) =>
+        info?.NameDeclaration?.GetFirstAncestor<QueryOperator>()?.GetFirstToken()?.Text.ToLowerInvariant();
 
     // Converts a zero-based character offset in the query string to a 1-based line/column position.
     static Position BuildPosition(string query, int pos)
@@ -137,54 +138,80 @@ public record QueryFacts(
         return new Position(Abs: pos, Line: line, Column: col);
     }
 
-    // For each PipeExpression ending with an InvokeOperator, records which new columns invoke introduces
-    // and captures everything needed to trace their provenance into the function body.
-    static Dictionary<ColumnSymbol, InvokeContext> BuildInvokeMap(SyntaxNode root)
+    // Single AST walk that builds a unified symbol map used throughout provenance tracing.
+    // For each symbol encountered, records: the earliest text position, the declaration node (columns only),
+    // and invoke context (for columns introduced via an invoke operator).
+    static Dictionary<Symbol, SymbolInfo> BuildSymbolInfoMap(SyntaxNode root)
     {
-        var map = new Dictionary<ColumnSymbol, InvokeContext>();
+        var map = new Dictionary<Symbol, SymbolInfo>();
+
         SyntaxElement.WalkNodes(root, n =>
         {
-            if (n is not PipeExpression pipe || pipe.Operator is not InvokeOperator invoke) return;
-
-            var funcCall = invoke.Function as FunctionCallExpression;
-            var sig = (funcCall?.Name.ReferencedSymbol as FunctionSymbol)?.Signatures.FirstOrDefault();
-            if (sig == null || string.IsNullOrEmpty(sig.Body)) return;
-
-            // Kusto SDK serializes let-defined function bodies with outer braces; unwrap them.
-            var bodyText = sig.Body.Trim();
-            if (bodyText.StartsWith('{') && bodyText.EndsWith('}'))
-                bodyText = bodyText[1..^1].Trim();
-            if (string.IsNullOrEmpty(bodyText)) return;
-
-            var bodySyntax = KustoCode.Parse(bodyText).Syntax;
-            var scalarParams = sig.Parameters.Where(p => !p.IsTabular).ToList();
-            var args = funcCall.ArgumentList.Expressions;
-            var scalarParamNames = scalarParams.Select(p => p.Name).ToArray();
-            var scalarArgPositions = Enumerable.Range(0, Math.Min(scalarParams.Count, args.Count))
-                .Select(i => args[i].Element.TextStart)
-                .ToArray();
-
-            var inputTable = pipe.Expression.ResultType as TableSymbol;
-            var sourceColumns = inputTable?.Columns ?? (IReadOnlyList<ColumnSymbol>)[];
-            var inputNames = new HashSet<string>(sourceColumns.Select(c => c.Name), StringComparer.OrdinalIgnoreCase);
-
-            foreach (var col in (pipe.ResultType as TableSymbol)?.Columns ?? [])
+            if (n is NameDeclaration || n is NameReference)
             {
-                if (!inputNames.Contains(col.Name))
-                    map[col] = new InvokeContext(invoke.InvokeKeyword.TextStart, scalarParamNames, scalarArgPositions, bodySyntax, sourceColumns);
+                switch (n.ReferencedSymbol)
+                {
+                    case ColumnSymbol col:
+                        if (n is NameDeclaration nd)
+                            map[col] = new SymbolInfo(n.TextStart, NameDeclaration: nd);
+                        break;
+                    case TableSymbol tbl:
+                        if (!map.TryGetValue(tbl, out var tblInfo) || n.TextStart < tblInfo.FirstPosition)
+                            map[tbl] = new SymbolInfo(n.TextStart);
+                        break;
+                }
+            }
+
+            if (n is PipeExpression pipe && pipe.Operator is InvokeOperator invoke)
+            {
+                var resultTable = pipe.Expression.ResultType as TableSymbol;
+                var ctx = BuildInvokeContext(invoke, resultTable);
+                var inputNames = new HashSet<string>((resultTable?.Columns ?? []).Select(c => c.Name), StringComparer.OrdinalIgnoreCase);
+                foreach (var col in (pipe.ResultType as TableSymbol)?.Columns ?? [])
+                {
+                    if (!inputNames.Contains(col.Name))
+                    {
+                        map.TryGetValue(col, out var existing);
+                        // Invoke-introduced columns typically have no NameDeclaration/NameReference in the
+                        // main query AST, so existing is usually null and InvokePos becomes FirstPosition.
+                        map[col] = new SymbolInfo(
+                            FirstPosition: existing?.FirstPosition ?? ctx.InvokePos,
+                            NameDeclaration: existing?.NameDeclaration,
+                            InvokeContext: ctx);
+                    }
+                }
             }
         });
+
         return map;
+    }
+
+    static InvokeContext BuildInvokeContext(InvokeOperator invoke, TableSymbol? resultTable)
+    {
+        var funcCall = (FunctionCallExpression)invoke.Function;
+        var sig = ((FunctionSymbol)funcCall.Name.ReferencedSymbol).Signatures.First();
+
+        // Kusto SDK serializes let-defined function bodies with outer braces; unwrap them.
+        var bodyText = sig.Body.Trim();
+        if (bodyText.StartsWith('{') && bodyText.EndsWith('}'))
+            bodyText = bodyText[1..^1].Trim();
+
+        var bodySyntax = KustoCode.Parse(bodyText).Syntax;
+        var scalarParams = sig.Parameters.Where(p => !p.IsTabular).ToList();
+        var args = funcCall.ArgumentList.Expressions;
+        var scalarParamNames = scalarParams.Select(p => p.Name).ToArray();
+        var scalarArgPositions = Enumerable.Range(0, Math.Min(scalarParams.Count, args.Count))
+            .Select(i => args[i].Element.TextStart)
+            .ToArray();
+
+        return new InvokeContext(invoke.InvokeKeyword.TextStart, scalarParamNames, scalarArgPositions, bodySyntax, resultTable);
     }
 
     // Builds a flattened provenance node for a column introduced by an invoke operator.
     // Scalar param references → invoke-boundary leaves. Table column references → recurse into source.
     static ProvenanceNode BuildInvokeProvenance(
         ColumnSymbol col, InvokeContext ctx, GlobalState globals,
-        Dictionary<ColumnSymbol, int> columnRefMap,
-        Dictionary<TableSymbol, int> tableRefMap,
-        Dictionary<ColumnSymbol, NameDeclaration> declMap,
-        Dictionary<ColumnSymbol, InvokeContext> invokeMap,
+        Dictionary<Symbol, SymbolInfo> symbolInfoMap,
         string query, HashSet<ColumnSymbol> path, HashSet<ColumnSymbol> leafSources)
     {
         var invokePos = BuildPosition(query, ctx.InvokePos);
@@ -209,15 +236,13 @@ public record QueryFacts(
                 continue;
             }
 
-            var sourceCol = ctx.SourceColumns.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
+            var sourceCol = ctx.ResultTable?.Columns.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
             if (sourceCol != null)
-                sources.Add(BuildProvenanceNode(sourceCol, globals, columnRefMap, tableRefMap, declMap, invokeMap, query, path, leafSources));
+                sources.Add(BuildProvenanceNode(sourceCol, globals, symbolInfoMap, query, path, leafSources));
         }
 
         path.Remove(col);
-        return sources.Count == 0
-            ? new ProvenanceNode(Column: col.Name, Operator: "invoke", Position: invokePos)
-            : new ProvenanceNode(Column: col.Name, Operator: "invoke", Position: invokePos, Sources: sources.ToArray());
+        return new ProvenanceNode(Column: col.Name, Operator: "invoke", Position: invokePos, Sources: (sources.Count > 0 ? sources.ToArray() : null));
     }
 
     // Finds the RHS expression of the first SimpleNamedExpression with the given column name in a body AST.
@@ -232,39 +257,6 @@ public record QueryFacts(
                 result = sne.Expression;
         });
         return result;
-    }
-
-    // Single AST walk that builds three maps used throughout provenance tracing:
-    // - columnMap: earliest text position of each column symbol (for pointing to its first use)
-    // - tableMap: earliest text position of each table symbol
-    // - declMap: the NameDeclaration node where each column symbol is introduced
-    static (Dictionary<ColumnSymbol, int>, Dictionary<TableSymbol, int>, Dictionary<ColumnSymbol, NameDeclaration>) BuildRefMaps(SyntaxNode root)
-    {
-        var columnMap = new Dictionary<ColumnSymbol, int>();
-        var tableMap = new Dictionary<TableSymbol, int>();
-        var declMap = new Dictionary<ColumnSymbol, NameDeclaration>();
-        SyntaxElement.WalkNodes(root, n =>
-        {
-            if (n is NameDeclaration decl && decl.ReferencedSymbol is ColumnSymbol declCol && !declMap.ContainsKey(declCol))
-                declMap[declCol] = decl;
-
-            if ((n is NameDeclaration || n is NameReference) && n is SyntaxNode sn)
-            {
-                switch (sn.ReferencedSymbol)
-                {
-                    case ColumnSymbol col:
-                        // Keep the earliest (leftmost) occurrence of this symbol.
-                        if (!columnMap.TryGetValue(col, out var cc) || sn.TextStart < cc)
-                            columnMap[col] = sn.TextStart;
-                        break;
-                    case TableSymbol tbl:
-                        if (!tableMap.TryGetValue(tbl, out var tc) || sn.TextStart < tc)
-                            tableMap[tbl] = sn.TextStart;
-                        break;
-                }
-            }
-        });
-        return (columnMap, tableMap, declMap);
     }
 
 }
