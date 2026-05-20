@@ -23,13 +23,20 @@ docker build -t kustodian .
 docker run -p 8080:8080 kustodian
 ```
 
-The service listens on port 8080 and exposes a single endpoint:
+## API
+
+The service listens on port 8080 and exposes the following endpoints:
 
 ```
+GET  /health
 POST /analyse
 ```
 
-### Request format
+### `/health`
+
+`GET /health` returns `200 OK` when the service is running.
+
+### `/analyse`
 
 POST a JSON payload with key/value pairs as indicated below.  Optional keys should be omitted entirely if not used.
 The `environment` value must match the filename (without `.json`) of a schema file in the environments directory. The built-in environment is `defender-xdr`.
@@ -37,6 +44,7 @@ The `environment` value must match the filename (without `.json`) of a schema fi
 | Field | Required | Type | Default | Description |
 |---|---|---|---|---|
 | `query` | Yes | `string` | N/A | The query to be analysed. |
+| `impactedEntityField` | Yes | `string` | N/A | The output column that identifies the affected entity (e.g. `DeviceId`, `AccountUpn`). Must be present in the query output and share source tables with `Timestamp` and `ReportId`. |
 | `environment` | Yes | `string` | N/A | The environment in which the query should be analysed.  This defines the available tables and functions.  See [Using a custom environment](#using-a-custom-environment). |
 | `namingConvention` | No | `string` (regex) | `null` | Regex that all newly introduced output columns must match. |
 | `provenance` | No | `boolean` | `true` | Set to `false` to omit the provenance tree from the response. |
