@@ -8,6 +8,8 @@ var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingP
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+app.MapGet("/health", () => Results.Ok());
+
 app.MapPost("/analyse", (AnalyseRequest req) =>
 {
     try { return Results.Json(Analyser.Analyse(req, environments), jsonOptions); }
