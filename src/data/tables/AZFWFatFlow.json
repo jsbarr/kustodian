@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "DestinationIp": "string",
+  "DestinationPort": "int",
+  "FlowRate": "real",
+  "_IsBillable": "string",
+  "Protocol": "string",
+  "_ResourceId": "string",
+  "SourceIp": "string",
+  "SourcePort": "int",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

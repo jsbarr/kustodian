@@ -1,0 +1,12 @@
+{
+  "DeviceId": "string",
+  "BrowserName": "string",
+  "ExtensionId": "string",
+  "ExtensionName": "string",
+  "ExtensionDescription": "string",
+  "ExtensionVersion": "string",
+  "ExtensionRisk": "string",
+  "ExtensionVendor": "string",
+  "IsActivated": "string",
+  "InstallationTime": "datetime"
+}

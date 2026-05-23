@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "CallerIpAddress": "string",
+  "Category": "string",
+  "CorrelationId": "string",
+  "DurationMs": "int",
+  "HttpStatusCode": "int",
+  "Identity": "dynamic",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultDescription": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "URI": "string",
+  "WorkspaceId": "string"
+}

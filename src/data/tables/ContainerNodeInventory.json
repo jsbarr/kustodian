@@ -1,0 +1,12 @@
+{
+  "_BilledSize": "real",
+  "Computer": "string",
+  "DockerVersion": "string",
+  "_IsBillable": "string",
+  "OperatingSystem": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "CallConnectionId": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "ParticipantId": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StreamingDurationInMs": "real",
+  "StreamingModality": "string",
+  "StreamingSessionId": "string",
+  "StreamingStartTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

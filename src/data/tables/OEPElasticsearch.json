@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "Content": "string",
+  "Duration": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "Namespace": "string",
+  "OperationName": "string",
+  "PodName": "string",
+  "_ResourceId": "string",
+  "Source": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TotalHits": "string",
+  "Type": "string"
+}

@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "OperationId": "string",
+  "OperationName": "string",
+  "PlayInLoop": "bool",
+  "PlayInterrupted": "bool",
+  "PlayToParticipant": "bool",
+  "RecognizePromptSubOperationName": "string",
+  "_ResourceId": "string",
+  "ResultCode": "int",
+  "ResultMessage": "string",
+  "ResultSubcode": "int",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

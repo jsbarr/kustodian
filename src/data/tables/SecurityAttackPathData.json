@@ -1,0 +1,23 @@
+{
+  "AdditionalRemediationSteps": "string",
+  "Assessments": "dynamic",
+  "AttackPathId": "string",
+  "AttackStory": "string",
+  "_BilledSize": "real",
+  "Description": "string",
+  "DisplayName": "string",
+  "EntrypointId": "string",
+  "_IsBillable": "string",
+  "Mitre": "string",
+  "Path": "dynamic",
+  "PotentialImpact": "string",
+  "_ResourceId": "string",
+  "RiskFactors": "dynamic",
+  "RiskLevel": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TargetId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "DataSetRunId": "string",
+  "DataSetRunSeqNum": "int",
+  "DataSourceName": "string",
+  "_IsBillable": "string",
+  "RawData": "string",
+  "RawDataLabel": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

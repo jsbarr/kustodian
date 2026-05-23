@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "CommandLine": "string",
+  "DataSetRunId": "string",
+  "EndTimeUtc": "datetime",
+  "HighImpactFindings": "int",
+  "_IsBillable": "string",
+  "LowImpactFindings": "int",
+  "MediumImpactFindings": "int",
+  "PerfInsightsExeFileVersion": "string",
+  "PerfInsightsResourceId": "string",
+  "ReportId": "string",
+  "_ResourceId": "string",
+  "Scenario": "string",
+  "SourceSystem": "string",
+  "StartTimeUtc": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

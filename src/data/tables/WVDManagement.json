@@ -1,0 +1,21 @@
+{
+  "AadTenantId": "string",
+  "ArmObjectScope": "string",
+  "_BilledSize": "real",
+  "ClientSideIPAddress": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "ObjectsCreated": "int",
+  "ObjectsDeleted": "int",
+  "ObjectsFetched": "int",
+  "ObjectsUpdated": "int",
+  "ProvisioningCorrelationId": "string",
+  "_ResourceId": "string",
+  "Route": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserName": "string"
+}

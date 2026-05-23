@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "ResourceGroup": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TargetResource": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TraceContext": "dynamic",
+  "Type": "string",
+  "User": "string",
+  "UserRole": "string"
+}

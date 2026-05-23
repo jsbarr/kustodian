@@ -1,0 +1,14 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "Path": "string",
+  "Process": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

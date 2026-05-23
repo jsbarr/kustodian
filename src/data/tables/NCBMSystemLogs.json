@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "ClusterManagerName": "string",
+  "ClusterName": "string",
+  "Facility": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "Message": "string",
+  "Node": "string",
+  "ProcessId": "int",
+  "ProcessName": "string",
+  "_ResourceId": "string",
+  "Severity": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

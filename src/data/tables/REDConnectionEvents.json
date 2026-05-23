@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "ClientIp": "string",
+  "ConnectionId": "long",
+  "EventEpochTime": "long",
+  "EventStatus": "int",
+  "EventType": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "PrivateLinkIPv6": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

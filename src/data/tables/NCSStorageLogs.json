@@ -1,0 +1,20 @@
+{
+  "ArrayController": "string",
+  "ArrayName": "string",
+  "_BilledSize": "real",
+  "ClusterManagerName": "string",
+  "ClusterName": "string",
+  "ContainerName": "string",
+  "IPAddress": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "Message": "string",
+  "Node": "string",
+  "PodName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

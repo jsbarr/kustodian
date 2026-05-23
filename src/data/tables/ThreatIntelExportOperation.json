@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "DestinationInfo": "dynamic",
+  "ErrorDetails": "string",
+  "ExportDuration": "int",
+  "ExportedBy": "string",
+  "ExportId": "string",
+  "ExportType": "string",
+  "ExternallyExportedId": "string",
+  "Id": "string",
+  "_IsBillable": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "StixId": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeExported": "datetime",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

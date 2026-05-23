@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "DataSetRunId": "string",
+  "Finding": "string",
+  "FindingId": "string",
+  "FindingPartitionKey": "string",
+  "ImpactLevel": "string",
+  "_IsBillable": "string",
+  "Recommendation": "string",
+  "ReferenceLinks": "dynamic",
+  "ReportId": "string",
+  "_ResourceId": "string",
+  "RuleCategory": "string",
+  "RuleFriendlyName": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

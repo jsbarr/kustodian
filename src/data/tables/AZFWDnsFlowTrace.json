@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "_IsBillable": "string",
+  "MsgType": "string",
+  "Protocol": "string",
+  "QueryMessage": "string",
+  "QueryTime": "datetime",
+  "_ResourceId": "string",
+  "ResponseTime": "datetime",
+  "ServerIp": "string",
+  "ServerMessage": "string",
+  "ServerPort": "int",
+  "SocketFamily": "string",
+  "SourceIp": "string",
+  "SourcePort": "int",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

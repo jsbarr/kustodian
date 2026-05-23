@@ -1,0 +1,23 @@
+{
+  "AppAttemptId": "string",
+  "ApplicationId": "string",
+  "AppName": "string",
+  "_BilledSize": "real",
+  "ClusterDnsName": "string",
+  "ClusterTenantId": "string",
+  "CompletionTime": "datetime",
+  "Host": "string",
+  "IpAddress": "string",
+  "_IsBillable": "string",
+  "Region": "string",
+  "_ResourceId": "string",
+  "Role": "string",
+  "SourceSystem": "string",
+  "SparkUser": "string",
+  "SubmissionTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserSubscriptionId": "string"
+}

@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "CorrelationParams": "dynamic",
+  "DataSetRunId": "string",
+  "DCRId": "string",
+  "_IsBillable": "string",
+  "Name": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "StatusDetail": "dynamic",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TimeoutMinutes": "int",
+  "Type": "string"
+}

@@ -1,0 +1,22 @@
+{
+  "AuditId": "string",
+  "_BilledSize": "real",
+  "ClusterName": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "ObjectRef": "string",
+  "RequestReceivedTimestamp": "datetime",
+  "RequestUri": "string",
+  "_ResourceId": "string",
+  "ResponseStatusCode": "int",
+  "SourceIps": "string",
+  "SourceSystem": "string",
+  "Stage": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "User": "string",
+  "UserAgent": "string",
+  "Verb": "string"
+}

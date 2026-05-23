@@ -1,0 +1,14 @@
+{
+  "_BilledSize": "real",
+  "Datatype": "string",
+  "FilePath": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Message": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

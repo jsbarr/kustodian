@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "ContainerImageName": "string",
+  "ContainerName": "string",
+  "DeploymentName": "string",
+  "InstanceId": "string",
+  "_IsBillable": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

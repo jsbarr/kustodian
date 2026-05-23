@@ -1,0 +1,22 @@
+{
+  "Action": "string",
+  "ActionId": "string",
+  "_BilledSize": "real",
+  "Category": "string",
+  "DataPartitionId": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "Message": "string",
+  "OperationDescription": "string",
+  "OperationName": "string",
+  "Puid": "string",
+  "RequestId": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "ServiceName": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

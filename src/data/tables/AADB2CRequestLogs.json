@@ -1,0 +1,16 @@
+{
+  "AADTenantId": "string",
+  "_BilledSize": "real",
+  "CallerIpAddress": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultSignature": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

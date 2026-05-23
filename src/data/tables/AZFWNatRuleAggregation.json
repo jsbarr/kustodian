@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "_IsBillable": "string",
+  "NatRuleCount": "int",
+  "Policy": "string",
+  "Protocol": "string",
+  "_ResourceId": "string",
+  "Rule": "string",
+  "RuleCollection": "string",
+  "RuleCollectionGroup": "string",
+  "SourceIp": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TranslatedIp": "string",
+  "TranslatedPort": "int",
+  "Type": "string"
+}

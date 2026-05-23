@@ -1,0 +1,22 @@
+{
+  "AadTenantId": "string",
+  "_BilledSize": "real",
+  "ClientOS": "string",
+  "ClientSideIPAddress": "string",
+  "ClientType": "string",
+  "ClientVersion": "string",
+  "CorrelationId": "string",
+  "IconFail": "int",
+  "IconTotal": "int",
+  "_IsBillable": "string",
+  "IsClientPrivateLink": "string",
+  "RDPFail": "int",
+  "RDPTotal": "int",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserName": "string"
+}

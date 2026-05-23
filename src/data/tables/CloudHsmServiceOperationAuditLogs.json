@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "CallerIpAddress": "string",
+  "ClientInfo": "string",
+  "ClientSdkPackageVersion": "string",
+  "DurationMs": "int",
+  "_IsBillable": "string",
+  "MemberId": "string",
+  "Opcode": "string",
+  "OperationName": "string",
+  "PoolType": "string",
+  "_ResourceId": "string",
+  "ResultDescription": "string",
+  "ResultSignature": "string",
+  "ResultType": "string",
+  "Sku": "dynamic",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

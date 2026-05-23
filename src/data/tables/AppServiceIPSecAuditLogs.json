@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "CIp": "string",
+  "CsHost": "string",
+  "Details": "string",
+  "_IsBillable": "string",
+  "_ResourceId": "string",
+  "Result": "string",
+  "ServiceEndpoint": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "XAzureFDID": "string",
+  "XFDHealthProbe": "string",
+  "XForwardedFor": "string",
+  "XForwardedHost": "string"
+}

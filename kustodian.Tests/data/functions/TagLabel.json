@@ -1,0 +1,4 @@
+{
+  "paramSignature": "T:(*), label:string",
+  "body": "T | extend Label = label"
+}

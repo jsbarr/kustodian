@@ -1,0 +1,4 @@
+{
+  "paramSignature": "T:(*), HashColumn:string, Limit:long",
+  "body": "T | extend __TEMPKEY__=1 | join kind=leftouter (datatable(__TEMPKEY__:long, SHA1:string, SHA256:string, MD5:string, FileSize:int, GlobalPrevalence:int, GlobalFirstSeen:datetime, GlobalLastSeen:datetime, Signer:string, Issuer:string, SignerHash:string, IsCertificateValid:bool, IsRootSignerMicrosoft:bool, SignatureState:string, IsExecutable:bool, ThreatName:string, Publisher:string, SoftwareName:string, ProfileAvailability:string) ['','','',int(0),datetime(null),datetime(null),'','','',false,false,'',false,'','','','']) on __TEMPKEY__ | project-away __TEMPKEY__, __TEMPKEY__1"
+}

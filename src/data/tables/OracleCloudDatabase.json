@@ -1,0 +1,13 @@
+{
+  "_BilledSize": "real",
+  "_IsBillable": "string",
+  "LifeCycleState": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultDescription": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

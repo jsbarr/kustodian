@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "EventhubName": "string",
+  "_IsBillable": "string",
+  "Message": "string",
+  "NamespaceName": "string",
+  "Provider": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TrackingId": "string",
+  "Type": "string"
+}

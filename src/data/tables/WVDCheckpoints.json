@@ -1,0 +1,16 @@
+{
+  "ActivityType": "string",
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "Name": "string",
+  "Parameters": "dynamic",
+  "_ResourceId": "string",
+  "Source": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserName": "string"
+}

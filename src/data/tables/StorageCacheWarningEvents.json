@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "Description": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "State": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

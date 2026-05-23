@@ -1,0 +1,20 @@
+{
+  "ActivityId": "string",
+  "ArchiveStep": "string",
+  "_BilledSize": "real",
+  "DurationMs": "int",
+  "EventhubName": "string",
+  "Failures": "int",
+  "_IsBillable": "string",
+  "Message": "string",
+  "PartitionId": "int",
+  "Provider": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TaskName": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TrackingId": "string",
+  "Type": "string"
+}

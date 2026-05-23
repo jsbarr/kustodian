@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "CallerIpAddress": "string",
+  "Category": "string",
+  "CorrelationId": "string",
+  "DataPlaneResourceId": "string",
+  "Identity": "dynamic",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultDescription": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

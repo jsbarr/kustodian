@@ -1,0 +1,14 @@
+{
+  "Timestamp": "datetime",
+  "NetworkMessageId": "string",
+  "InternetMessageId": "string",
+  "Action": "string",
+  "ActionType": "string",
+  "ActionTrigger": "string",
+  "ActionResult": "string",
+  "RecipientEmailAddress": "string",
+  "DeliveryLocation": "string",
+  "ThreatTypes": "string",
+  "DetectionMethods": "string",
+  "ReportId": "string"
+}

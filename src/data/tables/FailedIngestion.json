@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "Database": "string",
+  "Details": "string",
+  "ErrorCode": "string",
+  "FailedOn": "datetime",
+  "FailureStatus": "string",
+  "IngestionSourceId": "string",
+  "IngestionSourcePath": "string",
+  "_IsBillable": "string",
+  "OperationId": "string",
+  "OriginatesFromUpdatePolicy": "bool",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "RootActivityId": "string",
+  "ShouldRetry": "bool",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "Table": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

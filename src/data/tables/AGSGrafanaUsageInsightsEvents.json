@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "Details": "dynamic",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,18 @@
+{
+  "App": "string",
+  "_BilledSize": "real",
+  "Count": "int",
+  "Deployment": "string",
+  "Event": "string",
+  "FirstTimestamp": "datetime",
+  "Instance": "string",
+  "_IsBillable": "string",
+  "LastTimestamp": "datetime",
+  "Message": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

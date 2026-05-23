@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "_IsBillable": "string",
+  "Level": "int",
+  "LinkConnectionName": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "Properties": "dynamic",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

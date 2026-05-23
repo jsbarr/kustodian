@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "ErrorMessage": "string",
+  "_IsBillable": "string",
+  "ListOfInfectedFiles": "string",
+  "NumberOfInfectedFiles": "int",
+  "_ResourceId": "string",
+  "ScanStatus": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TimeStamp": "datetime",
+  "TotalFilesScanned": "int",
+  "Type": "string"
+}

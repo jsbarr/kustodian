@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "ClusterId": "string",
+  "ClusterName": "string",
+  "_IsBillable": "string",
+  "PVAccessModes": "string",
+  "PVCapacityBytes": "real",
+  "PVCName": "string",
+  "PVCNamespace": "string",
+  "PVCreationTimeStamp": "datetime",
+  "PVName": "string",
+  "PVStatus": "string",
+  "PVStorageClassName": "string",
+  "PVType": "string",
+  "PVTypeInfo": "dynamic",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,17 @@
+{
+  "AccountName": "string",
+  "ActivityId": "string",
+  "_BilledSize": "real",
+  "CollectionName": "string",
+  "CorrelatedActivityId": "string",
+  "DatabaseName": "string",
+  "_IsBillable": "string",
+  "PartitionKeyRangeId": "string",
+  "QueryText": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

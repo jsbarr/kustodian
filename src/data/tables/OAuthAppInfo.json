@@ -1,0 +1,18 @@
+{
+  "ReportId": "string",
+  "Timestamp": "datetime",
+  "OAuthAppId": "string",
+  "ServicePrincipalId": "string",
+  "AppName": "string",
+  "AddedOnTime": "datetime",
+  "LastModifiedTime": "datetime",
+  "AppStatus": "string",
+  "VerifiedPublisher": "dynamic",
+  "PrivilegeLevel": "string",
+  "Permissions": "dynamic",
+  "ConsentedUsersCount": "int",
+  "IsAdminConsented": "bool",
+  "AppOrigin": "string",
+  "LastUsedTime": "datetime",
+  "AppOwnerTenantId": "string"
+}

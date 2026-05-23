@@ -1,0 +1,13 @@
+{
+  "ConfigurationId": "string",
+  "ConfigurationName": "string",
+  "ConfigurationDescription": "string",
+  "ConfigurationRationale": "string",
+  "ConfigurationCategory": "string",
+  "BenchmarkProfileLevels": "dynamic",
+  "CCEReference": "string",
+  "RemediationOptions": "string",
+  "ConfigurationBenchmark": "string",
+  "Source": "dynamic",
+  "RecommendedValue": "dynamic"
+}

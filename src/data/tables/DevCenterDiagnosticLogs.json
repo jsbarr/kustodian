@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "CallerIdentity": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "OperationResult": "string",
+  "_ResourceId": "string",
+  "ResponseCode": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TargetResourceId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "Computer": "string",
+  "Failed": "int",
+  "Image": "string",
+  "ImageID": "string",
+  "ImageSize": "string",
+  "ImageTag": "string",
+  "_IsBillable": "string",
+  "Paused": "int",
+  "Repository": "string",
+  "_ResourceId": "string",
+  "Running": "int",
+  "SourceSystem": "string",
+  "Stopped": "int",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "TotalContainer": "long",
+  "Type": "string",
+  "VirtualSize": "string"
+}

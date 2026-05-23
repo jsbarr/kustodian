@@ -1,0 +1,20 @@
+{
+  "Timestamp": "datetime",
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "NetworkAdapterName": "string",
+  "MacAddress": "string",
+  "NetworkAdapterType": "string",
+  "NetworkAdapterStatus": "string",
+  "TunnelType": "string",
+  "ConnectedNetworks": "string",
+  "DnsAddresses": "string",
+  "IPv4Dhcp": "string",
+  "IPv6Dhcp": "string",
+  "DefaultGateways": "string",
+  "IPAddresses": "string",
+  "ReportId": "long",
+  "NetworkAdapterVendor": "string",
+  "OnboardingStatus": "string",
+  "NetworkAdapterDnsSuffix": "string"
+}

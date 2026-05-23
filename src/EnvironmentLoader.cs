@@ -3,10 +3,12 @@ using Kusto.Language;
 using Kusto.Language.Symbols;
 
 record EnvFunctionConfig(string? ParamSignature, string? Body);
-record EnvConfig(Dictionary<string, Dictionary<string, string>>? Tables, Dictionary<string, EnvFunctionConfig>? Functions);
+record EnvManifest(string[]? Tables, string[]? Functions);
 
 public static class EnvironmentLoader
 {
+    static readonly JsonSerializerOptions JsonOpts = new() { PropertyNameCaseInsensitive = true };
+
     static TypeSymbol MapType(string type) => type switch
     {
         "object" => ScalarTypes.DynamicBag,
@@ -15,19 +17,37 @@ public static class EnvironmentLoader
             ?? throw new InvalidOperationException($"Unknown column type: '{type}'")
     };
 
-    // Translates a JSON environment config into a Kusto GlobalState so the SDK can
-    // perform full semantic analysis (type resolution, column binding) against it.
-    static GlobalState BuildGlobalState(EnvConfig config)
-    {
-        var tables = (config.Tables ?? new())
-            .Select(t => (Symbol)new TableSymbol(t.Key,
-                t.Value.Select(c => new ColumnSymbol(c.Key, MapType(c.Value))).ToArray()));
+    static T Deserialize<T>(string path) =>
+        JsonSerializer.Deserialize<T>(File.ReadAllText(path), JsonOpts)!;
 
-        var functions = (config.Functions ?? new())
-            .Select(kvp =>
+    static string ResolveFile(string name, string subdir, string baseDir, string? overrideDir)
+    {
+        if (overrideDir != null)
+        {
+            var p = Path.Combine(overrideDir, subdir, $"{name}.json");
+            if (File.Exists(p)) return p;
+        }
+        var basePath = Path.Combine(baseDir, subdir, $"{name}.json");
+        if (File.Exists(basePath)) return basePath;
+        throw new InvalidOperationException($"{subdir[..^1]} file not found: '{name}'");
+    }
+
+    static GlobalState BuildGlobalState(EnvManifest manifest, string baseDir, string? overrideDir)
+    {
+        var tables = (manifest.Tables ?? [])
+            .Select(name =>
             {
-                var name = kvp.Key;
-                var cfg = kvp.Value;
+                var path = ResolveFile(name, "tables", baseDir, overrideDir);
+                var columns = Deserialize<Dictionary<string, string>>(path);
+                return (Symbol)new TableSymbol(name,
+                    columns.Select(c => new ColumnSymbol(c.Key, MapType(c.Value))).ToArray());
+            });
+
+        var functions = (manifest.Functions ?? [])
+            .Select(name =>
+            {
+                var path = ResolveFile(name, "functions", baseDir, overrideDir);
+                var cfg = Deserialize<EnvFunctionConfig>(path);
                 if (string.IsNullOrWhiteSpace(cfg.Body))
                     throw new InvalidOperationException($"Function '{name}': body is required");
                 try
@@ -43,11 +63,25 @@ public static class EnvironmentLoader
         return GlobalState.Default.WithDatabase(new DatabaseSymbol("db", tables.Concat(functions)));
     }
 
-    public static Dictionary<string, GlobalState> Load(string directory) =>
-        Directory.GetFiles(directory, "*.json")
-            .ToDictionary(
-                f => Path.GetFileNameWithoutExtension(f),
-                f => BuildGlobalState(JsonSerializer.Deserialize<EnvConfig>(
-                    File.ReadAllText(f),
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true })!));
+    public static Dictionary<string, GlobalState> Load(string baseDir, string? overrideDir = null)
+    {
+        var envFiles = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        var baseEnvDir = Path.Combine(baseDir, "environments");
+        if (Directory.Exists(baseEnvDir))
+            foreach (var f in Directory.GetFiles(baseEnvDir, "*.json"))
+                envFiles[Path.GetFileNameWithoutExtension(f)] = f;
+
+        if (overrideDir != null)
+        {
+            var overrideEnvDir = Path.Combine(overrideDir, "environments");
+            if (Directory.Exists(overrideEnvDir))
+                foreach (var f in Directory.GetFiles(overrideEnvDir, "*.json"))
+                    envFiles[Path.GetFileNameWithoutExtension(f)] = f;
+        }
+
+        return envFiles.ToDictionary(
+            kvp => kvp.Key,
+            kvp => BuildGlobalState(Deserialize<EnvManifest>(kvp.Value), baseDir, overrideDir));
+    }
 }

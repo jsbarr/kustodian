@@ -1,0 +1,17 @@
+{
+  "Authentication": "string",
+  "_BilledSize": "real",
+  "ClientIpAddress": "string",
+  "_IsBillable": "string",
+  "NetworkAccess": "string",
+  "OperationName": "string",
+  "OperationResult": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TlsVersion": "string",
+  "TotalOperations": "string",
+  "Type": "string"
+}

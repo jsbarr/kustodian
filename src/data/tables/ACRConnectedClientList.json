@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "CacheName": "string",
+  "ClientCount": "int",
+  "ClientIp": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "PrivateLinkIpv6": "string",
+  "_ResourceId": "string",
+  "RoleInstance": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,19 @@
+{
+  "AllocationResources": "dynamic",
+  "_BilledSize": "real",
+  "ChangeReason": "string",
+  "ChangeType": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "LogLevel": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

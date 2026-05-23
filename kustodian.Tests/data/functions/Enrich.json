@@ -1,0 +1,4 @@
+{
+  "paramSignature": "T:(*), category:string, score:int",
+  "body": "T | extend Category = category, Score = score"
+}

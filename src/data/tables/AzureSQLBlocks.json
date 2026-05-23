@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "BlockedProcessFiltered": "string",
+  "Category": "string",
+  "DatabaseName": "string",
+  "Duration": "long",
+  "ElasticPoolName": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "LockMode": "string",
+  "OperationName": "string",
+  "ResourceGroup": "string",
+  "_ResourceId": "string",
+  "ResourceOwnerType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

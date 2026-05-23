@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "BucketEndTime": "datetime",
+  "BucketStartTime": "datetime",
+  "Computer": "string",
+  "CounterName": "string",
+  "CounterPath": "string",
+  "CounterValue": "real",
+  "InstanceName": "string",
+  "_IsBillable": "string",
+  "Max": "real",
+  "Min": "real",
+  "ObjectName": "string",
+  "_ResourceId": "string",
+  "SampleCount": "int",
+  "SourceSystem": "string",
+  "StandardDeviation": "real",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

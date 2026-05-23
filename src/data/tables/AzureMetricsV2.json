@@ -1,0 +1,21 @@
+{
+  "Average": "real",
+  "_BilledSize": "real",
+  "Count": "real",
+  "Dimension": "dynamic",
+  "_IsBillable": "string",
+  "Maximum": "real",
+  "MetricCategory": "string",
+  "MetricName": "string",
+  "MetricResourceType": "string",
+  "Minimum": "real",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TimeGrain": "string",
+  "Total": "real",
+  "Type": "string",
+  "UnitName": "string"
+}

@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "BotId": "string",
+  "Category": "string",
+  "Channel": "string",
+  "CorrelationId": "string",
+  "DurationMs": "real",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultCode": "int",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "CacheNodeId": "string",
+  "EgressMbps": "real",
+  "HitMbps": "real",
+  "HitRatioMbps": "real",
+  "Hits": "int",
+  "_IsBillable": "string",
+  "Misses": "int",
+  "MissMbps": "real",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

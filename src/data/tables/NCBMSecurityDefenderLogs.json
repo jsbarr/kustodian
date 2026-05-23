@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "ClusterManagerName": "string",
+  "ClusterName": "string",
+  "ComponentName": "string",
+  "ComponentVersion": "string",
+  "ContainerName": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "LogType": "string",
+  "Message": "string",
+  "NamespaceName": "string",
+  "Node": "string",
+  "PodName": "string",
+  "_ResourceId": "string",
+  "Severity": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

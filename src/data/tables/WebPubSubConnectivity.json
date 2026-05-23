@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "CallerIpAddress": "string",
+  "ConnectionId": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserId": "string"
+}

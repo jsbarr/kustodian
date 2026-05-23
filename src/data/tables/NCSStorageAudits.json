@@ -1,0 +1,23 @@
+{
+  "Action": "string",
+  "ArrayController": "string",
+  "ArrayName": "string",
+  "_BilledSize": "real",
+  "ClusterManagerName": "string",
+  "ClusterName": "string",
+  "ContainerName": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "Message": "string",
+  "Node": "string",
+  "PodName": "string",
+  "_ResourceId": "string",
+  "Result": "string",
+  "Session": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "User": "string"
+}

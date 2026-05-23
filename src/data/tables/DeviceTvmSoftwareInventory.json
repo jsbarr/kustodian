@@ -1,0 +1,13 @@
+{
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "OSPlatform": "string",
+  "OSVersion": "string",
+  "OSArchitecture": "string",
+  "SoftwareVendor": "string",
+  "SoftwareName": "string",
+  "SoftwareVersion": "string",
+  "EndOfSupportStatus": "string",
+  "EndOfSupportDate": "datetime",
+  "ProductCodeCpe": "string"
+}

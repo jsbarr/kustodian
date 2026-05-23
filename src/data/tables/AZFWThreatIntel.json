@@ -1,0 +1,20 @@
+{
+  "Action": "string",
+  "_BilledSize": "real",
+  "DestinationIp": "string",
+  "DestinationPort": "int",
+  "Fqdn": "string",
+  "_IsBillable": "string",
+  "IsTlsInspected": "bool",
+  "Protocol": "string",
+  "_ResourceId": "string",
+  "SourceIp": "string",
+  "SourcePort": "int",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TargetUrl": "string",
+  "TenantId": "string",
+  "ThreatDescription": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

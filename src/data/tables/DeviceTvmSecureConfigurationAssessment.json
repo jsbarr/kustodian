@@ -1,0 +1,14 @@
+{
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "OSPlatform": "string",
+  "Timestamp": "datetime",
+  "ConfigurationId": "string",
+  "ConfigurationCategory": "string",
+  "ConfigurationSubcategory": "string",
+  "ConfigurationImpact": "real",
+  "IsCompliant": "bool",
+  "IsApplicable": "bool",
+  "Context": "dynamic",
+  "IsExpectedUserImpact": "bool"
+}

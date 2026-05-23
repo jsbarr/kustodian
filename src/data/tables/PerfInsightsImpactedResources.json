@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "DataSetRunId": "string",
+  "Details": "dynamic",
+  "FindingId": "string",
+  "ImpactedResourceName": "string",
+  "ImpactedResourceValue": "string",
+  "_IsBillable": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

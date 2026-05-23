@@ -1,0 +1,17 @@
+{
+  "AadTenantId": "string",
+  "AmlServiceName": "string",
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "Identity": "dynamic",
+  "_IsBillable": "string",
+  "Level": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "ClusterId": "string",
+  "ClusterName": "string",
+  "Computer": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Message": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "Tags": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

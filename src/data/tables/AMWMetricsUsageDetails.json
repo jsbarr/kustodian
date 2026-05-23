@@ -1,0 +1,21 @@
+{
+  "AMWResourceName": "string",
+  "_BilledSize": "real",
+  "DailyTimeseriesCount": "long",
+  "DaysSinceMetricQueried": "int",
+  "DimensionsList": "string",
+  "EndTime": "datetime",
+  "IncomingEventsCount": "long",
+  "IngestedSamplesCount": "long",
+  "_IsBillable": "string",
+  "MetricName": "string",
+  "MetricNamespace": "string",
+  "NumberOfQueries": "int",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StartTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

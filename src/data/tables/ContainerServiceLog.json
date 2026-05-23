@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "Command": "string",
+  "Computer": "string",
+  "ContainerID": "string",
+  "Image": "string",
+  "ImageTag": "string",
+  "_IsBillable": "string",
+  "Repository": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "TimeOfCommand": "datetime",
+  "Type": "string"
+}

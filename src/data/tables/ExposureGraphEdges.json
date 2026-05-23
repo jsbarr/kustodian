@@ -1,0 +1,13 @@
+{
+  "EdgeId": "string",
+  "EdgeLabel": "string",
+  "SourceNodeId": "string",
+  "SourceNodeName": "string",
+  "SourceNodeLabel": "string",
+  "SourceNodeCategories": "dynamic",
+  "TargetNodeId": "string",
+  "TargetNodeName": "string",
+  "TargetNodeLabel": "string",
+  "TargetNodeCategories": "dynamic",
+  "EdgeProperties": "dynamic"
+}

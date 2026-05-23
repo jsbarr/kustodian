@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "ContainerGroup": "string",
+  "ContainerID": "string",
+  "ContainerImage": "string",
+  "ContainerName": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "Message": "string",
+  "OSType": "string",
+  "_ResourceId": "string",
+  "Source": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

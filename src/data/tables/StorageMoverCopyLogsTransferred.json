@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "Details": "string",
+  "FileSize": "long",
+  "_IsBillable": "string",
+  "ItemPath": "string",
+  "ItemType": "string",
+  "JobRunName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StatusCode": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TransferResult": "string",
+  "Type": "string"
+}

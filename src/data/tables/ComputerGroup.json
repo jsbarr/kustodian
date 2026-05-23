@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "Computer": "string",
+  "Group": "string",
+  "GroupFullName": "string",
+  "GroupId": "string",
+  "GroupSource": "string",
+  "GroupSourceName": "string",
+  "_IsBillable": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

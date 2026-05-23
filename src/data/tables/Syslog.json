@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "CollectorHostName": "string",
+  "Computer": "string",
+  "EventTime": "datetime",
+  "Facility": "string",
+  "HostIP": "string",
+  "HostName": "string",
+  "_IsBillable": "string",
+  "ProcessID": "int",
+  "ProcessName": "string",
+  "_ResourceId": "string",
+  "SeverityLevel": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "SyslogMessage": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

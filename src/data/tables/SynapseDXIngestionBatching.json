@@ -1,0 +1,18 @@
+{
+  "BatchingType": "string",
+  "BatchSizeBytes": "long",
+  "BatchTimeSeconds": "real",
+  "_BilledSize": "real",
+  "Database": "string",
+  "DataSourcesInBatch": "int",
+  "_IsBillable": "string",
+  "_ResourceId": "string",
+  "RootActivityId": "string",
+  "SourceCreationTime": "datetime",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "Table": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

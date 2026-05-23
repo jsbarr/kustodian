@@ -1,0 +1,17 @@
+{
+  "BackupManagementType": "string",
+  "_BilledSize": "real",
+  "Category": "string",
+  "ExtendedProperties": "dynamic",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "OperationStartTime": "datetime",
+  "OperationType": "string",
+  "_ResourceId": "string",
+  "SchemaVersion": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

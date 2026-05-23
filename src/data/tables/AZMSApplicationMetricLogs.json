@@ -1,0 +1,22 @@
+{
+  "ActivityId": "string",
+  "AuthId": "string",
+  "AuthType": "string",
+  "_BilledSize": "real",
+  "EntityName": "string",
+  "EntityType": "string",
+  "_IsBillable": "string",
+  "NamespaceName": "string",
+  "OperationName": "string",
+  "Outcome": "string",
+  "Properties": "dynamic",
+  "Protocol": "string",
+  "Provider": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "Value": "int"
+}

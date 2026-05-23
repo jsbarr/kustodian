@@ -1,0 +1,10 @@
+{
+  "CveId": "string",
+  "CvssScore": "string",
+  "IsExploitAvailable": "bool",
+  "VulnerabilitySeverityLevel": "string",
+  "LastModifiedTime": "datetime",
+  "PublishedDate": "datetime",
+  "VulnerabilityDescription": "string",
+  "AffectedSoftware": "dynamic"
+}

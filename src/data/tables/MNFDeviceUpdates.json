@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "DeviceId": "string",
+  "DeviceTime": "long",
+  "EventCategory": "string",
+  "EventName": "string",
+  "FabricId": "string",
+  "_IsBillable": "string",
+  "Properties": "dynamic",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,22 @@
+{
+  "AffectedResourceId": "string",
+  "AffectedResourceName": "string",
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "EventName": "string",
+  "EventSeverity": "string",
+  "EventType": "string",
+  "HealthErrors": "dynamic",
+  "_IsBillable": "string",
+  "LogId": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TimeOfOccurrence": "datetime",
+  "Type": "string",
+  "Version": "string"
+}

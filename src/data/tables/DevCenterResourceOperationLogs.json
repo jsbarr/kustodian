@@ -1,0 +1,16 @@
+{
+  "AdditionalProperties": "dynamic",
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "Region": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "SubResourceId": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

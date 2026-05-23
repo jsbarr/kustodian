@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "InstanceName": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Log": "string",
+  "Logger": "string",
+  "LogType": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ServiceName": "string",
+  "SourceSystem": "string",
+  "Stack": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "Thread": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

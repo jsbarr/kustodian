@@ -1,0 +1,14 @@
+{
+  "Timestamp": "datetime",
+  "Url": "string",
+  "ActionType": "string",
+  "AccountUpn": "string",
+  "Workload": "string",
+  "NetworkMessageId": "string",
+  "ThreatTypes": "string",
+  "DetectionMethods": "string",
+  "IPAddress": "string",
+  "IsClickedThrough": "bool",
+  "UrlChain": "string",
+  "ReportId": "string"
+}

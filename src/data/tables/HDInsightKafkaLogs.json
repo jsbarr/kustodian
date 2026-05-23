@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "ClusterName": "string",
+  "CorrelationId": "string",
+  "HostName": "string",
+  "_IsBillable": "string",
+  "LogLevel": "string",
+  "LogType": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

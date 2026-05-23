@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "Calls": "long",
+  "DatabaseId": "int",
+  "EndTime": "datetime",
+  "Event": "string",
+  "EventType": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "LogicalServerName": "string",
+  "QueryId": "string",
+  "ReplicaRole": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StartTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserId": "int"
+}

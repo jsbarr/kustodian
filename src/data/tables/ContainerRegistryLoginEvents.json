@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "CallerIpAddress": "string",
+  "Category": "string",
+  "CorrelationId": "string",
+  "DurationMs": "string",
+  "Identity": "string",
+  "_IsBillable": "string",
+  "JwtId": "string",
+  "LoginServer": "string",
+  "OperationName": "string",
+  "Region": "string",
+  "_ResourceId": "string",
+  "ResultDescription": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserAgent": "string"
+}

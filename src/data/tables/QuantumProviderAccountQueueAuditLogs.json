@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "OperationParams": "dynamic",
+  "OperationVersion": "string",
+  "QueueId": "string",
+  "RequesterObjectId": "string",
+  "RequesterTenantId": "string",
+  "RequesterUpn": "string",
+  "_ResourceId": "string",
+  "ResultCode": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TraceId": "string",
+  "Type": "string"
+}

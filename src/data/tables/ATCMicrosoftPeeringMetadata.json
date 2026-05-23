@@ -1,0 +1,20 @@
+{
+  "ATCRegion": "string",
+  "ATCResourceId": "string",
+  "_BilledSize": "real",
+  "IpMask": "string",
+  "IpSubnet": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "PrefixRegion": "string",
+  "RegionalBgpCommunity": "string",
+  "_ResourceId": "string",
+  "SchemaVersion": "string",
+  "ServiceBgpCommunity": "string",
+  "ServiceName": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

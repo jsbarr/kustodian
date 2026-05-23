@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "ClusterManagerName": "string",
+  "ClusterName": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "Message": "string",
+  "Node": "string",
+  "OperationID": "string",
+  "PodName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

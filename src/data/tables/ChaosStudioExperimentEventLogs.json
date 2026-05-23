@@ -1,0 +1,21 @@
+{
+  "Action": "string",
+  "_BilledSize": "real",
+  "Branch": "string",
+  "CorrelationId": "string",
+  "Error": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SeverityLevel": "string",
+  "SourceSystem": "string",
+  "SpanType": "string",
+  "Status": "string",
+  "Step": "string",
+  "_SubscriptionId": "string",
+  "Target": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "Facility": "string",
+  "FilePath": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "Message": "string",
+  "_ResourceId": "string",
+  "Severity": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "Tag": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}
