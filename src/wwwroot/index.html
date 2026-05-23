@@ -36,6 +36,13 @@
       --hl-prov-1:    #b8cbf5;  /* blue */
       --hl-prov-2:    #b8e0c4;  /* green */
       --hl-prov-3:    #f5cf9a;  /* orange */
+      --hl-neutral:   rgba(28,29,34,0.10);
+
+      --prov-frame:        #c9c6bd;
+      --prov-frame-tint:   #f5f2e9;
+      --prov-1-bar:        #4f7cf5;
+      --prov-2-bar:        #3a9a5a;
+      --prov-3-bar:        #d68a31;
 
       --radius:       12px;
       --radius-sm:    8px;
@@ -74,6 +81,13 @@
       --hl-prov-1:    #2a3a6b;
       --hl-prov-2:    #1f4a30;
       --hl-prov-3:    #5a3a15;
+      --hl-neutral:   rgba(232,234,240,0.14);
+
+      --prov-frame:        #3a4252;
+      --prov-frame-tint:   #1a2030;
+      --prov-1-bar:        #7b91ff;
+      --prov-2-bar:        #6dd897;
+      --prov-3-bar:        #f0b25e;
 
       --shadow-sm:    0 1px 2px rgba(0,0,0,0.3);
       --shadow:       0 1px 3px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.25);
@@ -232,7 +246,9 @@
       min-width: 0;
       overflow: hidden;
     }
-    .header-summary .pill { font-size: 11px; }
+    .header-summary .pill { font-size: 11px; font-family: var(--font-mono); }
+    .header-summary .pill .pill-key { color: var(--text-3); margin-right: 4px; }
+    .header-summary .pill .pill-val { color: var(--text); }
     .card:not(.is-collapsed) .header-summary { display: none; }
 
     .card-title {
@@ -395,6 +411,9 @@
     [data-prov-active="2"] .hl-prov-2 { background: var(--hl-prov-2); border-radius: 3px; padding: 1px 2px; }
     [data-prov-active="3"] .hl-prov-3 { background: var(--hl-prov-3); border-radius: 3px; padding: 1px 2px; }
 
+    /* Per-column neutral hover highlight (toggled via JS by adding .is-hovered) */
+    .hl-col.is-hovered { background: var(--hl-neutral); border-radius: 3px; padding: 1px 2px; }
+
     /* ── Tabs ─────────────────────────────────────────────── */
     .tabs {
       display: flex;
@@ -496,13 +515,49 @@
     }
     [data-theme="dark"] #output-columns td code { background: var(--bg-elevated); }
 
+    /* ── Impacted entity section frame ───────────────────── */
+    /* Section header row: label + colour swatches */
+    .prov-section-header td {
+      background: var(--prov-frame-tint);
+      padding: 8px 14px;
+      border-top: 1px solid var(--prov-frame);
+      border-bottom: 1px solid var(--prov-frame);
+    }
+    .prov-section-header td:first-child { border-left: 1px solid var(--prov-frame); }
+    .prov-section-header td:last-child  { border-right: 1px solid var(--prov-frame); }
+    #output-columns tr.prov-section-header:hover td { background: var(--prov-frame-tint); }
+
+    .prov-section-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-2);
+    }
+    .prov-section-swatches { display: inline-flex; gap: 3px; }
+    .prov-section-swatches span {
+      width: 8px; height: 8px; border-radius: 2px; display: inline-block;
+    }
+
     /* Impacted entity rows */
     .prov-row td:first-child { font-weight: 600; }
     .prov-row { cursor: default; transition: background 0.1s; }
 
-    .prov-row[data-prov-group="1"] td:first-child { box-shadow: inset 3px 0 0 #4f7cf5; padding-left: 17px; }
-    .prov-row[data-prov-group="2"] td:first-child { box-shadow: inset 3px 0 0 #3a9a5a; padding-left: 17px; }
-    .prov-row[data-prov-group="3"] td:first-child { box-shadow: inset 3px 0 0 #d68a31; padding-left: 17px; }
+    /* Side borders form the left/right edges of the frame */
+    .prov-row td:first-child { border-left: 1px solid var(--prov-frame); }
+    .prov-row td:last-child  { border-right: 1px solid var(--prov-frame); }
+    /* Bottom edge of the frame sits on the last prov row */
+    .prov-row.is-last td { border-bottom: 1px solid var(--prov-frame); }
+
+    .prov-row[data-prov-group="1"] td:first-child { box-shadow: inset 3px 0 0 var(--prov-1-bar); padding-left: 17px; }
+    .prov-row[data-prov-group="2"] td:first-child { box-shadow: inset 3px 0 0 var(--prov-2-bar); padding-left: 17px; }
+    .prov-row[data-prov-group="3"] td:first-child { box-shadow: inset 3px 0 0 var(--prov-3-bar); padding-left: 17px; }
+
+    /* Non-prov rows show a faint indicator on hover */
+    #output-columns tbody tr.col-row { cursor: default; }
 
     .prov-row .prov-dot {
       display: inline-block;
@@ -648,9 +703,9 @@
     <div class="main-col">
       <!-- ── Input form ── -->
       <div class="card" id="input-card">
-        <button type="button" class="card-header is-toggle" id="input-toggle" data-comment-anchor="e37f8bd0cf-span">
+        <button type="button" class="card-header is-toggle" id="input-toggle">
           <div class="header-main">
-            <span class="card-title" data-comment-anchor="1fae9cc763-span">Input</span>
+            <span class="card-title">Input</span>
             <div class="header-summary" id="input-summary"></div>
           </div>
           <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
@@ -687,7 +742,7 @@
       <!-- ── Results: highlighted query ── -->
       <div class="card" id="prov-container">
         <div class="card-header">
-          <span class="card-title" data-comment-anchor="05071f7fd1-span">Output</span>
+          <span class="card-title">Output</span>
           <div class="meta-row when-ready" id="result-meta"></div>
         </div>
         <div class="placeholder when-pending">
@@ -701,7 +756,7 @@
           <pre id="query-display"></pre>
           <div class="prov-hint" id="prov-hint" hidden>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-            Hover the highlighted rows on the right to trace provenance.
+            Hover any column on the right to trace provenance — impacted entity columns light up in colour, others in grey.
           </div>
         </div>
       </div>
@@ -723,7 +778,7 @@
                 <span>Output columns</span>
                 <span class="tab-count" id="count-columns">0</span>
               </button>
-              <button class="tab" data-pane="pane-diagnostics" role="tab" data-comment-anchor="e0e00a81d7-button">
+              <button class="tab" data-pane="pane-diagnostics" role="tab">
                 <span>Diagnostics</span>
                 <span class="tab-count" id="count-diagnostics">0</span>
               </button>
@@ -819,12 +874,19 @@ function collectTables(node) {
 
 // ── Span collection ──────────────────────────────────────────
 
+function nodeLen(node) {
+  return node.table != null         ? node.table.length
+       : node.operator === 'invoke' ? 'invoke'.length
+       : node.column.length;
+}
+
 function collectSpans(query, result, impactedEntityField) {
-  const spans = [];
+  const mergedSpans = [];
+  const colSpans    = [];
 
   for (const msg of result.messages)
     if (msg.type === 'Syntax' && msg.start != null && msg.end != null && msg.end > msg.start)
-      spans.push({ start: msg.start, end: msg.end, classes: ['hl-syntax'] });
+      mergedSpans.push({ start: msg.start, end: msg.end, classes: ['hl-syntax'] });
 
   const namingMsg = result.messages.find(m => m.type === 'ColumnNamingConvention');
   if (namingMsg && result.outputColumns)
@@ -832,7 +894,7 @@ function collectSpans(query, result, impactedEntityField) {
       const col = result.outputColumns.find(c => c.name === colName);
       if (col?.provenance?.position != null) {
         const abs = col.provenance.position.abs;
-        spans.push({ start: abs, end: abs + colName.length, classes: ['hl-naming'] });
+        mergedSpans.push({ start: abs, end: abs + colName.length, classes: ['hl-naming'] });
       }
     }
 
@@ -841,70 +903,88 @@ function collectSpans(query, result, impactedEntityField) {
     { name: 'ReportId',          cls: 'hl-prov-2' },
     { name: impactedEntityField, cls: 'hl-prov-3' }
   ];
-  if (result.outputColumns)
+  if (result.outputColumns) {
     for (const { name, cls } of provGroups) {
       const col = result.outputColumns.find(c => c.name === name);
       if (col?.provenance)
         for (const node of walkProvenance(col.provenance))
           if (node.position != null) {
-            const len = node.table != null         ? node.table.length
-                      : node.operator === 'invoke' ? 'invoke'.length
-                      : node.column.length;
-            spans.push({ start: node.position.abs, end: node.position.abs + len, classes: [cls] });
+            const len = nodeLen(node);
+            mergedSpans.push({ start: node.position.abs, end: node.position.abs + len, classes: [cls] });
           }
     }
 
-  return spans;
+    // Per-column hover spans — emitted for every column so the user can
+    // hover any row in the right pane and trace it back to the KQL.
+    for (const col of result.outputColumns) {
+      if (!col.provenance) continue;
+      for (const node of walkProvenance(col.provenance))
+        if (node.position != null)
+          colSpans.push({ start: node.position.abs, end: node.position.abs + nodeLen(node), col: col.name });
+    }
+  }
+
+  return { mergedSpans, colSpans };
 }
 
-function renderHighlightedQuery(query, spans) {
-  const events = [];
-  for (const { start, end, classes } of spans) {
-    events.push({ pos: start, open: true,  classes });
-    events.push({ pos: end,   open: false, classes });
-  }
-  events.sort((a, b) => a.pos - b.pos || (a.open ? -1 : 1));
+function renderHighlightedQuery(query, mergedSpans, colSpans) {
+  const N = query.length;
 
-  let html = '', pos = 0;
-  const activeCounts = {};
+  // For each character index, what merged classes apply, and which columns?
+  const mergedAt = new Array(N).fill(null);  // Set<string> | null
+  const colsAt   = new Array(N);             // string[]
+  for (let i = 0; i < N; i++) colsAt[i] = [];
 
-  const joinActive = () =>
-    Object.entries(activeCounts)
-      .filter(([, c]) => c > 0)
-      .map(([k]) => k)
-      .join(' ');
-
-  for (const ev of events) {
-    if (pos < ev.pos) {
-      const cls = joinActive();
-      const segment = escapeHtml(query.slice(pos, ev.pos));
-      html += cls ? `<span class="${cls}">${segment}</span>` : segment;
-      pos = ev.pos;
+  for (const { start, end, classes } of mergedSpans) {
+    const a = Math.max(0, start), b = Math.min(N, end);
+    for (let i = a; i < b; i++) {
+      if (mergedAt[i] === null) mergedAt[i] = new Set();
+      for (const c of classes) mergedAt[i].add(c);
     }
-    for (const c of ev.classes)
-      activeCounts[c] = (activeCounts[c] ?? 0) + (ev.open ? 1 : -1);
+  }
+  for (const { start, end, col } of colSpans) {
+    const a = Math.max(0, start), b = Math.min(N, end);
+    for (let i = a; i < b; i++) colsAt[i].push(col);
   }
 
-  if (pos < query.length) {
-    const cls = joinActive();
-    const segment = escapeHtml(query.slice(pos));
-    html += cls ? `<span class="${cls}">${segment}</span>` : segment;
-  }
+  const stateKey = i => {
+    const m = mergedAt[i] ? [...mergedAt[i]].sort().join(' ') : '';
+    const c = colsAt[i].length ? [...colsAt[i]].slice().sort().join('') : '';
+    return m + '' + c;
+  };
 
+  let html = '', i = 0;
+  while (i < N) {
+    const key = stateKey(i);
+    let j = i + 1;
+    while (j < N && stateKey(j) === key) j++;
+
+    let out = escapeHtml(query.slice(i, j));
+    // Innermost: per-column spans (toggled by row hover)
+    for (const col of colsAt[i]) {
+      out = `<span class="hl-col" data-col="${escapeHtml(col)}">${out}</span>`;
+    }
+    // Outermost: merged classes (syntax, naming, prov-1/2/3)
+    if (mergedAt[i] && mergedAt[i].size > 0) {
+      out = `<span class="${[...mergedAt[i]].join(' ')}">${out}</span>`;
+    }
+    html += out;
+    i = j;
+  }
   return html;
 }
 
 // ── Icons ──────────────────────────────────────────────
 const ICON_ERROR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
-const ICON_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/></svg>';
+const ICON_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 10v4M12 18h.01"/></svg>';
 const ICON_ALERT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
 const ICON_TICK_SM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 10 17 19 7"/></svg>';
-const ICON_WARN_TRI_SM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>';
+const ICON_WARN_TRI_SM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 10v4M12 18h.01"/></svg>';
 const ICON_X_SM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
 
 // ── Render ───────────────────────────────────────────────────
 
-function renderResults(query, result, impactedEntityField, environment) {
+function renderResults(query, result, impactedEntityField, environment, namingConvention) {
   const provContainer = document.getElementById('prov-container');
 
   document.body.dataset.state = 'ready';
@@ -935,8 +1015,9 @@ function renderResults(query, result, impactedEntityField, environment) {
   }
 
   // Highlighted query
-  const spans = collectSpans(query, result, impactedEntityField);
-  document.getElementById('query-display').innerHTML = renderHighlightedQuery(query, spans);
+  const { mergedSpans, colSpans } = collectSpans(query, result, impactedEntityField);
+  const queryDisplay = document.getElementById('query-display');
+  queryDisplay.innerHTML = renderHighlightedQuery(query, mergedSpans, colSpans);
 
   // Diagnostics
   const diagList = document.getElementById('diag-list');
@@ -997,18 +1078,11 @@ function renderResults(query, result, impactedEntityField, environment) {
       })
       .map(x => x.c);
 
-    let hasProvRows = false;
+    const provColumns  = sortedColumns.filter(c => provGroupMap[c.name]);
+    const otherColumns = sortedColumns.filter(c => !provGroupMap[c.name]);
 
-    for (const col of sortedColumns) {
+    const buildRow = (col) => {
       const tr = document.createElement('tr');
-      const group = provGroupMap[col.name];
-      if (group) {
-        tr.classList.add('prov-row');
-        tr.dataset.provGroup = group;
-        tr.addEventListener('mouseenter', () => provContainer.dataset.provActive = group);
-        tr.addEventListener('mouseleave', () => delete provContainer.dataset.provActive);
-        hasProvRows = true;
-      }
       const operator = col.provenance?.operator ?? (col.provenance?.table ? '(source)' : '—');
       const sources = col.provenance ? collectTables(col.provenance) : '—';
       tr.innerHTML = `
@@ -1017,10 +1091,54 @@ function renderResults(query, result, impactedEntityField, environment) {
         <td>${escapeHtml(operator)}</td>
         <td>${escapeHtml(sources)}</td>
       `;
+      return tr;
+    };
+
+    // ── Impacted entity section (framed group) ──
+    if (provColumns.length > 0) {
+      const headerTr = document.createElement('tr');
+      headerTr.className = 'prov-section-header';
+      headerTr.innerHTML = `
+        <td colspan="4">
+          <div class="prov-section-label">
+            <span class="prov-section-swatches" aria-hidden="true">
+              <span style="background: var(--prov-1-bar)"></span>
+              <span style="background: var(--prov-2-bar)"></span>
+              <span style="background: var(--prov-3-bar)"></span>
+            </span>
+            Impacted entity columns
+          </div>
+        </td>`;
+      tbody.appendChild(headerTr);
+
+      provColumns.forEach((col, idx) => {
+        const tr = buildRow(col);
+        const group = provGroupMap[col.name];
+        tr.classList.add('prov-row');
+        if (idx === provColumns.length - 1) tr.classList.add('is-last');
+        tr.dataset.provGroup = group;
+        tr.addEventListener('mouseenter', () => provContainer.dataset.provActive = group);
+        tr.addEventListener('mouseleave', () => delete provContainer.dataset.provActive);
+        tbody.appendChild(tr);
+      });
+    }
+
+    // ── Other columns ──
+    const highlightCol = (name, on) => {
+      const sel = `#query-display .hl-col[data-col="${(window.CSS && CSS.escape) ? CSS.escape(name) : name.replace(/"/g, '\\"')}"]`;
+      queryDisplay.querySelectorAll(sel).forEach(s => s.classList.toggle('is-hovered', on));
+    };
+    for (const col of otherColumns) {
+      const tr = buildRow(col);
+      tr.classList.add('col-row');
+      tr.dataset.col = col.name;
+      tr.addEventListener('mouseenter', () => highlightCol(col.name, true));
+      tr.addEventListener('mouseleave', () => highlightCol(col.name, false));
       tbody.appendChild(tr);
     }
+
     columnsEmpty.hidden = true;
-    document.getElementById('prov-hint').hidden = !hasProvRows;
+    document.getElementById('prov-hint').hidden = provColumns.length === 0;
   } else {
     columnsEmpty.hidden = false;
     document.getElementById('prov-hint').hidden = true;
@@ -1030,10 +1148,13 @@ function renderResults(query, result, impactedEntityField, environment) {
   // Collapse the Input card and surface a summary in its header
   const inputCard = document.getElementById('input-card');
   const inputSummary = document.getElementById('input-summary');
-  inputSummary.innerHTML = `
-    <span class="pill">${escapeHtml(environment)}</span>
-    <span class="pill">entity: ${escapeHtml(impactedEntityField)}</span>
-  `;
+  const pill = (k, v) =>
+    `<span class="pill"><span class="pill-key">${k}:</span><span class="pill-val">${escapeHtml(v)}</span></span>`;
+  inputSummary.innerHTML = [
+    pill('environment', environment),
+    pill('impactedEntity', impactedEntityField),
+    namingConvention ? pill('namingConvention', namingConvention) : ''
+  ].join('');
   inputCard.classList.add('is-collapsed');
 }
 
@@ -1136,7 +1257,7 @@ document.getElementById('form').addEventListener('submit', async e => {
         return;
       }
     }
-    renderResults(query, result, impactedEntityField, environment);
+    renderResults(query, result, impactedEntityField, environment, namingConvention);
   } catch (err) {
     alert('Request failed: ' + err.message);
   } finally {
