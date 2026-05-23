@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "PrimingJobName": "string",
+  "_ResourceId": "string",
+  "ResponseCode": "int",
+  "ResultDescription": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "StorageTargetName": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

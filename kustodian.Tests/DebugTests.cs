@@ -7,7 +7,7 @@ public class DebugTests
         Path.GetDirectoryName(typeof(DebugTests).Assembly.Location)!, "data");
 
     static readonly Dictionary<string, GlobalState> Environments =
-        EnvironmentLoader.Load(Path.Combine(DataDir, "environments"));
+        EnvironmentLoader.Load(DataDir);
 
     static readonly AnalyseRequest BaseRequest = new(
         Query: "DeviceEvents | project Timestamp, ReportId, DeviceId",

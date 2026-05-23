@@ -1,0 +1,10 @@
+{
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "ComponentType": "string",
+  "Manufacturer": "string",
+  "ComponentName": "string",
+  "ComponentFamily": "string",
+  "ComponentVersion": "string",
+  "AdditionalFields": "dynamic"
+}

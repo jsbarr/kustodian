@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "Log": "string",
+  "NodeName": "string",
+  "OperationName": "string",
+  "PodName": "string",
+  "_ResourceId": "string",
+  "SessionPoolName": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

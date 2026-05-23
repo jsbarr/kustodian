@@ -1,0 +1,16 @@
+{
+  "Timestamp": "datetime",
+  "ReportId": "string",
+  "DataSource": "string",
+  "SubscriptionId": "string",
+  "ActionType": "string",
+  "AzureResourceId": "string",
+  "AwsResourceName": "string",
+  "GcpFullResourceName": "string",
+  "Region": "string",
+  "ResourceKind": "string",
+  "ResourceName": "string",
+  "KubernetesNamespace": "string",
+  "Reason": "string",
+  "AdditionalFields": "string"
+}

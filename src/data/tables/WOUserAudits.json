@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "EdgeLocation": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "Message": "string",
+  "OperatingResourceId": "string",
+  "OperatingResourceK8SId": "string",
+  "OperationName": "string",
+  "Properties": "dynamic",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "User": "string",
+  "WOServiceInstance": "string",
+  "WOServiceName": "string"
+}

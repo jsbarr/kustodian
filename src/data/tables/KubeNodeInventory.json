@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "ClusterId": "string",
+  "ClusterName": "string",
+  "Computer": "string",
+  "CreationTimeStamp": "datetime",
+  "DockerVersion": "string",
+  "_IsBillable": "string",
+  "KubeletVersion": "string",
+  "KubeProxyVersion": "string",
+  "KubernetesProviderID": "string",
+  "Labels": "string",
+  "LastTransitionTimeReady": "datetime",
+  "OperatingSystem": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

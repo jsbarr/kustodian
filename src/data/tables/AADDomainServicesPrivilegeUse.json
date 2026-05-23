@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "NewState": "int",
+  "OperationName": "string",
+  "ProcessId": "string",
+  "ProcessName": "string",
+  "RecordId": "string",
+  "ResourceId": "string",
+  "_ResourceId": "string",
+  "ResourceManager": "string",
+  "ResultDescription": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "TransactionId": "string",
+  "Type": "string"
+}

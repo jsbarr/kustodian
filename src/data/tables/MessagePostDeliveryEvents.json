@@ -1,0 +1,17 @@
+{
+  "Timestamp": "datetime",
+  "TeamsMessageId": "string",
+  "Action": "string",
+  "ActionType": "string",
+  "ActionTrigger": "string",
+  "ActionResult": "string",
+  "SenderEmailAddress": "string",
+  "RecipientDetails": "dynamic",
+  "ThreatTypes": "string",
+  "ConfidenceLevel": "dynamic",
+  "DetectionMethods": "string",
+  "LatestDeliveryLocation": "string",
+  "ReportId": "string",
+  "IsExternalThread": "bool",
+  "SafetyTip": "string"
+}

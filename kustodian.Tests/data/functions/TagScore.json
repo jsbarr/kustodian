@@ -1,0 +1,4 @@
+{
+  "paramSignature": "T:(*), score:long",
+  "body": "T | extend TaggedScore = score"
+}

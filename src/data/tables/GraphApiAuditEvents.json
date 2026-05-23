@@ -1,0 +1,22 @@
+{
+  "IdentityProvider": "string",
+  "ApiVersion": "string",
+  "ApplicationId": "string",
+  "IPAddress": "string",
+  "ClientRequestId": "string",
+  "EntityType": "string",
+  "RequestUri": "string",
+  "AccountObjectId": "string",
+  "OperationId": "string",
+  "Location": "string",
+  "RequestDuration": "string",
+  "RequestId": "string",
+  "RequestMethod": "string",
+  "Timestamp": "string",
+  "ResponseStatusCode": "string",
+  "Scopes": "string",
+  "UniqueTokenIdentifier": "string",
+  "TargetWorkload": "string",
+  "ServicePrincipalId": "string",
+  "ResponseSize": "int"
+}

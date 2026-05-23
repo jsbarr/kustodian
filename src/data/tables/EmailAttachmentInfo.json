@@ -1,0 +1,17 @@
+{
+  "Timestamp": "datetime",
+  "NetworkMessageId": "string",
+  "SenderFromAddress": "string",
+  "SenderDisplayName": "string",
+  "SenderObjectId": "string",
+  "RecipientEmailAddress": "string",
+  "RecipientObjectId": "string",
+  "FileName": "string",
+  "FileType": "string",
+  "SHA256": "string",
+  "FileSize": "long",
+  "ThreatTypes": "string",
+  "ThreatNames": "string",
+  "DetectionMethods": "string",
+  "ReportId": "string"
+}

@@ -10,4 +10,9 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Azure.Kusto.Language" Version="12.*" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Update="data\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
 </Project>

@@ -1,0 +1,4 @@
+{
+  "paramSignature": "T:(*)",
+  "body": "T | extend IsFlagged = true"
+}

@@ -1,0 +1,19 @@
+{
+  "ActivityType": "string",
+  "_BilledSize": "real",
+  "Code": "long",
+  "CodeSymbolic": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "Message": "string",
+  "Operation": "string",
+  "_ResourceId": "string",
+  "ServiceError": "bool",
+  "Source": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserName": "string"
+}

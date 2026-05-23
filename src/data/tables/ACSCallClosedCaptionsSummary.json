@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "CancelReason": "string",
+  "CorrelationId": "string",
+  "Duration": "real",
+  "EndReason": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "SpeechRecognitionSessionId": "string",
+  "SpokenLanguage": "string",
+  "StartTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

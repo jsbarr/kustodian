@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "_IsBillable": "string",
+  "Location": "string",
+  "LogicalServerName": "string",
+  "QueryId": "string",
+  "QueryText": "string",
+  "ReplicaRole": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

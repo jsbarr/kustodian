@@ -1,0 +1,20 @@
+{
+  "AnalysisId": "string",
+  "AnalysisType": "string",
+  "_BilledSize": "real",
+  "EventName": "string",
+  "ExperimentationGroup": "string",
+  "ExperimentId": "string",
+  "ExperimentStepId": "string",
+  "ExperimentWorkspaceId": "string",
+  "FeatureId": "string",
+  "_IsBillable": "string",
+  "Properties": "dynamic",
+  "_ResourceId": "string",
+  "ScorecardId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

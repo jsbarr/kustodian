@@ -1,0 +1,16 @@
+{
+  "Timestamp": "datetime",
+  "ReportId": "string",
+  "DataSource": "string",
+  "ActionType": "string",
+  "OperationName": "string",
+  "ResourceId": "string",
+  "IPAddress": "string",
+  "IsAnonymousProxy": "bool",
+  "CountryCode": "string",
+  "City": "string",
+  "Isp": "string",
+  "UserAgent": "string",
+  "RawEventData": "dynamic",
+  "AdditionalFields": "dynamic"
+}

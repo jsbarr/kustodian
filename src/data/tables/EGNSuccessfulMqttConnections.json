@@ -1,0 +1,16 @@
+{
+  "AuthenticationType": "string",
+  "_BilledSize": "real",
+  "ClientIdentity": "string",
+  "ClientIdentitySource": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "Protocol": "string",
+  "_ResourceId": "string",
+  "SessionName": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

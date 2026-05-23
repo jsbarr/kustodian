@@ -1,0 +1,22 @@
+{
+  "avg_cpu_percent": "string",
+  "_BilledSize": "real",
+  "Category": "string",
+  "io_bytes_read": "string",
+  "io_bytes_written": "string",
+  "io_requests": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "reserved_storage_mb": "string",
+  "ResourceGroup": "string",
+  "_ResourceId": "string",
+  "SKU": "string",
+  "SourceSystem": "string",
+  "storage_space_used_mb": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "virtual_core_count": "string"
+}

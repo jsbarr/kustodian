@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "ContainerId": "string",
+  "Host": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultDescription": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

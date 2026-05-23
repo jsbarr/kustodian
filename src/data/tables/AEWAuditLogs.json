@@ -1,0 +1,16 @@
+{
+  "ActionName": "string",
+  "_BilledSize": "real",
+  "Category": "string",
+  "ExpComponentName": "string",
+  "_IsBillable": "string",
+  "Message": "string",
+  "Operator": "string",
+  "RequestUri": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

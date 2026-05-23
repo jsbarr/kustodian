@@ -1,0 +1,4 @@
+{
+  "paramSignature": "T:(*), severity:int",
+  "body": "T | extend Severity = severity"
+}

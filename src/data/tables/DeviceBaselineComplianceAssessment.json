@@ -1,0 +1,14 @@
+{
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "OSPlatform": "string",
+  "OSVersion": "string",
+  "ConfigurationId": "string",
+  "ProfileId": "string",
+  "IsCompliant": "bool",
+  "IsApplicable": "bool",
+  "Source": "dynamic",
+  "RecommendedValue": "dynamic",
+  "CurrentValue": "dynamic",
+  "IsExempt": "bool"
+}

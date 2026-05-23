@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "Destination": "string",
+  "Error": "string",
+  "EventName": "string",
+  "_IsBillable": "string",
+  "Region": "string",
+  "_ResourceId": "string",
+  "Source": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

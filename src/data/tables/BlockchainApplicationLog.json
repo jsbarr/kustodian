@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "BlockchainMessage": "string",
+  "BlockchainNodeName": "string",
+  "Category": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "NodeLocation": "string",
+  "OperationName": "string",
+  "Resource": "string",
+  "ResourceGroup": "string",
+  "ResourceId": "string",
+  "_ResourceId": "string",
+  "ResourceProvider": "string",
+  "SourceSystem": "string",
+  "SubscriptionId": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

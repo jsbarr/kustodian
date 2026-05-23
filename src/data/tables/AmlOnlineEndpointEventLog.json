@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "DeploymentName": "string",
+  "InstanceId": "string",
+  "_IsBillable": "string",
+  "Message": "string",
+  "Name": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

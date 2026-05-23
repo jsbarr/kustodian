@@ -1,0 +1,15 @@
+{
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "OSPlatform": "string",
+  "OSVersion": "string",
+  "OSArchitecture": "string",
+  "SoftwareVendor": "string",
+  "SoftwareName": "string",
+  "SoftwareVersion": "string",
+  "CveId": "string",
+  "VulnerabilitySeverityLevel": "string",
+  "RecommendedSecurityUpdate": "string",
+  "RecommendedSecurityUpdateId": "string",
+  "CveTags": "dynamic"
+}

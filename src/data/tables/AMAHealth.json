@@ -1,0 +1,20 @@
+{
+  "AgentHealth": "int",
+  "AgentRegion": "string",
+  "AgentType": "string",
+  "AgentVersion": "string",
+  "_BilledSize": "real",
+  "DroppedEventsStatus": "int",
+  "EndTime": "datetime",
+  "_IsBillable": "string",
+  "MaxDiskExceededPercent": "real",
+  "MaxEventsExceededPercent": "real",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StartTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "VMUUID": "string"
+}

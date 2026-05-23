@@ -1,0 +1,10 @@
+{
+  "Timestamp": "datetime",
+  "CampaignName": "string",
+  "CampaignId": "string",
+  "CampaignType": "string",
+  "CampaignSubtype": "string",
+  "NetworkMessageId": "string",
+  "RecipientEmailAddress": "string",
+  "ReportId": "string"
+}

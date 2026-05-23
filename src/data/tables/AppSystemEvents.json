@@ -1,0 +1,14 @@
+{
+  "_BilledSize": "real",
+  "EventType": "string",
+  "_IsBillable": "string",
+  "Measurements": "dynamic",
+  "Name": "string",
+  "Properties": "dynamic",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

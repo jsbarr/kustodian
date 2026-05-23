@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "Index": "int",
+  "_IsBillable": "string",
+  "MsgVersion": "string",
+  "Payload": "dynamic",
+  "PayloadType": "string",
+  "_ResourceId": "string",
+  "Sender": "string",
+  "SlSecMetadata": "dynamic",
+  "SlSecProps": "dynamic",
+  "SlSecRequestId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

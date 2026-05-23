@@ -1,0 +1,10 @@
+{
+  "Timestamp": "datetime",
+  "AlertId": "string",
+  "Title": "string",
+  "Category": "string",
+  "Severity": "string",
+  "ServiceSource": "string",
+  "DetectionSource": "string",
+  "AttackTechniques": "string"
+}

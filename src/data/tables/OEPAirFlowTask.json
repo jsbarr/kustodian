@@ -1,0 +1,22 @@
+{
+  "AdditionalLogContent": "string",
+  "_BilledSize": "real",
+  "Category": "string",
+  "CodePath": "string",
+  "Content": "string",
+  "CorrelationId": "string",
+  "DagName": "string",
+  "DagTaskName": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "LogLevel": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "RunId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TryNumber": "string",
+  "Type": "string"
+}

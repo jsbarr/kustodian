@@ -1,0 +1,15 @@
+{
+  "AccessRequestCount": "real",
+  "_BilledSize": "real",
+  "ClusterDnsName": "string",
+  "ErrorMessage": "string",
+  "_IsBillable": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserName": "string"
+}

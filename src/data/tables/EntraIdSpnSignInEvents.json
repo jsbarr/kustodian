@@ -1,0 +1,21 @@
+{
+  "Timestamp": "datetime",
+  "Application": "string",
+  "ApplicationId": "string",
+  "IsManagedIdentity": "bool",
+  "ErrorCode": "int",
+  "CorrelationId": "string",
+  "ServicePrincipalName": "string",
+  "ServicePrincipalId": "string",
+  "ResourceDisplayName": "string",
+  "ResourceId": "string",
+  "ResourceTenantId": "string",
+  "IPAddress": "string",
+  "Country": "string",
+  "State": "string",
+  "City": "string",
+  "Latitude": "string",
+  "Longitude": "string",
+  "RequestId": "string",
+  "ReportId": "string"
+}

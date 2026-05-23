@@ -1,0 +1,7 @@
+{
+  "IgId": "string",
+  "FieldName": "string",
+  "Description": "string",
+  "Categories": "dynamic",
+  "DataStructure": "string"
+}

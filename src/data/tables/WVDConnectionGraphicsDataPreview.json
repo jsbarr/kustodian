@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "ClientSkippedFramesPercentage": "int",
+  "CompressedFrameSizeInBytes": "int",
+  "CorrelationId": "string",
+  "DecodingTimeOnClientInMs": "int",
+  "EncodingDelayOnServerInMs": "int",
+  "EndToEndDelayInMs": "int",
+  "EstAvailableBandwidthKBps": "int",
+  "EstRoundTripTimeInMs": "int",
+  "_IsBillable": "string",
+  "NetworkSkippedFramesPercentage": "int",
+  "RenderingTimeOnClientInMs": "int",
+  "_ResourceId": "string",
+  "ServerSkippedFramesPercentage": "int",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

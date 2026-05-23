@@ -1,0 +1,21 @@
+{
+  "AllocationId": "string",
+  "AssignmentEventCount": "long",
+  "_BilledSize": "real",
+  "BinSize": "long",
+  "BinStartTime": "datetime",
+  "FeatureFlagReference": "string",
+  "FeatureName": "string",
+  "_IsBillable": "string",
+  "IsControlVariant": "bool",
+  "MaxTimeGenerated": "datetime",
+  "MinTimeGenerated": "datetime",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "Variant": "string",
+  "VariantAssignmentPercentage": "real"
+}

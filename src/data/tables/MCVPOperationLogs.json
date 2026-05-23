@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "DeviceName": "string",
+  "_IsBillable": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SeverityText": "string",
+  "SourceSystem": "string",
+  "SpanId": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TraceId": "string",
+  "Type": "string",
+  "VehicleId": "string"
+}

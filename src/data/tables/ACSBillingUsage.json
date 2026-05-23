@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "EndTime": "datetime",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "OperationVersion": "string",
+  "ParticipantId": "string",
+  "Quantity": "real",
+  "RecordId": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StartTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UnitType": "string",
+  "UsageType": "string",
+  "UserIdA": "string",
+  "UserIdB": "string"
+}

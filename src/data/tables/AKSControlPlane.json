@@ -1,0 +1,15 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Message": "string",
+  "PodName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "Stream": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

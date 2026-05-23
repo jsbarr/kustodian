@@ -1,0 +1,15 @@
+{
+  "ProfileId": "string",
+  "ProfileName": "string",
+  "ProfileDescription": "string",
+  "OSPlatform": "dynamic",
+  "OSVersion": "string",
+  "BaseBenchmark": "string",
+  "BenchmarkVersion": "string",
+  "BenchmarkProfileLevel": "string",
+  "Status": "bool",
+  "CreatedBy": "string",
+  "CreatedOn": "datetime",
+  "LastUpdatedBy": "string",
+  "LastUpdatedOn": "datetime"
+}

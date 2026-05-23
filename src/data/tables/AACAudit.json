@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "CallerIdentity": "dynamic",
+  "CallerIPAddress": "string",
+  "Category": "string",
+  "CorrelationId": "string",
+  "ETag": "string",
+  "EventCategory": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "RequestId": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "_SubscriptionId": "string",
+  "TargetResource": "dynamic",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

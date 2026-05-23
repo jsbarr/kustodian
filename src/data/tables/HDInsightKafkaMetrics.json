@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "ClusterName": "string",
+  "CorrelationId": "string",
+  "HostName": "string",
+  "_IsBillable": "string",
+  "MetricDataType": "string",
+  "MetricName": "string",
+  "MetricNamespace": "string",
+  "MetricValue": "real",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "Tags": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,8 @@
+{
+  "Timestamp": "datetime",
+  "NetworkMessageId": "string",
+  "Url": "string",
+  "UrlDomain": "string",
+  "UrlLocation": "string",
+  "ReportId": "string"
+}

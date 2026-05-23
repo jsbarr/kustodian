@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "Database": "string",
+  "IngestionSourceId": "string",
+  "IngestionSourcePath": "string",
+  "_IsBillable": "string",
+  "OperationId": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "RootActivityId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "SucceededOn": "datetime",
+  "Table": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

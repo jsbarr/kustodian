@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "Details": "string",
+  "HostName": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Message": "string",
+  "ModuleRuntimeVersion": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SiteName": "string",
+  "SourceSystem": "string",
+  "StatusCode": "int",
+  "_SubscriptionId": "string",
+  "SubStatusCode": "int",
+  "TaskName": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "DetailedMessage": "string",
+  "GroupMemberships": "dynamic",
+  "_IsBillable": "string",
+  "Location": "string",
+  "LogLevel": "string",
+  "Message": "string",
+  "NetworkResourceIds": "dynamic",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

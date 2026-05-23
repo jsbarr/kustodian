@@ -1,0 +1,21 @@
+{
+  "ActionName": "string",
+  "_BilledSize": "real",
+  "Category": "string",
+  "Identity": "string",
+  "_IsBillable": "string",
+  "LogId": "string",
+  "OperationName": "string",
+  "OperationVersion": "string",
+  "RequestId": "string",
+  "RequestParams": "string",
+  "ResourceId": "string",
+  "Response": "string",
+  "ServiceName": "string",
+  "SessionId": "string",
+  "SourceIPAddress": "string",
+  "SourceSystem": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserAgent": "string"
+}

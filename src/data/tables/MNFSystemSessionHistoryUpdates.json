@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "DiffTimeStamp": "long",
+  "EventCategory": "string",
+  "FabricId": "string",
+  "GnmiTimeStamp": "long",
+  "_IsBillable": "string",
+  "_ResourceId": "string",
+  "SessionDiffs": "string",
+  "SessionUpdateSessionId": "string",
+  "SessionUpdateSize": "long",
+  "SessionUpdateTimeStamp": "long",
+  "SessionUpdateUser": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

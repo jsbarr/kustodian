@@ -8,7 +8,7 @@ public class AnalyserTests
         Path.GetDirectoryName(typeof(AnalyserTests).Assembly.Location)!, "data");
 
     static readonly Dictionary<string, GlobalState> Environments =
-        EnvironmentLoader.Load(Path.Combine(DataDir, "environments"));
+        EnvironmentLoader.Load(DataDir);
 
     public static IEnumerable<object[]> TestCases()
     {

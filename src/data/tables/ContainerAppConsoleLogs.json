@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "ContainerAppName": "string",
+  "ContainerGroupId": "string",
+  "ContainerGroupName": "string",
+  "ContainerId": "string",
+  "ContainerImage": "string",
+  "ContainerName": "string",
+  "EnvironmentName": "string",
+  "_IsBillable": "string",
+  "JobName": "string",
+  "Location": "string",
+  "Log": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "RevisionName": "string",
+  "SourceSystem": "string",
+  "Stream": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

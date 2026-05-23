@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "DataFactoryName": "string",
+  "IntegrationRuntimeName": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

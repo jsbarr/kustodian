@@ -1,0 +1,19 @@
+{
+  "ActivityId": "string",
+  "ActivityName": "string",
+  "_BilledSize": "real",
+  "EntityName": "string",
+  "EntityType": "string",
+  "ErrorCount": "int",
+  "ErrorMessage": "string",
+  "_IsBillable": "string",
+  "NamespaceName": "string",
+  "OperationResult": "string",
+  "Provider": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

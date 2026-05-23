@@ -1,0 +1,19 @@
+{
+  "ApplicationId": "string",
+  "_BilledSize": "real",
+  "ClusterDnsName": "string",
+  "ClusterTenantId": "string",
+  "EventJson": "string",
+  "Host": "string",
+  "IpAddress": "string",
+  "_IsBillable": "string",
+  "Region": "string",
+  "_ResourceId": "string",
+  "Role": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserSubscriptionId": "string"
+}

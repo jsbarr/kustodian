@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "EngagementContext": "string",
+  "EngagementType": "string",
+  "InternetMessageId": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "OperationVersion": "string",
+  "RecipientId": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserAgent": "string"
+}

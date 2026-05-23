@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "Error": "string",
+  "Fqdn": "string",
+  "_IsBillable": "string",
+  "Policy": "string",
+  "_ResourceId": "string",
+  "Rule": "string",
+  "RuleCollection": "string",
+  "RuleCollectionGroup": "string",
+  "ServerIp": "string",
+  "ServerPort": "int",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

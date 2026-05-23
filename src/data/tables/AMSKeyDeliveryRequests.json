@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "DurationMs": "int",
+  "_IsBillable": "string",
+  "KeyId": "string",
+  "KeyType": "string",
+  "Level": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "OperationVersion": "string",
+  "PolicyName": "string",
+  "RequestId": "string",
+  "_ResourceId": "string",
+  "ResultSignature": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "StatusMessage": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TokenType": "string",
+  "Type": "string"
+}

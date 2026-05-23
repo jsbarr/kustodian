@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "ErrorCode": "string",
+  "EventSourceProperties": "dynamic",
+  "EventSourceType": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultDescription": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

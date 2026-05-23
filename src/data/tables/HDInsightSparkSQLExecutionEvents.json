@@ -1,0 +1,23 @@
+{
+  "ApplicationId": "string",
+  "_BilledSize": "real",
+  "ClusterDnsName": "string",
+  "ClusterTenantId": "string",
+  "EndTime": "datetime",
+  "ExecutionId": "string",
+  "Host": "string",
+  "IpAddress": "string",
+  "_IsBillable": "string",
+  "PhysicalPlanDescription": "string",
+  "Region": "string",
+  "_ResourceId": "string",
+  "Role": "string",
+  "SourceSystem": "string",
+  "SparkPlanInfo": "string",
+  "StartTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserSubscriptionId": "string"
+}

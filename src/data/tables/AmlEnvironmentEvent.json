@@ -1,0 +1,15 @@
+{
+  "AadTenantId": "string",
+  "AmlEnvironmentName": "string",
+  "AmlEnvironmentVersion": "string",
+  "_BilledSize": "real",
+  "Identity": "dynamic",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

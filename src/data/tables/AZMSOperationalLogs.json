@@ -1,0 +1,16 @@
+{
+  "ActivityId": "string",
+  "_BilledSize": "real",
+  "Caller": "string",
+  "EventName": "string",
+  "EventProperties": "dynamic",
+  "_IsBillable": "string",
+  "Provider": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

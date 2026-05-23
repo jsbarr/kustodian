@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "FilePath": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "MetricUnit": "string",
+  "OperationName": "string",
+  "OperationVersion": "string",
+  "Properties": "dynamic",
+  "Quantity": "real",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TopDimension": "string",
+  "TopMetric": "string",
+  "Type": "string",
+  "VolumeName": "string"
+}

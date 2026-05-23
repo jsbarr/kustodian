@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "ModifiedPlayerId": "string",
+  "OperationName": "string",
+  "OperationType": "string",
+  "PlayFabPlayerAccountPoolId": "string",
+  "PlayFabTitleId": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserId": "string",
+  "UserName": "string"
+}

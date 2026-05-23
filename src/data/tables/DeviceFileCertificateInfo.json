@@ -1,0 +1,20 @@
+{
+  "Timestamp": "datetime",
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "SHA1": "string",
+  "IsSigned": "bool",
+  "SignatureType": "string",
+  "Signer": "string",
+  "SignerHash": "string",
+  "Issuer": "string",
+  "IssuerHash": "string",
+  "CertificateSerialNumber": "string",
+  "CrlDistributionPointUrls": "string",
+  "CertificateCreationTime": "datetime",
+  "CertificateExpirationTime": "datetime",
+  "CertificateCountersignatureTime": "datetime",
+  "IsTrusted": "bool",
+  "IsRootSignerMicrosoft": "bool",
+  "ReportId": "long"
+}

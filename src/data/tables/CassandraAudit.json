@@ -1,0 +1,20 @@
+{
+  "BatchId": "string",
+  "_BilledSize": "real",
+  "ClientIP": "string",
+  "ClientPort": "string",
+  "ClusterName": "string",
+  "CoordinatorIP": "string",
+  "ExternalUserId": "string",
+  "_IsBillable": "string",
+  "Operation": "string",
+  "OperationNaked": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "User": "string"
+}

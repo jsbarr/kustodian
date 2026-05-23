@@ -1,0 +1,23 @@
+{
+  "ActivityId": "string",
+  "ApimClient": "string",
+  "_BilledSize": "real",
+  "Category": "string",
+  "HashedUserId": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "Region": "string",
+  "RequestMethod": "string",
+  "RequestPath": "string",
+  "_ResourceId": "string",
+  "ResponseCode": "int",
+  "ResultType": "string",
+  "ServiceName": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserAgent": "string",
+  "Version": "string"
+}

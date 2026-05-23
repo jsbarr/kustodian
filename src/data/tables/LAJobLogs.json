@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "Destination": "dynamic",
+  "_IsBillable": "string",
+  "JobId": "string",
+  "JobType": "string",
+  "Message": "string",
+  "_ResourceId": "string",
+  "ResultsGB": "real",
+  "ResultsRecordCount": "long",
+  "SourceSystem": "string",
+  "SourceTable": "string",
+  "Status": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

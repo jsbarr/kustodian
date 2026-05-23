@@ -1,0 +1,20 @@
+{
+  "_BilledSize": "real",
+  "Computer": "string",
+  "DnsSecSigned": "string",
+  "DomainName": "string",
+  "DynamicUpdate": "string",
+  "ForestName": "string",
+  "_IsBillable": "string",
+  "NameServers": "string",
+  "_ResourceId": "string",
+  "ResourceRecordName": "string",
+  "ResourceRecordType": "string",
+  "ServerIPs": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "SubType": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "ZoneName": "string"
+}

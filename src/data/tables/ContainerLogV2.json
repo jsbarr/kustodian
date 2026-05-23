@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "Computer": "string",
+  "ContainerId": "string",
+  "ContainerName": "string",
+  "_IsBillable": "string",
+  "KubernetesMetadata": "dynamic",
+  "LogLevel": "string",
+  "LogMessage": "dynamic",
+  "LogSource": "string",
+  "PodName": "string",
+  "PodNamespace": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "CurrentMonitorState": "string",
+  "CurrentStateFirstObservedTimestamp": "datetime",
+  "EvaluationTimestamp": "datetime",
+  "Evidence": "dynamic",
+  "ImpactStartTimestamp": "datetime",
+  "InstrumentationData": "dynamic",
+  "_IsBillable": "string",
+  "MonitorConfiguration": "dynamic",
+  "MonitoredObject": "string",
+  "MonitorName": "string",
+  "MonitorResourceId": "string",
+  "MonitorType": "string",
+  "ParentMonitorName": "string",
+  "PreviousMonitorState": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

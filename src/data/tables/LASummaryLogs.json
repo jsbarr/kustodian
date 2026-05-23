@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "BinSize": "int",
+  "BinStartTime": "datetime",
+  "_IsBillable": "string",
+  "Message": "string",
+  "QueryDurationMs": "long",
+  "_ResourceId": "string",
+  "ResultsRecordCount": "long",
+  "RuleLastModifiedTime": "datetime",
+  "RuleName": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "DatabaseName": "string",
+  "DeltaMaxWaitTimeMs": "real",
+  "DeltaSignalWaitTimeMs": "real",
+  "DeltaWaitingTasksCount": "int",
+  "DeltaWaitTimeMs": "real",
+  "ElasticPoolName": "string",
+  "EndUtcDate": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "OperationName": "string",
+  "ResourceGroup": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StartUtcDate": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "WaitType": "string"
+}

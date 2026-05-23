@@ -1,7 +1,8 @@
 using System.Text.Json;
 
-var path = Path.Combine(Path.GetDirectoryName(typeof(EnvironmentLoader).Assembly.Location)!, "environments");
-var environments = EnvironmentLoader.Load(path);
+var baseDir = Path.Combine(Path.GetDirectoryName(typeof(EnvironmentLoader).Assembly.Location)!, "data");
+var overrideDir = Environment.GetEnvironmentVariable("KUSTODIAN_DATA_DIR");
+var environments = EnvironmentLoader.Load(baseDir, overrideDir);
 
 var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 

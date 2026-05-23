@@ -1,0 +1,23 @@
+{
+  "ActivityId": "string",
+  "AgentVersion": "string",
+  "_BilledSize": "real",
+  "CloudPcId": "string",
+  "DevBoxName": "string",
+  "_IsBillable": "string",
+  "LastHeartBeat": "datetime",
+  "NicResourceId": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SessionHostHealthCheckResult": "dynamic",
+  "SessionHostName": "string",
+  "SessionHostResourceId": "string",
+  "SourceSystem": "string",
+  "Status": "string",
+  "SubnetResourceId": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UpgradeState": "string"
+}

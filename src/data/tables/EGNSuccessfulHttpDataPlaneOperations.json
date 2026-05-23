@@ -1,0 +1,18 @@
+{
+  "AuthenticationType": "string",
+  "_BilledSize": "real",
+  "CallerIpAddress": "string",
+  "_IsBillable": "string",
+  "NetworkAccess": "string",
+  "ObjectId": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TLSVersion": "string",
+  "TotalOperations": "string",
+  "Type": "string"
+}

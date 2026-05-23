@@ -1,0 +1,8 @@
+{
+  "Timestamp": "datetime",
+  "TeamsMessageId": "string",
+  "Url": "string",
+  "UrlDomain": "string",
+  "ThreatTypes": "string",
+  "ReportId": "string"
+}

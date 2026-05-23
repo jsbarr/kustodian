@@ -1,0 +1,21 @@
+{
+  "ApplicationName": "string",
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "DatabaseName": "string",
+  "_IsBillable": "string",
+  "MaxCreatedOn": "datetime",
+  "MinCreatedOn": "datetime",
+  "OperationName": "string",
+  "Principal": "string",
+  "_ResourceId": "string",
+  "RootActivityId": "string",
+  "SourceSystem": "string",
+  "StartedOn": "datetime",
+  "_SubscriptionId": "string",
+  "TableName": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "User": "string"
+}

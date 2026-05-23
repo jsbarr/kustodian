@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "ClusterId": "string",
+  "ClusterIp": "string",
+  "ClusterName": "string",
+  "_IsBillable": "string",
+  "Namespace": "string",
+  "_ResourceId": "string",
+  "SelectorLabels": "string",
+  "ServiceName": "string",
+  "ServiceType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

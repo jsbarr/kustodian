@@ -1,0 +1,21 @@
+{
+  "Authentication": "string",
+  "_BilledSize": "real",
+  "CacheName": "string",
+  "ClientId": "string",
+  "ClientName": "string",
+  "IpAddress": "string",
+  "_IsBillable": "string",
+  "Lifetime": "string",
+  "Location": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "RoleInstance": "int",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "Username": "string"
+}

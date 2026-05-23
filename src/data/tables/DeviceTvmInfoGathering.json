@@ -1,0 +1,8 @@
+{
+  "Timestamp": "datetime",
+  "LastSeenTime": "datetime",
+  "DeviceId": "string",
+  "DeviceName": "string",
+  "OSPlatform": "string",
+  "AdditionalFields": "dynamic"
+}

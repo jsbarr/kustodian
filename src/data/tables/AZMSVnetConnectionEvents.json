@@ -1,0 +1,16 @@
+{
+  "Action": "string",
+  "AddressIp": "string",
+  "_BilledSize": "real",
+  "Count": "int",
+  "_IsBillable": "string",
+  "Message": "string",
+  "NamespaceName": "string",
+  "Provider": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

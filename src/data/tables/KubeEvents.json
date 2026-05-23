@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "ClusterId": "string",
+  "ClusterName": "string",
+  "Computer": "string",
+  "Count": "real",
+  "FirstSeen": "datetime",
+  "_IsBillable": "string",
+  "KubeEventType": "string",
+  "LastSeen": "datetime",
+  "Message": "string",
+  "Name": "string",
+  "Namespace": "string",
+  "ObjectKind": "string",
+  "Reason": "string",
+  "_ResourceId": "string",
+  "SourceComponent": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

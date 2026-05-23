@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "BufferSize": "int",
+  "EventType": "string",
+  "_IsBillable": "string",
+  "Name": "string",
+  "operationName": "string",
+  "operationVersion": "string",
+  "RData": "string",
+  "RecordId": "string",
+  "_ResourceId": "string",
+  "resultDescription": "string",
+  "Source": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Ttl": "int",
+  "Type": "string",
+  "Zone": "string",
+  "ZoneScope": "string"
+}

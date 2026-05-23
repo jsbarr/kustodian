@@ -1,0 +1,15 @@
+{
+  "AvailableFirmwareVersion": "string",
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "CurrentFirmwareVersion": "string",
+  "Description": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

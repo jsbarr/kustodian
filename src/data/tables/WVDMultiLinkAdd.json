@@ -1,0 +1,22 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "ClientNatIP": "string",
+  "ClientTransportIP": "string",
+  "ClientTransportType": "string",
+  "ClientTURNIP": "string",
+  "CorrelationId": "string",
+  "GatewayRegion": "string",
+  "_IsBillable": "string",
+  "LinkId": "string",
+  "_ResourceId": "string",
+  "ServerNatIP": "string",
+  "ServerTransportIP": "string",
+  "ServerTransportType": "string",
+  "ServerTURNIP": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

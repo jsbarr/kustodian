@@ -1,0 +1,14 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "IsSessionHostPrivateLink": "string",
+  "_ResourceId": "string",
+  "SessionHostIPAddress": "string",
+  "SessionHostName": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

@@ -1,0 +1,20 @@
+{
+  "Timestamp": "datetime",
+  "ReportId": "string",
+  "AccountId": "string",
+  "AccountType": "string",
+  "AccountDisplayName": "string",
+  "AccountUpn": "string",
+  "ActionType": "string",
+  "ActionResult": "string",
+  "ActionFailureReason": "string",
+  "IPAddress": "string",
+  "UserAgent": "string",
+  "TargetObjects": "dynamic",
+  "Application": "string",
+  "ApplicationInstanceId": "string",
+  "ApplicationEventId": "string",
+  "ApplicationSessionId": "string",
+  "RawEventData": "dynamic",
+  "AdditionalFields": "dynamic"
+}

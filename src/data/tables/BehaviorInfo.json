@@ -1,0 +1,18 @@
+{
+  "Timestamp": "datetime",
+  "BehaviorId": "string",
+  "Title": "string",
+  "Description": "string",
+  "Categories": "string",
+  "AttackTechniques": "string",
+  "ServiceSource": "string",
+  "DetectionSource": "string",
+  "DataSources": "string",
+  "DeviceId": "string",
+  "AccountUpn": "string",
+  "AccountObjectId": "string",
+  "StartTime": "datetime",
+  "EndTime": "datetime",
+  "AdditionalFields": "string",
+  "ActionType": "string"
+}

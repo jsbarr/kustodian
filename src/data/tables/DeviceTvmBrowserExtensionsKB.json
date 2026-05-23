@@ -1,0 +1,13 @@
+{
+  "BrowserName": "string",
+  "ExtensionId": "string",
+  "ExtensionName": "string",
+  "ExtensionDescription": "string",
+  "ExtensionVersion": "dynamic",
+  "ExtensionRisk": "string",
+  "PermissionId": "string",
+  "PermissionName": "string",
+  "PermissionDescription": "string",
+  "PermissionRisk": "string",
+  "IsPermissionRequired": "string"
+}

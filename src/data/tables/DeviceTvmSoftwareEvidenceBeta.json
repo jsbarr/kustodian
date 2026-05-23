@@ -1,0 +1,9 @@
+{
+  "DeviceId": "string",
+  "SoftwareVendor": "string",
+  "SoftwareName": "string",
+  "SoftwareVersion": "string",
+  "RegistryPaths": "dynamic",
+  "DiskPaths": "dynamic",
+  "LastSeenTime": "string"
+}

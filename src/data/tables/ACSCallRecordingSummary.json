@@ -1,0 +1,23 @@
+{
+  "AudioChannelsCount": "int",
+  "_BilledSize": "real",
+  "ChannelType": "string",
+  "ChunkCount": "int",
+  "ContentType": "string",
+  "CorrelationId": "string",
+  "FormatType": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "OperationName": "string",
+  "RecordingEndReason": "string",
+  "RecordingId": "string",
+  "RecordingLength": "real",
+  "RecordingStartTime": "datetime",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

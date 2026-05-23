@@ -1,0 +1,12 @@
+{
+  "ConfigurationId": "string",
+  "ConfigurationImpact": "real",
+  "ConfigurationName": "string",
+  "ConfigurationDescription": "string",
+  "RiskDescription": "string",
+  "ConfigurationCategory": "string",
+  "ConfigurationSubcategory": "string",
+  "ConfigurationBenchmarks": "dynamic",
+  "Tags": "dynamic",
+  "RemediationOptions": "string"
+}

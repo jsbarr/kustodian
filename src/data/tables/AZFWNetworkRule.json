@@ -1,0 +1,21 @@
+{
+  "Action": "string",
+  "ActionReason": "string",
+  "_BilledSize": "real",
+  "DestinationIp": "string",
+  "DestinationPort": "int",
+  "_IsBillable": "string",
+  "Policy": "string",
+  "Protocol": "string",
+  "_ResourceId": "string",
+  "Rule": "string",
+  "RuleCollection": "string",
+  "RuleCollectionGroup": "string",
+  "SourceIp": "string",
+  "SourcePort": "int",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

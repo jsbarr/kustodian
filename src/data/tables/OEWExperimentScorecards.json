@@ -1,0 +1,18 @@
+{
+  "AllocationId": "string",
+  "AnalysisEndTime": "datetime",
+  "AnalysisStartTime": "datetime",
+  "_BilledSize": "real",
+  "FeatureFlagReference": "string",
+  "FeatureName": "string",
+  "Insights": "dynamic",
+  "_IsBillable": "string",
+  "Label": "string",
+  "_ResourceId": "string",
+  "ScorecardId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

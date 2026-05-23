@@ -1,0 +1,4 @@
+{
+  "paramSignature": "n:long, factor:long",
+  "body": "n * factor"
+}

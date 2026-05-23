@@ -1,0 +1,17 @@
+{
+  "AuditsDiscarded": "int",
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "RecordId": "string",
+  "ResourceId": "string",
+  "_ResourceId": "string",
+  "ResultDescription": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

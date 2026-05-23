@@ -1,0 +1,8 @@
+{
+  "NodeId": "string",
+  "NodeLabel": "string",
+  "NodeName": "string",
+  "Categories": "dynamic",
+  "NodeProperties": "dynamic",
+  "EntityIds": "dynamic"
+}

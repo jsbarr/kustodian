@@ -1,0 +1,18 @@
+{
+  "AssetName": "string",
+  "AssetVersion": "string",
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "_IsBillable": "string",
+  "Labels": "string",
+  "RegistryResourceId": "string",
+  "RegistryTenantId": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UserName": "string",
+  "UserObjectId": "string"
+}

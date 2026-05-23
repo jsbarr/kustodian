@@ -1,0 +1,19 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "_IsBillable": "string",
+  "LockType": "string",
+  "LogicalServerName": "string",
+  "OperationName": "string",
+  "Priority": "int",
+  "RequestId": "string",
+  "ResourceGroup": "string",
+  "_ResourceId": "string",
+  "SessionId": "string",
+  "SourceSystem": "string",
+  "State": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

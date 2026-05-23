@@ -1,0 +1,21 @@
+{
+  "_BilledSize": "real",
+  "CallerIpAddress": "string",
+  "DurationMs": "string",
+  "Headers": "string",
+  "HttpMethod": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "Message": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StatusCode": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "TraceId": "string",
+  "Type": "string",
+  "Url": "string"
+}

@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "Identity": "dynamic",
+  "_IsBillable": "string",
+  "Level": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "ResultType": "string",
+  "SourceSystem": "string",
+  "StatusCode": "int",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "Uri": "string"
+}

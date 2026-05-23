@@ -1,0 +1,22 @@
+{
+  "Action": "string",
+  "ActionReason": "string",
+  "ApplicationRuleCount": "int",
+  "_BilledSize": "real",
+  "DestinationPort": "int",
+  "Fqdn": "string",
+  "_IsBillable": "string",
+  "Policy": "string",
+  "Protocol": "string",
+  "_ResourceId": "string",
+  "Rule": "string",
+  "RuleCollection": "string",
+  "RuleCollectionGroup": "string",
+  "SourceIp": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TargetUrl": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

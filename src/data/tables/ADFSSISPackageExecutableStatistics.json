@@ -1,0 +1,23 @@
+{
+  "_BilledSize": "real",
+  "Category": "string",
+  "CorrelationId": "string",
+  "DataFactoryName": "string",
+  "EndTime": "datetime",
+  "ExecutionDuration": "int",
+  "ExecutionId": "long",
+  "ExecutionPath": "string",
+  "ExecutionResult": "int",
+  "ExecutionValue": "dynamic",
+  "IntegrationRuntimeName": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "StartTime": "datetime",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

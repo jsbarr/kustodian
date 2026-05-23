@@ -1,0 +1,18 @@
+{
+  "_BilledSize": "real",
+  "CorrelationId": "string",
+  "DurationMs": "real",
+  "EventBody": "dynamic",
+  "EventId": "string",
+  "EventType": "string",
+  "_IsBillable": "string",
+  "OperationName": "string",
+  "RequestId": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "SupplyChainResourceType": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}

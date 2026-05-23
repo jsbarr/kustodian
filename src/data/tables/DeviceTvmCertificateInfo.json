@@ -1,0 +1,16 @@
+{
+  "DeviceId": "string",
+  "Thumbprint": "string",
+  "Path": "string",
+  "SerialNumber": "string",
+  "IssuedTo": "dynamic",
+  "IssuedBy": "dynamic",
+  "FriendlyName": "string",
+  "SignatureAlgorithm": "string",
+  "KeySize": "string",
+  "ExpirationDate": "string",
+  "IssueDate": "string",
+  "SubjectType": "string",
+  "KeyUsage": "string",
+  "ExtendedKeyUsage": "string"
+}

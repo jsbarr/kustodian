@@ -1,0 +1,23 @@
+{
+  "ActivityId": "string",
+  "_BilledSize": "real",
+  "ClientType": "string",
+  "ClientVersion": "string",
+  "CloudPcId": "string",
+  "DevBoxName": "string",
+  "_IsBillable": "string",
+  "NicResourceId": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SessionHostName": "string",
+  "SessionHostPoolType": "string",
+  "SessionHostResourceId": "string",
+  "SourceSystem": "string",
+  "State": "string",
+  "SubnetResourceId": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UdpType": "string"
+}

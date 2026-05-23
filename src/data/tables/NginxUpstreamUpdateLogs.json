@@ -1,0 +1,17 @@
+{
+  "_BilledSize": "real",
+  "Context": "string",
+  "Error": "string",
+  "_IsBillable": "string",
+  "Level": "string",
+  "Location": "string",
+  "Message": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "Tag": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string",
+  "UpstreamName": "string"
+}

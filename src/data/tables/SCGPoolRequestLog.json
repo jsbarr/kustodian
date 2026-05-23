@@ -1,0 +1,16 @@
+{
+  "_BilledSize": "real",
+  "EventName": "string",
+  "_IsBillable": "string",
+  "Location": "string",
+  "NewMaxCapacity": "int",
+  "NewMinCapacity": "int",
+  "NewResourceState": "string",
+  "OperationName": "string",
+  "_ResourceId": "string",
+  "SourceSystem": "string",
+  "_SubscriptionId": "string",
+  "TenantId": "string",
+  "TimeGenerated": "datetime",
+  "Type": "string"
+}
