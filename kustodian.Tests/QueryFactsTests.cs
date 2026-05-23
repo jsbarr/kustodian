@@ -62,4 +62,98 @@ public class QueryFactsTests
         Assert.Contains(facts.Output, c => c.Name == "A");
         Assert.Contains(facts.Output, c => c.Name == "B");
     }
+
+    static GlobalState TwoTableEnv() =>
+        GlobalState.Default.WithDatabase(new DatabaseSymbol("db",
+            new TableSymbol("DeviceEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String),
+                new ColumnSymbol("FileName", ScalarTypes.String)),
+            new TableSymbol("DeviceFileEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String))));
+
+    static GlobalState ThreeTableEnv() =>
+        GlobalState.Default.WithDatabase(new DatabaseSymbol("db",
+            new TableSymbol("DeviceEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String),
+                new ColumnSymbol("FileName", ScalarTypes.String)),
+            new TableSymbol("DeviceProcessEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String),
+                new ColumnSymbol("FileName", ScalarTypes.String)),
+            new TableSymbol("DeviceFileEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String))));
+
+    const string UnionLookupQuery =
+        "let ExtraData = DeviceFileEvents | summarize Count=count() by DeviceId;\n" +
+        "let Subsearch1 = DeviceEvents | where FileName=~\"evil.exe\" | lookup ExtraData on DeviceId;\n" +
+        "let Subsearch2 = DeviceProcessEvents | where FileName=~\"evil.exe\" | lookup ExtraData on DeviceId;\n" +
+        "union Subsearch1, Subsearch2";
+
+    [Fact]
+    public void Build_UnionOfLookups_NonKeyColumnTracesAllUnionBranches()
+    {
+        var globals = ThreeTableEnv();
+        var facts = QueryFacts.Build(UnionLookupQuery, globals);
+
+        var fileName = facts.Columns.Single(c => c.Name == "FileName");
+        var sourceTableNames = facts.SourceMap[fileName]
+            .Select(c => globals.GetTable(c)?.Name)
+            .ToHashSet();
+
+        Assert.Contains("DeviceEvents", sourceTableNames);
+        Assert.Contains("DeviceProcessEvents", sourceTableNames);
+    }
+
+    [Fact]
+    public void Build_UnionOfLookups_KeyColumnTracesAllLeftSideSources()
+    {
+        var globals = ThreeTableEnv();
+        var facts = QueryFacts.Build(UnionLookupQuery, globals);
+
+        var deviceId = facts.Columns.Single(c => c.Name == "DeviceId");
+        var sourceTableNames = facts.SourceMap[deviceId]
+            .Select(c => globals.GetTable(c)?.Name)
+            .ToHashSet();
+
+        Assert.Contains("DeviceEvents", sourceTableNames);
+        Assert.Contains("DeviceProcessEvents", sourceTableNames);
+        Assert.DoesNotContain("DeviceFileEvents", sourceTableNames);
+    }
+
+    const string LookupQuery =
+        "let ExtraData = DeviceFileEvents | summarize Count=count() by DeviceId;\n" +
+        "DeviceEvents | where FileName =~ \"evil.exe\" | lookup ExtraData on DeviceId";
+
+    [Fact]
+    public void Build_LookupKeyColumn_ProvenanceTracesOnlyLeftSide()
+    {
+        var globals = TwoTableEnv();
+        var facts = QueryFacts.Build(LookupQuery, globals);
+
+        var deviceId = facts.Columns.Single(c => c.Name == "DeviceId");
+        var sources = facts.SourceMap[deviceId];
+
+        Assert.Single(sources);
+        Assert.Equal("DeviceEvents", globals.GetTable(sources[0])?.Name);
+    }
+
+    [Fact]
+    public void Build_LookupKeyColumn_NoProvenanceNodeAtQueryStart()
+    {
+        // Without the position fix, the intermediate ExtraData.DeviceId node (colInfo=null)
+        // defaults to position 0 ("let" keyword), causing a misaligned highlight in the UI.
+        var globals = TwoTableEnv();
+        var facts = QueryFacts.Build(LookupQuery, globals);
+
+        var allNodes = facts.Output.SelectMany(c => AllProvenanceNodes(c.Provenance));
+        Assert.DoesNotContain(allNodes, n => n.Position?.Abs == 0);
+    }
+
+    static IEnumerable<ProvenanceNode> AllProvenanceNodes(ProvenanceNode? node)
+    {
+        if (node == null) yield break;
+        yield return node;
+        foreach (var src in node.Sources ?? [])
+            foreach (var n in AllProvenanceNodes(src))
+                yield return n;
+    }
 }

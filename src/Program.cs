@@ -9,7 +9,13 @@ var jsonOptions = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingP
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapGet("/health", () => Results.Ok());
+
+app.MapGet("/environments", () =>
+    Results.Json(environments.Keys.OrderBy(k => k).ToArray(), jsonOptions));
 
 app.MapPost("/analyse", (AnalyseRequest req) =>
 {
