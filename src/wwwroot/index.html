@@ -4,265 +4,801 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kustodian</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
+    /* ── Tokens ────────────────────────────────────────────── */
+    :root {
+      --bg:           #f4f3ef;
+      --bg-elevated:  #fbfaf7;
+      --panel:        #ffffff;
+      --panel-2:      #f7f6f2;
+      --border:       #e4e2dc;
+      --border-soft:  #ecebe6;
+      --text:         #1c1d22;
+      --text-2:       #4a4d56;
+      --text-3:       #8a8d96;
+      --accent:       #4361ee;
+      --accent-soft:  #e6ebff;
+      --accent-fg:    #ffffff;
+
+      --err:          #c5314a;
+      --err-bg:       #fbe6ea;
+      --err-border:   #f1b9c4;
+      --warn:         #b46210;
+      --warn-bg:      #fbeed3;
+      --warn-border:  #f0d094;
+      --ok:           #2f7a4a;
+
+      --hl-syntax:    #f5b7c0;
+      --hl-naming:    #f3df9a;
+      --hl-prov-1:    #b8cbf5;  /* blue */
+      --hl-prov-2:    #b8e0c4;  /* green */
+      --hl-prov-3:    #f5cf9a;  /* orange */
+
+      --radius:       12px;
+      --radius-sm:    8px;
+      --radius-xs:    6px;
+      --shadow-sm:    0 1px 2px rgba(20,22,28,0.04);
+      --shadow:       0 1px 3px rgba(20,22,28,0.05), 0 4px 12px rgba(20,22,28,0.04);
+
+      --font-ui:      'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-mono:    'JetBrains Mono', 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    }
+
+    [data-theme="dark"] {
+      --bg:           #0d1016;
+      --bg-elevated:  #11141b;
+      --panel:        #161a22;
+      --panel-2:      #1a1f29;
+      --border:       #262c38;
+      --border-soft:  #1f242e;
+      --text:         #e8eaf0;
+      --text-2:       #a8adb9;
+      --text-3:       #6b7180;
+      --accent:       #7b91ff;
+      --accent-soft:  #1e2540;
+      --accent-fg:    #0d1016;
+
+      --err:          #ff7e92;
+      --err-bg:       #2d1820;
+      --err-border:   #5a2330;
+      --warn:         #f0b25e;
+      --warn-bg:      #2a200f;
+      --warn-border:  #5a4320;
+      --ok:           #6dd897;
+
+      --hl-syntax:    #6b2331;
+      --hl-naming:    #5a4316;
+      --hl-prov-1:    #2a3a6b;
+      --hl-prov-2:    #1f4a30;
+      --hl-prov-3:    #5a3a15;
+
+      --shadow-sm:    0 1px 2px rgba(0,0,0,0.3);
+      --shadow:       0 1px 3px rgba(0,0,0,0.25), 0 8px 24px rgba(0,0,0,0.25);
+    }
+
+    /* ── Reset & base ─────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html, body { height: 100%; }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: var(--font-ui);
       font-size: 14px;
-      background: #f5f5f5;
-      color: #212121;
-      min-height: 100vh;
+      line-height: 1.5;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      transition: background-color 0.2s ease, color 0.2s ease;
     }
 
+    /* ── Header ───────────────────────────────────────────── */
     header {
-      background: #1565C0;
-      color: #fff;
-      padding: 12px 24px;
-      font-size: 18px;
+      background: var(--bg-elevated);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: -0.01em;
+    }
+
+    .brand-mark {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, var(--accent), color-mix(in oklch, var(--accent) 65%, #7b3fdf));
+      display: grid;
+      place-items: center;
+      color: white;
+      font-family: var(--font-mono);
+      font-size: 12px;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      box-shadow: 0 1px 3px rgba(67,97,238,0.35);
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-toggle {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text-2);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: all 0.15s;
+    }
+    .theme-toggle:hover { color: var(--text); border-color: var(--text-3); background: var(--panel-2); }
+    .theme-toggle svg { width: 16px; height: 16px; }
+    .theme-toggle .sun { display: none; }
+    [data-theme="dark"] .theme-toggle .sun { display: block; }
+    [data-theme="dark"] .theme-toggle .moon { display: none; }
+
+    /* ── Layout ───────────────────────────────────────────── */
     main {
-      max-width: 1100px;
-      margin: 24px auto;
-      padding: 0 24px;
+      max-width: 1480px;
+      margin: 0 auto;
+      padding: 24px 28px 60px;
     }
 
-    /* ── Form ── */
-
-    .form-card {
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 20px;
-      margin-bottom: 24px;
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 380px;
+      gap: 20px;
+      align-items: start;
     }
 
-    .form-row { display: flex; gap: 16px; margin-bottom: 14px; align-items: flex-end; }
-    .form-field { display: flex; flex-direction: column; gap: 5px; }
-    .form-field.grow { flex: 1; }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+    }
 
-    label { font-weight: 600; font-size: 13px; color: #424242; }
+    .main-col { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+    .side-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; position: sticky; top: 80px; }
 
-    textarea, input[type=text], select {
+    @media (max-width: 900px) {
+      .side-col { position: static; }
+    }
+
+    /* ── Card ─────────────────────────────────────────────── */
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-soft);
+      gap: 12px;
+    }
+
+    /* Collapsible card */
+    .card-header.is-toggle {
+      cursor: pointer;
+      user-select: none;
+      background: transparent;
+      border: none;
+      width: 100%;
+      font-family: inherit;
+      text-align: left;
+      transition: background 0.15s;
+    }
+    .card-header.is-toggle:hover { background: var(--panel-2); }
+    .card.is-collapsed .card-header { border-bottom-color: transparent; }
+    .card.is-collapsed .card-body { display: none; }
+
+    .chevron {
+      width: 16px;
+      height: 16px;
+      color: var(--text-3);
+      transition: transform 0.2s ease;
+      flex-shrink: 0;
+    }
+    .card.is-collapsed .chevron { transform: rotate(-90deg); }
+
+    .header-main { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .header-summary {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .header-summary .pill { font-size: 11px; }
+    .card:not(.is-collapsed) .header-summary { display: none; }
+
+    .card-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .card-body { padding: 18px; }
+    .card-body.flush { padding: 0; }
+
+    /* ── Form ─────────────────────────────────────────────── */
+    .form-grid { display: flex; flex-direction: column; gap: 14px; }
+
+    .form-field { display: flex; flex-direction: column; gap: 6px; }
+    .form-field.grow { flex: 1; min-width: 0; }
+
+    label {
+      font-weight: 500;
+      font-size: 12px;
+      color: var(--text-2);
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+    }
+    label .optional { color: var(--text-3); font-weight: 400; font-size: 11px; }
+
+    input[type=text], select, textarea {
       font-family: inherit;
       font-size: 13px;
-      border: 1px solid #bdbdbd;
-      border-radius: 4px;
-      padding: 7px 10px;
+      color: var(--text);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 9px 12px;
       outline: none;
-      transition: border-color 0.15s;
-      background: #fff;
-      color: #212121;
+      transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+      width: 100%;
     }
-    textarea:focus, input[type=text]:focus, select:focus { border-color: #1565C0; }
-
-    #query { width: 100%; resize: vertical; font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 13px; min-height: 140px; }
-
-    button[type=submit] {
-      background: #1565C0;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 22px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.15s;
-      white-space: nowrap;
-    }
-    button[type=submit]:hover { background: #0D47A1; }
-    button[type=submit]:disabled { background: #90A4AE; cursor: default; }
-
-    /* ── Banners ── */
-
-    .banner {
-      padding: 10px 14px;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      font-weight: 600;
-      font-size: 13px;
-    }
-    .banner-error { background: #FFCDD2; color: #B71C1C; border-left: 4px solid #C62828; }
-    .banner-warn  { background: #FFE0B2; color: #E65100; border-left: 4px solid #EF6C00; }
-
-    /* ── Results ── */
-
-    #results { display: none; }
-    #results.visible { display: block; }
-
-    .results-card {
-      background: #fff;
-      border: 1px solid #e0e0e0;
-      border-radius: 6px;
-      padding: 20px;
-      margin-bottom: 20px;
+    input[type=text]:hover, select:hover, textarea:hover { border-color: var(--text-3); }
+    input[type=text]:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+      background: var(--panel);
     }
 
-    .section-title {
-      font-size: 13px;
-      font-weight: 700;
-      color: #424242;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 10px;
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M3 5l3 3 3-3' stroke='%238a8d96' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      padding-right: 30px;
     }
 
-    /* ── Query display ── */
-
-    #query-display {
-      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+    #query {
+      font-family: var(--font-mono);
       font-size: 13px;
       line-height: 1.6;
+      min-height: 160px;
+      resize: vertical;
+      tab-size: 2;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 160px 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+    @media (max-width: 720px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn {
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      border-radius: var(--radius-sm);
+      padding: 9px 18px;
+      cursor: pointer;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      height: 36px;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--accent-fg);
+      box-shadow: 0 1px 2px rgba(67,97,238,0.2);
+    }
+    .btn-primary:hover { background: color-mix(in oklch, var(--accent) 88%, black); box-shadow: 0 2px 6px rgba(67,97,238,0.28); }
+    .btn-primary:active { transform: translateY(0.5px); }
+    .btn-primary:disabled { background: var(--text-3); box-shadow: none; cursor: default; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-2);
+      border-color: var(--border);
+      padding: 6px 10px;
+      height: 28px;
+      font-size: 12px;
+    }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text-3); background: var(--panel-2); }
+
+    /* Spinner */
+    .spinner {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid color-mix(in oklch, var(--accent-fg) 30%, transparent);
+      border-top-color: var(--accent-fg);
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-primary[data-loading="1"] .label { opacity: 0.7; }
+
+    /* ── Banners ──────────────────────────────────────────── */
+    .banner {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.45;
+    }
+    .banner svg { flex-shrink: 0; margin-top: 2px; width: 16px; height: 16px; }
+    .banner-error { background: var(--err-bg); color: var(--err); border: 1px solid var(--err-border); }
+    .banner-warn  { background: var(--warn-bg); color: var(--warn); border: 1px solid var(--warn-border); }
+    .banner-ok    { background: color-mix(in oklch, var(--ok) 12%, transparent); color: var(--ok); border: 1px solid color-mix(in oklch, var(--ok) 35%, transparent); }
+
+    /* ── Query display ────────────────────────────────────── */
+    #query-display {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.65;
       white-space: pre-wrap;
-      word-break: break-all;
-      background: #FAFAFA;
-      border: 1px solid #e0e0e0;
-      border-radius: 4px;
-      padding: 12px 14px;
+      word-break: break-word;
+      background: var(--bg-elevated);
+      border-top: 1px solid var(--border-soft);
+      padding: 16px 20px;
       overflow-x: auto;
+      color: var(--text);
     }
 
     /* Always-on highlights */
-    .hl-syntax  { background: #FFCDD2; border-radius: 2px; }
-    .hl-naming  { background: #FFF9C4; border-radius: 2px; }
+    .hl-syntax  { background: var(--hl-syntax); border-radius: 3px; padding: 1px 2px; }
+    .hl-naming  { background: var(--hl-naming); border-radius: 3px; padding: 1px 2px; }
 
     /* Provenance highlights — only visible when ancestor has matching data-prov-active */
-    [data-prov-active="1"] .hl-prov-1 { background: #BBDEFB; border-radius: 2px; }
-    [data-prov-active="2"] .hl-prov-2 { background: #C8E6C9; border-radius: 2px; }
-    [data-prov-active="3"] .hl-prov-3 { background: #FFE0B2; border-radius: 2px; }
+    [data-prov-active="1"] .hl-prov-1 { background: var(--hl-prov-1); border-radius: 3px; padding: 1px 2px; }
+    [data-prov-active="2"] .hl-prov-2 { background: var(--hl-prov-2); border-radius: 3px; padding: 1px 2px; }
+    [data-prov-active="3"] .hl-prov-3 { background: var(--hl-prov-3); border-radius: 3px; padding: 1px 2px; }
 
-    /* ── Output columns table ── */
+    /* ── Tabs ─────────────────────────────────────────────── */
+    .tabs {
+      display: flex;
+      gap: 2px;
+      padding: 4px;
+      background: var(--panel-2);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-soft);
+    }
+    .tab {
+      flex: 1;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-family: inherit;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active {
+      background: var(--panel);
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+    .tab-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-width: 22px;
+      height: 18px;
+      padding: 0 6px;
+      font-size: 10px;
+      font-weight: 600;
+      background: var(--border);
+      color: var(--text-2);
+      border-radius: 9px;
+      justify-content: center;
+    }
+    .tab-count svg { width: 10px; height: 10px; flex-shrink: 0; }
+    .tab.active .tab-count { background: var(--accent-soft); color: var(--accent); }
+    [data-theme="dark"] .tab.active .tab-count { color: var(--accent); }
 
-    #output-section { margin-top: 20px; }
+    /* Severity-tinted counters (used on Diagnostics tab) */
+    .tab-count.sev-ok    { background: color-mix(in oklch, var(--ok) 14%, transparent); color: var(--ok); }
+    .tab-count.sev-warn  { background: var(--warn-bg); color: var(--warn); border: 1px solid color-mix(in oklch, var(--warn) 25%, transparent); height: 20px; }
+    .tab-count.sev-error { background: var(--err-bg); color: var(--err); border: 1px solid color-mix(in oklch, var(--err) 25%, transparent); height: 20px; }
+    .tab.active .tab-count.sev-ok    { background: color-mix(in oklch, var(--ok) 20%, transparent); color: var(--ok); }
+    .tab.active .tab-count.sev-warn  { background: var(--warn-bg); color: var(--warn); }
+    .tab.active .tab-count.sev-error { background: var(--err-bg); color: var(--err); }
+
+    /* ── Output columns table ─────────────────────────────── */
+    .table-wrap { max-height: calc(100vh - 280px); overflow-y: auto; }
+    @media (max-width: 900px) { .table-wrap { max-height: 600px; } }
 
     #output-columns {
       width: 100%;
       border-collapse: collapse;
       font-size: 13px;
     }
-    #output-columns th, #output-columns td {
+    #output-columns th {
+      position: sticky;
+      top: 0;
+      background: var(--panel);
       text-align: left;
-      padding: 7px 12px;
-      border-bottom: 1px solid #e0e0e0;
+      padding: 10px 14px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--border);
+      z-index: 1;
     }
-    #output-columns th { background: #F5F5F5; font-weight: 700; color: #424242; }
+    #output-columns td {
+      text-align: left;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border-soft);
+      color: var(--text-2);
+      vertical-align: middle;
+    }
+    #output-columns td:first-child { color: var(--text); font-weight: 500; }
     #output-columns tr:last-child td { border-bottom: none; }
-    #output-columns tr:hover td { background: #F5F5F5; }
+    #output-columns tr:hover td { background: var(--panel-2); }
+    #output-columns td code {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      color: var(--text-2);
+      background: var(--panel-2);
+      padding: 1px 6px;
+      border-radius: 4px;
+    }
+    [data-theme="dark"] #output-columns td code { background: var(--bg-elevated); }
 
     /* Impacted entity rows */
-    .prov-row td:first-child { font-weight: 700; }
+    .prov-row td:first-child { font-weight: 600; }
+    .prov-row { cursor: default; transition: background 0.1s; }
 
-    .prov-row[data-prov-group="1"] td:first-child { border-left: 3px solid #1976D2; padding-left: 9px; }
-    .prov-row[data-prov-group="2"] td:first-child { border-left: 3px solid #388E3C; padding-left: 9px; }
-    .prov-row[data-prov-group="3"] td:first-child { border-left: 3px solid #F57C00; padding-left: 9px; }
+    .prov-row[data-prov-group="1"] td:first-child { box-shadow: inset 3px 0 0 #4f7cf5; padding-left: 17px; }
+    .prov-row[data-prov-group="2"] td:first-child { box-shadow: inset 3px 0 0 #3a9a5a; padding-left: 17px; }
+    .prov-row[data-prov-group="3"] td:first-child { box-shadow: inset 3px 0 0 #d68a31; padding-left: 17px; }
 
-    .prov-row { cursor: default; }
+    .prov-row .prov-dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      margin-right: 8px;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
 
     .prov-hint {
       font-size: 11px;
-      color: #9E9E9E;
-      margin-top: 6px;
+      color: var(--text-3);
+      padding: 10px 18px;
+      border-top: 1px solid var(--border-soft);
+      background: var(--panel-2);
       font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* ── Diagnostics list ── */
-    .diag-list { list-style: none; margin-top: 4px; }
-    .diag-list li { padding: 4px 0; border-bottom: 1px solid #F5F5F5; font-size: 13px; color: #424242; }
+    /* ── Diagnostics list ─────────────────────────────────── */
+    .diag-list { list-style: none; display: flex; flex-direction: column; }
+    .diag-list li {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-soft);
+      font-size: 13px;
+      color: var(--text);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      line-height: 1.5;
+    }
     .diag-list li:last-child { border-bottom: none; }
-    .diag-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 700;
-      padding: 1px 5px;
-      border-radius: 3px;
-      margin-right: 6px;
-      text-transform: uppercase;
-      vertical-align: middle;
+    .diag-list .diag-icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin-top: 1px;
     }
-    .tag-error { background: #FFCDD2; color: #B71C1C; }
-    .tag-warn  { background: #FFF9C4; color: #F57F17; }
+    .diag-list .diag-icon svg { width: 11px; height: 11px; }
+    .diag-list .diag-icon.error { background: var(--err-bg); color: var(--err); }
+    .diag-list .diag-icon.warn { background: var(--warn-bg); color: var(--warn); }
 
-    /* ── Loading state ── */
-    #loading { display: none; color: #757575; font-size: 13px; margin-top: 8px; }
-    #loading.visible { display: block; }
+    .diag-text { flex: 1; min-width: 0; }
+    .diag-text .diag-type {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+    .diag-text .diag-msg {
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    /* ── Pane visibility ──────────────────────────────────── */
+    .pane { display: none; }
+    .pane.active { display: block; }
+
+    /* Empty state */
+    .empty {
+      padding: 32px 20px;
+      text-align: center;
+      color: var(--text-3);
+      font-size: 13px;
+    }
+    .empty svg { width: 28px; height: 28px; margin-bottom: 10px; opacity: 0.5; }
+
+    /* State swap: placeholder vs result content */
+    body[data-state="pending"] .when-ready { display: none; }
+    body:not([data-state="pending"]) .when-pending { display: none; }
+
+    /* Empty placeholder */
+    .placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 56px 24px;
+      gap: 14px;
+      color: var(--text-3);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .placeholder .placeholder-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--panel-2);
+      display: grid;
+      place-items: center;
+      color: var(--text-3);
+      border: 1px solid var(--border-soft);
+    }
+    .placeholder .placeholder-icon svg { width: 20px; height: 20px; }
+    .placeholder p { max-width: 240px; }
+    .placeholder strong { color: var(--text-2); font-weight: 600; }
+
+    /* Subtle env pill in result query header */
+    .meta-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: var(--panel-2);
+      color: var(--text-2);
+      border: 1px solid var(--border-soft);
+    }
   </style>
 </head>
-<body>
+<body data-state="pending">
 
-<header>Kustodian</header>
+<header>
+  <div class="brand">
+    <div class="brand-mark">K</div>
+    <span>Kustodian</span>
+  </div>
+  <div class="header-actions">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Toggle theme">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </button>
+  </div>
+</header>
 
 <main>
-  <div class="form-card">
-    <form id="form">
-      <div class="form-field" style="margin-bottom:14px;">
-        <label for="query">KQL Query</label>
-        <textarea id="query" placeholder="DeviceEvents&#10;| project Timestamp, ReportId, DeviceName, AccountName" required spellcheck="false"></textarea>
-      </div>
-      <div class="form-row">
-        <div class="form-field">
-          <label for="environment">Environment</label>
-          <select id="environment" required>
-            <option value="" disabled selected>Loading…</option>
-          </select>
+  <div class="layout" id="layout">
+    <div class="main-col">
+      <!-- ── Input form ── -->
+      <div class="card" id="input-card">
+        <button type="button" class="card-header is-toggle" id="input-toggle" data-comment-anchor="e37f8bd0cf-span">
+          <div class="header-main">
+            <span class="card-title" data-comment-anchor="1fae9cc763-span">Input</span>
+            <div class="header-summary" id="input-summary"></div>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="card-body">
+          <form id="form" class="form-grid">
+            <div class="form-field">
+              <label for="query">KQL Query</label>
+              <textarea id="query" placeholder="DeviceEvents&#10;| where FileName == &quot;evil.exe&quot;&#10;| project Timestamp, ReportId, DeviceId, FileName" required spellcheck="false"></textarea>
+            </div>
+            <div class="form-row">
+              <div class="form-field">
+                <label for="environment">Environment</label>
+                <select id="environment" required>
+                  <option value="" disabled selected>Loading…</option>
+                </select>
+              </div>
+              <div class="form-field grow">
+                <label for="impactedEntityField">Impacted entity field</label>
+                <input type="text" id="impactedEntityField" placeholder="e.g. DeviceId" required>
+              </div>
+              <div class="form-field grow">
+                <label for="namingConvention">Naming convention regex <span class="optional">(optional)</span></label>
+                <input type="text" id="namingConvention" placeholder="e.g. ^[A-Z]">
+              </div>
+              <button type="submit" id="submit-btn" class="btn btn-primary">
+                <span class="label">Analyse</span>
+              </button>
+            </div>
+          </form>
         </div>
-        <div class="form-field grow">
-          <label for="impactedEntityField">Impacted entity field</label>
-          <input type="text" id="impactedEntityField" placeholder="e.g. AccountName" required>
-        </div>
-        <div class="form-field grow">
-          <label for="namingConvention">Naming convention regex <span style="font-weight:400;color:#9E9E9E">(optional)</span></label>
-          <input type="text" id="namingConvention" placeholder="e.g. ^[A-Z]">
-        </div>
-        <button type="submit" id="submit-btn">Analyse</button>
-      </div>
-    </form>
-    <div id="loading">Analysing…</div>
-  </div>
-
-  <div id="results">
-    <div class="results-card" id="prov-container">
-      <div id="banner-existence" class="banner banner-error" hidden></div>
-      <div id="banner-consistency" class="banner banner-warn" hidden></div>
-
-      <div class="section-title">Query</div>
-      <pre id="query-display"></pre>
-
-      <div id="diag-section" style="margin-top:16px;" hidden>
-        <div class="section-title">Diagnostics</div>
-        <ul id="diag-list" class="diag-list"></ul>
       </div>
 
-      <div id="output-section" hidden>
-        <div class="section-title" style="margin-top:20px;">Output columns</div>
-        <table id="output-columns">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Operator</th>
-              <th>Source tables</th>
-            </tr>
-          </thead>
-          <tbody id="output-tbody"></tbody>
-        </table>
-        <p class="prov-hint" id="prov-hint" hidden>
-          Hover the highlighted rows to trace provenance in the query above.
-        </p>
+      <!-- ── Results: highlighted query ── -->
+      <div class="card" id="prov-container">
+        <div class="card-header">
+          <span class="card-title" data-comment-anchor="05071f7fd1-span">Output</span>
+          <div class="meta-row when-ready" id="result-meta"></div>
+        </div>
+        <div class="placeholder when-pending">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <p>Submit a query in <strong>Input</strong> to inspect its output.</p>
+        </div>
+        <div class="when-ready">
+          <div id="banners" style="padding: 12px 18px 0; display: flex; flex-direction: column; gap: 8px;"></div>
+          <pre id="query-display"></pre>
+          <div class="prov-hint" id="prov-hint" hidden>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            Hover the highlighted rows on the right to trace provenance.
+          </div>
+        </div>
       </div>
     </div>
+
+    <!-- ── Side column ── -->
+    <aside class="side-col" id="side-col">
+      <div class="card">
+        <div class="placeholder when-pending">
+          <div class="placeholder-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 9h18M9 21V9"/></svg>
+          </div>
+          <p>Columns and diagnostics will appear here once you analyse a query.</p>
+        </div>
+        <div class="when-ready">
+          <div class="card-header">
+            <div class="tabs" role="tablist" style="flex: 1;">
+              <button class="tab active" data-pane="pane-columns" role="tab">
+                <span>Output columns</span>
+                <span class="tab-count" id="count-columns">0</span>
+              </button>
+              <button class="tab" data-pane="pane-diagnostics" role="tab" data-comment-anchor="e0e00a81d7-button">
+                <span>Diagnostics</span>
+                <span class="tab-count" id="count-diagnostics">0</span>
+              </button>
+            </div>
+          </div>
+          <div class="card-body flush">
+            <!-- Columns pane -->
+            <div class="pane active" id="pane-columns" role="tabpanel">
+              <div class="table-wrap">
+                <table id="output-columns">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th>Operator</th>
+                      <th>Source</th>
+                    </tr>
+                  </thead>
+                  <tbody id="output-tbody"></tbody>
+                </table>
+              </div>
+              <div id="columns-empty" class="empty" hidden>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+                <div>No output columns</div>
+              </div>
+            </div>
+            <!-- Diagnostics pane -->
+            <div class="pane" id="pane-diagnostics" role="tabpanel">
+              <ul id="diag-list" class="diag-list"></ul>
+              <div id="diag-empty" class="empty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/></svg>
+                <div>No issues found</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
   </div>
 </main>
 
 <script>
 'use strict';
 
+// ── Theme ────────────────────────────────────────────────
+const themeToggle = document.getElementById('theme-toggle');
+const stored = localStorage.getItem('kustodian-theme');
+if (stored) document.documentElement.dataset.theme = stored;
+else if (matchMedia('(prefers-color-scheme: dark)').matches) document.documentElement.dataset.theme = 'dark';
+
+themeToggle.addEventListener('click', () => {
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('kustodian-theme', next);
+});
+
+// ── Tabs ─────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.pane').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.pane).classList.add('active');
+  });
+});
+
+// ── Collapsible input card ───────────────────────────────
+document.getElementById('input-toggle').addEventListener('click', () => {
+  document.getElementById('input-card').classList.toggle('is-collapsed');
+});
+
 // ── Utilities ────────────────────────────────────────────────
 
 function escapeHtml(str) {
-  return str
+  return String(str)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
@@ -286,12 +822,10 @@ function collectTables(node) {
 function collectSpans(query, result, impactedEntityField) {
   const spans = [];
 
-  // Syntax error spans (have start/end offsets)
   for (const msg of result.messages)
     if (msg.type === 'Syntax' && msg.start != null && msg.end != null && msg.end > msg.start)
       spans.push({ start: msg.start, end: msg.end, classes: ['hl-syntax'] });
 
-  // Naming convention spans — find position via provenance tree
   const namingMsg = result.messages.find(m => m.type === 'ColumnNamingConvention');
   if (namingMsg && result.outputColumns)
     for (const colName of namingMsg.affectedColumns) {
@@ -302,7 +836,6 @@ function collectSpans(query, result, impactedEntityField) {
       }
     }
 
-  // Provenance spans for the three impacted entity columns
   const provGroups = [
     { name: 'Timestamp',         cls: 'hl-prov-1' },
     { name: 'ReportId',          cls: 'hl-prov-2' },
@@ -313,14 +846,16 @@ function collectSpans(query, result, impactedEntityField) {
       const col = result.outputColumns.find(c => c.name === name);
       if (col?.provenance)
         for (const node of walkProvenance(col.provenance))
-          if (node.position != null)
-            spans.push({ start: node.position.abs, end: node.position.abs + node.column.length, classes: [cls] });
+          if (node.position != null) {
+            const len = node.table != null         ? node.table.length
+                      : node.operator === 'invoke' ? 'invoke'.length
+                      : node.column.length;
+            spans.push({ start: node.position.abs, end: node.position.abs + len, classes: [cls] });
+          }
     }
 
   return spans;
 }
-
-// ── Multi-layer span rendering ───────────────────────────────
 
 function renderHighlightedQuery(query, spans) {
   const events = [];
@@ -328,7 +863,6 @@ function renderHighlightedQuery(query, spans) {
     events.push({ pos: start, open: true,  classes });
     events.push({ pos: end,   open: false, classes });
   }
-  // Sort by position; opens before closes at the same position
   events.sort((a, b) => a.pos - b.pos || (a.open ? -1 : 1));
 
   let html = '', pos = 0;
@@ -360,46 +894,87 @@ function renderHighlightedQuery(query, spans) {
   return html;
 }
 
+// ── Icons ──────────────────────────────────────────────
+const ICON_ERROR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+const ICON_WARN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/></svg>';
+const ICON_ALERT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>';
+const ICON_TICK_SM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="5 12 10 17 19 7"/></svg>';
+const ICON_WARN_TRI_SM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>';
+const ICON_X_SM = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>';
+
 // ── Render ───────────────────────────────────────────────────
 
-function renderResults(query, result, impactedEntityField) {
+function renderResults(query, result, impactedEntityField, environment) {
   const provContainer = document.getElementById('prov-container');
 
+  document.body.dataset.state = 'ready';
+
+  // Meta pills
+  const meta = document.getElementById('result-meta');
+  meta.innerHTML = `
+    <span class="pill">${escapeHtml(environment)}</span>
+    <span class="pill">entity: ${escapeHtml(impactedEntityField)}</span>
+  `;
+
   // Banners
+  const banners = document.getElementById('banners');
+  banners.innerHTML = '';
   const existenceMsg = result.messages.find(m => m.type === 'ImpactedEntityExistence');
   const consistencyMsg = result.messages.find(m => m.type === 'ImpactedEntityConsistency');
-
-  const elExistence = document.getElementById('banner-existence');
-  elExistence.hidden = !existenceMsg;
-  if (existenceMsg) elExistence.textContent = existenceMsg.message;
-
-  const elConsistency = document.getElementById('banner-consistency');
-  elConsistency.hidden = !consistencyMsg;
-  if (consistencyMsg) elConsistency.textContent = consistencyMsg.message;
+  if (existenceMsg) {
+    banners.insertAdjacentHTML('beforeend',
+      `<div class="banner banner-error">${ICON_ALERT}<div>${escapeHtml(existenceMsg.message)}</div></div>`);
+  }
+  if (consistencyMsg) {
+    banners.insertAdjacentHTML('beforeend',
+      `<div class="banner banner-warn">${ICON_ALERT}<div>${escapeHtml(consistencyMsg.message)}</div></div>`);
+  }
+  if (result.messages.length === 0) {
+    banners.insertAdjacentHTML('beforeend',
+      `<div class="banner banner-ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><div>Query passed all checks.</div></div>`);
+  }
 
   // Highlighted query
   const spans = collectSpans(query, result, impactedEntityField);
   document.getElementById('query-display').innerHTML = renderHighlightedQuery(query, spans);
 
-  // Diagnostics list
-  const diagSection = document.getElementById('diag-section');
+  // Diagnostics
   const diagList = document.getElementById('diag-list');
+  const diagEmpty = document.getElementById('diag-empty');
   diagList.innerHTML = '';
   if (result.messages.length > 0) {
     for (const msg of result.messages) {
+      const isError = msg.level === 'ERROR';
+      const iconCls = isError ? 'error' : 'warn';
+      const iconSvg = isError ? ICON_ERROR : ICON_WARN;
       const li = document.createElement('li');
-      const tagClass = msg.level === 'ERROR' ? 'tag-error' : 'tag-warn';
-      li.innerHTML = `<span class="diag-tag ${tagClass}">${escapeHtml(msg.type)}</span>${escapeHtml(msg.message)}`;
+      li.innerHTML = `
+        <div class="diag-icon ${iconCls}">${iconSvg}</div>
+        <div class="diag-text">
+          <div class="diag-type">${escapeHtml(msg.type)}</div>
+          <div class="diag-msg">${escapeHtml(msg.message)}</div>
+        </div>`;
       diagList.appendChild(li);
     }
-    diagSection.hidden = false;
+    diagEmpty.hidden = true;
   } else {
-    diagSection.hidden = true;
+    diagEmpty.hidden = false;
   }
+  // Diagnostics counter (severity-tinted lozenge with icon)
+  const errCount = result.messages.filter(m => m.level === 'ERROR').length;
+  const warnCount = result.messages.length - errCount;
+  const totalCount = result.messages.length;
+  const diagCount = document.getElementById('count-diagnostics');
+  diagCount.classList.remove('sev-ok', 'sev-warn', 'sev-error');
+  let icon;
+  if (totalCount === 0)      { diagCount.classList.add('sev-ok');    icon = ICON_TICK_SM; }
+  else if (errCount > 0)     { diagCount.classList.add('sev-error'); icon = ICON_X_SM; }
+  else                       { diagCount.classList.add('sev-warn');  icon = ICON_WARN_TRI_SM; }
+  diagCount.innerHTML = `<span>${totalCount}</span>${icon}`;
 
-  // Output columns table
-  const outputSection = document.getElementById('output-section');
+  // Output columns (sort: Timestamp, ReportId, impactedEntityField first; preserve original order otherwise)
   const tbody = document.getElementById('output-tbody');
+  const columnsEmpty = document.getElementById('columns-empty');
   tbody.innerHTML = '';
 
   if (result.outputColumns && result.outputColumns.length > 0) {
@@ -408,9 +983,23 @@ function renderResults(query, result, impactedEntityField) {
       'ReportId':  '2',
       [impactedEntityField]: '3'
     };
+    const sortRank = name => {
+      if (name === 'Timestamp') return 0;
+      if (name === 'ReportId') return 1;
+      if (name === impactedEntityField) return 2;
+      return 3;
+    };
+    const sortedColumns = result.outputColumns
+      .map((c, i) => ({ c, i }))
+      .sort((a, b) => {
+        const ra = sortRank(a.c.name), rb = sortRank(b.c.name);
+        return ra !== rb ? ra - rb : a.i - b.i;  // stable within group
+      })
+      .map(x => x.c);
+
     let hasProvRows = false;
 
-    for (const col of result.outputColumns) {
+    for (const col of sortedColumns) {
       const tr = document.createElement('tr');
       const group = provGroupMap[col.name];
       if (group) {
@@ -430,22 +1019,68 @@ function renderResults(query, result, impactedEntityField) {
       `;
       tbody.appendChild(tr);
     }
-
-    outputSection.hidden = false;
+    columnsEmpty.hidden = true;
     document.getElementById('prov-hint').hidden = !hasProvRows;
   } else {
-    outputSection.hidden = true;
+    columnsEmpty.hidden = false;
+    document.getElementById('prov-hint').hidden = true;
   }
+  document.getElementById('count-columns').textContent = result.outputColumns?.length ?? 0;
 
-  document.getElementById('results').classList.add('visible');
+  // Collapse the Input card and surface a summary in its header
+  const inputCard = document.getElementById('input-card');
+  const inputSummary = document.getElementById('input-summary');
+  inputSummary.innerHTML = `
+    <span class="pill">${escapeHtml(environment)}</span>
+    <span class="pill">entity: ${escapeHtml(impactedEntityField)}</span>
+  `;
+  inputCard.classList.add('is-collapsed');
+}
+
+// ── Mock data (preview fallback when /environments and /analyse are unreachable) ──
+const MOCK_ENVIRONMENTS = ['defender-xdr', 'sentinel'];
+
+function buildMockAnalyse(req) {
+  // Minimal mock that mirrors a successful defender-xdr response
+  const cols = [
+    'Timestamp','DeviceId','DeviceName','ActionType','FileName','FolderPath','SHA1','SHA256','MD5',
+    'FileSize','AccountDomain','AccountName','AccountSid','RemoteUrl','RemoteDeviceName','ProcessId',
+    'ProcessCommandLine','ProcessCreationTime','ProcessTokenElevation','LogonId','RegistryKey',
+    'RegistryValueName','RegistryValueData','RemoteIP','RemotePort','LocalIP','LocalPort',
+    'FileOriginUrl','FileOriginIP','InitiatingProcessSHA1','InitiatingProcessSHA256','InitiatingProcessMD5',
+    'InitiatingProcessFileName','InitiatingProcessFileSize','InitiatingProcessFolderPath',
+    'InitiatingProcessId','InitiatingProcessCommandLine','InitiatingProcessCreationTime',
+    'InitiatingProcessAccountDomain','InitiatingProcessAccountName','InitiatingProcessAccountSid',
+    'InitiatingProcessAccountUpn','InitiatingProcessAccountObjectId',
+    'InitiatingProcessVersionInfoCompanyName','InitiatingProcessVersionInfoProductName',
+    'InitiatingProcessVersionInfoProductVersion','InitiatingProcessVersionInfoInternalFileName',
+    'InitiatingProcessVersionInfoOriginalFileName','InitiatingProcessVersionInfoFileDescription',
+    'InitiatingProcessParentId','InitiatingProcessParentFileName','InitiatingProcessParentCreationTime',
+    'InitiatingProcessLogonId','ReportId','AppGuardContainerId','AdditionalFields','InitiatingProcessSessionId'
+  ];
+  const longCols = new Set(['FileSize','ProcessId','LogonId','InitiatingProcessFileSize','InitiatingProcessId','InitiatingProcessParentId','InitiatingProcessLogonId','ReportId','InitiatingProcessSessionId']);
+  const dtCols = new Set(['Timestamp','ProcessCreationTime','InitiatingProcessCreationTime','InitiatingProcessParentCreationTime']);
+  const intCols = new Set(['RemotePort','LocalPort']);
+  const typeOf = c => longCols.has(c) ? 'long' : dtCols.has(c) ? 'datetime' : intCols.has(c) ? 'int' : 'string';
+  const outputColumns = cols.map(c => ({
+    name: c,
+    type: typeOf(c),
+    provenance: { table: 'DeviceEvents', operator: null, position: { abs: 0 } }
+  }));
+  return { messages: [], outputColumns, syntaxTree: null };
 }
 
 // ── Init ─────────────────────────────────────────────────────
 
+let mockMode = false;
+
 async function loadEnvironments() {
+  const sel = document.getElementById('environment');
   try {
-    const envs = await fetch('/environments').then(r => r.json());
-    const sel = document.getElementById('environment');
+    const envs = await fetch('/environments').then(r => {
+      if (!r.ok) throw new Error('bad status');
+      return r.json();
+    });
     sel.innerHTML = '';
     for (const e of envs) {
       const opt = document.createElement('option');
@@ -453,10 +1088,18 @@ async function loadEnvironments() {
       sel.appendChild(opt);
     }
   } catch {
-    const sel = document.getElementById('environment');
-    sel.innerHTML = '<option value="" disabled selected>Failed to load</option>';
+    // Preview / offline fallback
+    mockMode = true;
+    sel.innerHTML = '';
+    for (const e of MOCK_ENVIRONMENTS) {
+      const opt = document.createElement('option');
+      opt.value = opt.textContent = e;
+      sel.appendChild(opt);
+    }
   }
 }
+
+// (env-label removed in favor of collapsed-card summary pills)
 
 document.getElementById('form').addEventListener('submit', async e => {
   e.preventDefault();
@@ -470,27 +1113,36 @@ document.getElementById('form').addEventListener('submit', async e => {
   if (namingConvention) req.namingConvention = namingConvention;
 
   const btn = document.getElementById('submit-btn');
-  const loading = document.getElementById('loading');
+  const label = btn.querySelector('.label');
+  const originalLabel = label.textContent;
   btn.disabled = true;
-  loading.classList.add('visible');
+  btn.dataset.loading = '1';
+  label.innerHTML = '<span class="spinner"></span>';
 
   try {
-    const resp = await fetch('/analyse', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req)
-    });
-    const result = await resp.json();
-    if (!resp.ok) {
-      alert('Error: ' + (result.error ?? resp.statusText));
-      return;
+    let result;
+    if (mockMode) {
+      await new Promise(r => setTimeout(r, 400));
+      result = buildMockAnalyse(req);
+    } else {
+      const resp = await fetch('/analyse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(req)
+      });
+      result = await resp.json();
+      if (!resp.ok) {
+        alert('Error: ' + (result.error ?? resp.statusText));
+        return;
+      }
     }
-    renderResults(query, result, impactedEntityField);
+    renderResults(query, result, impactedEntityField, environment);
   } catch (err) {
     alert('Request failed: ' + err.message);
   } finally {
     btn.disabled = false;
-    loading.classList.remove('visible');
+    delete btn.dataset.loading;
+    label.textContent = originalLabel;
   }
 });
 
