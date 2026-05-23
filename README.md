@@ -16,9 +16,14 @@ The intended audience is **detection engineers** writing custom detection querie
 
 ## Running with Docker
 
-### Build and run
+```bash
+docker run -p 8080:8080 jsbarr/kustodian # From DockerHub
+```
+
+or:
 
 ```bash
+# Build from source
 docker build -t kustodian .
 docker run -p 8080:8080 kustodian
 ```
@@ -39,13 +44,13 @@ POST /analyse
 ### `/analyse`
 
 POST a JSON payload with key/value pairs as indicated below.  Optional keys should be omitted entirely if not used.
-The `environment` value must match the filename (without `.json`) of a schema file in the environments directory. The built-in environment is `defender-xdr`.
+The `environment` value must match the filename (without `.json`) of a manifest in the `environments/` subdirectory. Built-in environments are `defender-xdr` and `sentinel`.  See [Environments](#environments) for more.
 
 | Field | Required | Type | Default | Description |
 |---|---|---|---|---|
 | `query` | Yes | `string` | N/A | The query to be analysed. |
 | `impactedEntityField` | Yes | `string` | N/A | The output column that identifies the affected entity (e.g. `DeviceId`, `AccountUpn`). Must be present in the query output and share source tables with `Timestamp` and `ReportId`. |
-| `environment` | Yes | `string` | N/A | The environment in which the query should be analysed.  This defines the available tables and functions.  See [Using a custom environment](#using-a-custom-environment). |
+| `environment` | Yes | `string` | N/A | The environment in which the query should be analysed.  This defines the available tables and functions.  See [Environments](#environments). |
 | `namingConvention` | No | `string` (regex) | `null` | Regex that all newly introduced output columns must match. |
 | `provenance` | No | `boolean` | `true` | Set to `false` to omit the provenance tree from the response. |
 | `debug` | No | `boolean` | `false` | Set to `true` to include the raw KQL syntax tree in the response. |
@@ -181,42 +186,66 @@ All three required columns must trace back to the same source tables. Here, `Tim
 }
 ```
 
-### Using a custom environment
+### Environments
 
-Environment schemas are loaded from `/app/environments/` inside the container. Mount your own directory to override or extend the built-in schemas:
+The environment dictates what tables and functions are available and are used when analysing the query. The built-in environments are loaded from a data directory in [`src/data`](./src/data) with three subdirectories:
+
+```
+data/
+  environments/   # one manifest file per environment, with references to tables and functions
+  tables/         # one schema file per table
+  functions/      # one definition file per function
+```
+
+You can specify your own environments, tables and/or functions.  Your environment can use any combination of either the built-ins or your custom ones, and in the event of a name clash, your custom definition takes priority.  Using this, you can override a single table schema, add a new function, or define an entirely new environment without touching the built-ins
+
+To load custom environments, set `KUSTODIAN_DATA_DIR` to a directory with this layout when starting the service, for example when using the container image:
 
 ```bash
 docker run -p 8080:8080 \
-  -v /path/to/my/environments:/app/environments \
-  kustodian
+  -e KUSTODIAN_DATA_DIR=/custom \
+  -v /path/to/my/data:/custom \
+  jsbarr/kustodian
 ```
 
-Each file in the directory is named `<environment-name>.json` and describes the tables and functions available in that environment. Example:
+**Environment manifest** (`environments/my-env.json`)
+
+Lists the tables and functions that make up the environment by name. Each name must correspond to a file in `tables/` or `functions/`.
 
 ```json
 {
-  "tables": {
-    "MyCustomTable": {
-      "Timestamp": "datetime",
-      "DeviceId": "string",
-      "AccountUpn": "string",
-      "Score": "real"
-    }
-  },
-  "functions": {
-    "Enrich": {
-      "paramSignature": "T:(*), label:string",
-      "body": "T | extend Tag = label"
-    }
-  }
+  "tables": ["MyCustomTable", "DeviceEvents"],
+  "functions": ["Enrich"]
 }
 ```
 
-Functions are declared as a dictionary keyed by function name. `paramSignature` is the parameter list (without outer parentheses); `body` is the KQL expression or tabular pipeline that the function evaluates to. Tabular functions (used with `invoke`) take a leading `T:(*)` parameter. Scalar functions omit it. `paramSignature` may be omitted entirely for zero-argument functions.
+**Table schema** (`tables/MyCustomTable.json`)
 
-Supported KQL column types include `string`, `datetime`, `int`, `long`, `real`, `bool`, `boolean`, `dynamic`, `guid`, and others accepted by the Kusto SDK's `ScalarTypes`.
+A flat object mapping column names to KQL scalar types.
 
-To use both the built-in `defender-xdr` schema and your own tables, copy `src/environments/defender-xdr.json` into your mounted directory alongside your custom files.
+```json
+{
+  "Timestamp": "datetime",
+  "DeviceId": "string",
+  "AccountUpn": "string",
+  "Score": "real"
+}
+```
+
+Supported column types: `string`, `datetime`, `int`, `long`, `real`, `bool`, `dynamic`, `guid`, `decimal`, `timespan`, `object` (dynamic bag), `array` (dynamic array).
+
+**Function definition** (`functions/Enrich.json`)
+
+`paramSignature` is the parameter list without outer parentheses; `body` is the KQL expression or tabular pipeline the function evaluates to. Tabular functions (used with `invoke`) take a leading `T:(*)` parameter. Scalar functions omit it. `paramSignature` may be omitted for zero-argument functions.
+
+```json
+{
+  "paramSignature": "T:(*), label:string",
+  "body": "T | extend Tag = label"
+}
+```
+
+The built-in environment files live under `src/data/` in the repository and are generated from the source definitions in `src/environments/` using `scripts/collect-environments.py`.
 
 ## How query facts are computed
 
