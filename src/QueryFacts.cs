@@ -84,12 +84,15 @@ public record QueryFacts(
         }
 
         var op = GetEnclosingOperator(colInfo);
-        var declPos = colInfo?.FirstPosition ?? 0;
+        // Use null position when there's no symbol map entry: let-bound columns with no NameDeclaration
+        // in the query AST would otherwise default to position 0 (the "let" keyword), causing the UI
+        // to anchor highlights at the wrong location.
+        var position = colInfo != null ? BuildPosition(query, colInfo.FirstPosition) : null;
 
         var originalColumns = GetProvenanceSources(col, colInfo);
         // No upstream sources found (e.g. a literal or aggregate with no column references).
         if (originalColumns.Count == 0)
-            return new ProvenanceNode(Column: col.Name, Operator: op, Position: BuildPosition(query, declPos));
+            return new ProvenanceNode(Column: col.Name, Operator: op, Position: position);
 
         // Recursive case: descend into each upstream column, collecting their provenance nodes.
         path.Add(col);
@@ -98,7 +101,7 @@ public record QueryFacts(
             .ToArray();
         path.Remove(col);
 
-        return new ProvenanceNode(Column: col.Name, Operator: op, Position: BuildPosition(query, declPos), Sources: sources);
+        return new ProvenanceNode(Column: col.Name, Operator: op, Position: position, Sources: sources);
     }
 
     // Returns the immediate upstream columns that `col` is derived from.
@@ -107,7 +110,18 @@ public record QueryFacts(
     // (e.g. `extend foo = bar + baz` → [bar, baz]).
     static IReadOnlyList<ColumnSymbol> GetProvenanceSources(ColumnSymbol col, SymbolInfo? info)
     {
-        if (col.OriginalColumns.Count > 0) return col.OriginalColumns;
+        var originals = col.OriginalColumns;
+        if (originals.Count > 0)
+        {
+            // The lookup binder merges left and right key columns into one with both as OriginalColumns
+            // (SDK Binder_NodeBinder.cs VisitLookupOperator). Provenance follows only the left/driver side —
+            // the lookup key value is always taken from the left table, matching join semantics.
+            if (originals.Count == 2 &&
+                string.Equals(originals[0].Name, col.Name, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(originals[1].Name, col.Name, StringComparison.OrdinalIgnoreCase))
+                return [originals[0]];
+            return originals;
+        }
 
         if (info?.NameDeclaration?.Parent is SimpleNamedExpression sne)
         {

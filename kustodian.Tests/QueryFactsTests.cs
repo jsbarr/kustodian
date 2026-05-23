@@ -62,4 +62,50 @@ public class QueryFactsTests
         Assert.Contains(facts.Output, c => c.Name == "A");
         Assert.Contains(facts.Output, c => c.Name == "B");
     }
+
+    static GlobalState TwoTableEnv() =>
+        GlobalState.Default.WithDatabase(new DatabaseSymbol("db",
+            new TableSymbol("DeviceEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String),
+                new ColumnSymbol("FileName", ScalarTypes.String)),
+            new TableSymbol("DeviceFileEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String))));
+
+    const string LookupQuery =
+        "let ExtraData = DeviceFileEvents | summarize Count=count() by DeviceId;\n" +
+        "DeviceEvents | where FileName =~ \"evil.exe\" | lookup ExtraData on DeviceId";
+
+    [Fact]
+    public void Build_LookupKeyColumn_ProvenanceTracesOnlyLeftSide()
+    {
+        var globals = TwoTableEnv();
+        var facts = QueryFacts.Build(LookupQuery, globals);
+
+        var deviceId = facts.Columns.Single(c => c.Name == "DeviceId");
+        var sources = facts.SourceMap[deviceId];
+
+        Assert.Single(sources);
+        Assert.Equal("DeviceEvents", globals.GetTable(sources[0])?.Name);
+    }
+
+    [Fact]
+    public void Build_LookupKeyColumn_NoProvenanceNodeAtQueryStart()
+    {
+        // Without the position fix, the intermediate ExtraData.DeviceId node (colInfo=null)
+        // defaults to position 0 ("let" keyword), causing a misaligned highlight in the UI.
+        var globals = TwoTableEnv();
+        var facts = QueryFacts.Build(LookupQuery, globals);
+
+        var allNodes = facts.Output.SelectMany(c => AllProvenanceNodes(c.Provenance));
+        Assert.DoesNotContain(allNodes, n => n.Position?.Abs == 0);
+    }
+
+    static IEnumerable<ProvenanceNode> AllProvenanceNodes(ProvenanceNode? node)
+    {
+        if (node == null) yield break;
+        yield return node;
+        foreach (var src in node.Sources ?? [])
+            foreach (var n in AllProvenanceNodes(src))
+                yield return n;
+    }
 }
