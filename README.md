@@ -28,18 +28,41 @@ docker build -t kustodian .
 docker run -p 8080:8080 kustodian
 ```
 
+## Web UI
+
+Kustodian ships a browser-based UI served from `/` on the same port as the API. Open `http://localhost:8080` after starting the service.
+
+The UI provides an interactive form for the fields described in the [`/analyse`](#analyse) section. After submission it shows:
+
+- **Highlighted query** — the original query text with colour-coded spans for syntax errors, naming violations, and provenance groups. Hovering a column in the results panel highlights its corresponding source spans in the query, and vice versa.
+- **Output columns tab** — a table listing each output column's name, type, and the leaf table columns it was derived from.
+- **Diagnostics tab** — a list of all errors and warnings with severity icons and the affected column names.
+
+Light and dark themes are supported and persist across sessions.
+
 ## API
 
 The service listens on port 8080 and exposes the following endpoints:
 
 ```
 GET  /health
+GET  /environments
 POST /analyse
 ```
 
 ### `/health`
 
 `GET /health` returns `200 OK` when the service is running.
+
+### `/environments`
+
+`GET /environments` returns the list of available environment names as a sorted JSON array.
+
+```json
+["defender-xdr", "sentinel"]
+```
+
+Use this to populate environment selectors in tooling or UIs without hard-coding environment names.
 
 ### `/analyse`
 
