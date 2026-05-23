@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kustodian</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      background: #f5f5f5;
+      color: #212121;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1565C0;
+      color: #fff;
+      padding: 12px 24px;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 24px;
+    }
+
+    /* ── Form ── */
+
+    .form-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .form-row { display: flex; gap: 16px; margin-bottom: 14px; align-items: flex-end; }
+    .form-field { display: flex; flex-direction: column; gap: 5px; }
+    .form-field.grow { flex: 1; }
+
+    label { font-weight: 600; font-size: 13px; color: #424242; }
+
+    textarea, input[type=text], select {
+      font-family: inherit;
+      font-size: 13px;
+      border: 1px solid #bdbdbd;
+      border-radius: 4px;
+      padding: 7px 10px;
+      outline: none;
+      transition: border-color 0.15s;
+      background: #fff;
+      color: #212121;
+    }
+    textarea:focus, input[type=text]:focus, select:focus { border-color: #1565C0; }
+
+    #query { width: 100%; resize: vertical; font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 13px; min-height: 140px; }
+
+    button[type=submit] {
+      background: #1565C0;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    button[type=submit]:hover { background: #0D47A1; }
+    button[type=submit]:disabled { background: #90A4AE; cursor: default; }
+
+    /* ── Banners ── */
+
+    .banner {
+      padding: 10px 14px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      font-weight: 600;
+      font-size: 13px;
+    }
+    .banner-error { background: #FFCDD2; color: #B71C1C; border-left: 4px solid #C62828; }
+    .banner-warn  { background: #FFE0B2; color: #E65100; border-left: 4px solid #EF6C00; }
+
+    /* ── Results ── */
+
+    #results { display: none; }
+    #results.visible { display: block; }
+
+    .results-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #424242;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Query display ── */
+
+    #query-display {
+      font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      word-break: break-all;
+      background: #FAFAFA;
+      border: 1px solid #e0e0e0;
+      border-radius: 4px;
+      padding: 12px 14px;
+      overflow-x: auto;
+    }
+
+    /* Always-on highlights */
+    .hl-syntax  { background: #FFCDD2; border-radius: 2px; }
+    .hl-naming  { background: #FFF9C4; border-radius: 2px; }
+
+    /* Provenance highlights — only visible when ancestor has matching data-prov-active */
+    [data-prov-active="1"] .hl-prov-1 { background: #BBDEFB; border-radius: 2px; }
+    [data-prov-active="2"] .hl-prov-2 { background: #C8E6C9; border-radius: 2px; }
+    [data-prov-active="3"] .hl-prov-3 { background: #FFE0B2; border-radius: 2px; }
+
+    /* ── Output columns table ── */
+
+    #output-section { margin-top: 20px; }
+
+    #output-columns {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    #output-columns th, #output-columns td {
+      text-align: left;
+      padding: 7px 12px;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    #output-columns th { background: #F5F5F5; font-weight: 700; color: #424242; }
+    #output-columns tr:last-child td { border-bottom: none; }
+    #output-columns tr:hover td { background: #F5F5F5; }
+
+    /* Impacted entity rows */
+    .prov-row td:first-child { font-weight: 700; }
+
+    .prov-row[data-prov-group="1"] td:first-child { border-left: 3px solid #1976D2; padding-left: 9px; }
+    .prov-row[data-prov-group="2"] td:first-child { border-left: 3px solid #388E3C; padding-left: 9px; }
+    .prov-row[data-prov-group="3"] td:first-child { border-left: 3px solid #F57C00; padding-left: 9px; }
+
+    .prov-row { cursor: default; }
+
+    .prov-hint {
+      font-size: 11px;
+      color: #9E9E9E;
+      margin-top: 6px;
+      font-style: italic;
+    }
+
+    /* ── Diagnostics list ── */
+    .diag-list { list-style: none; margin-top: 4px; }
+    .diag-list li { padding: 4px 0; border-bottom: 1px solid #F5F5F5; font-size: 13px; color: #424242; }
+    .diag-list li:last-child { border-bottom: none; }
+    .diag-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 5px;
+      border-radius: 3px;
+      margin-right: 6px;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+    .tag-error { background: #FFCDD2; color: #B71C1C; }
+    .tag-warn  { background: #FFF9C4; color: #F57F17; }
+
+    /* ── Loading state ── */
+    #loading { display: none; color: #757575; font-size: 13px; margin-top: 8px; }
+    #loading.visible { display: block; }
+  </style>
+</head>
+<body>
+
+<header>Kustodian</header>
+
+<main>
+  <div class="form-card">
+    <form id="form">
+      <div class="form-field" style="margin-bottom:14px;">
+        <label for="query">KQL Query</label>
+        <textarea id="query" placeholder="DeviceEvents&#10;| project Timestamp, ReportId, DeviceName, AccountName" required spellcheck="false"></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label for="environment">Environment</label>
+          <select id="environment" required>
+            <option value="" disabled selected>Loading…</option>
+          </select>
+        </div>
+        <div class="form-field grow">
+          <label for="impactedEntityField">Impacted entity field</label>
+          <input type="text" id="impactedEntityField" placeholder="e.g. AccountName" required>
+        </div>
+        <div class="form-field grow">
+          <label for="namingConvention">Naming convention regex <span style="font-weight:400;color:#9E9E9E">(optional)</span></label>
+          <input type="text" id="namingConvention" placeholder="e.g. ^[A-Z]">
+        </div>
+        <button type="submit" id="submit-btn">Analyse</button>
+      </div>
+    </form>
+    <div id="loading">Analysing…</div>
+  </div>
+
+  <div id="results">
+    <div class="results-card" id="prov-container">
+      <div id="banner-existence" class="banner banner-error" hidden></div>
+      <div id="banner-consistency" class="banner banner-warn" hidden></div>
+
+      <div class="section-title">Query</div>
+      <pre id="query-display"></pre>
+
+      <div id="diag-section" style="margin-top:16px;" hidden>
+        <div class="section-title">Diagnostics</div>
+        <ul id="diag-list" class="diag-list"></ul>
+      </div>
+
+      <div id="output-section" hidden>
+        <div class="section-title" style="margin-top:20px;">Output columns</div>
+        <table id="output-columns">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Operator</th>
+              <th>Source tables</th>
+            </tr>
+          </thead>
+          <tbody id="output-tbody"></tbody>
+        </table>
+        <p class="prov-hint" id="prov-hint" hidden>
+          Hover the highlighted rows to trace provenance in the query above.
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+'use strict';
+
+// ── Utilities ────────────────────────────────────────────────
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function* walkProvenance(node) {
+  yield node;
+  for (const src of (node.sources ?? [])) yield* walkProvenance(src);
+}
+
+function collectTables(node) {
+  const tables = new Set();
+  for (const n of walkProvenance(node))
+    if (n.table) tables.add(n.table);
+  return [...tables].join(', ') || '—';
+}
+
+// ── Span collection ──────────────────────────────────────────
+
+function collectSpans(query, result, impactedEntityField) {
+  const spans = [];
+
+  // Syntax error spans (have start/end offsets)
+  for (const msg of result.messages)
+    if (msg.type === 'Syntax' && msg.start != null && msg.end != null && msg.end > msg.start)
+      spans.push({ start: msg.start, end: msg.end, classes: ['hl-syntax'] });
+
+  // Naming convention spans — find position via provenance tree
+  const namingMsg = result.messages.find(m => m.type === 'ColumnNamingConvention');
+  if (namingMsg && result.outputColumns)
+    for (const colName of namingMsg.affectedColumns) {
+      const col = result.outputColumns.find(c => c.name === colName);
+      if (col?.provenance?.position != null) {
+        const abs = col.provenance.position.abs;
+        spans.push({ start: abs, end: abs + colName.length, classes: ['hl-naming'] });
+      }
+    }
+
+  // Provenance spans for the three impacted entity columns
+  const provGroups = [
+    { name: 'Timestamp',         cls: 'hl-prov-1' },
+    { name: 'ReportId',          cls: 'hl-prov-2' },
+    { name: impactedEntityField, cls: 'hl-prov-3' }
+  ];
+  if (result.outputColumns)
+    for (const { name, cls } of provGroups) {
+      const col = result.outputColumns.find(c => c.name === name);
+      if (col?.provenance)
+        for (const node of walkProvenance(col.provenance))
+          if (node.position != null)
+            spans.push({ start: node.position.abs, end: node.position.abs + node.column.length, classes: [cls] });
+    }
+
+  return spans;
+}
+
+// ── Multi-layer span rendering ───────────────────────────────
+
+function renderHighlightedQuery(query, spans) {
+  const events = [];
+  for (const { start, end, classes } of spans) {
+    events.push({ pos: start, open: true,  classes });
+    events.push({ pos: end,   open: false, classes });
+  }
+  // Sort by position; opens before closes at the same position
+  events.sort((a, b) => a.pos - b.pos || (a.open ? -1 : 1));
+
+  let html = '', pos = 0;
+  const activeCounts = {};
+
+  const joinActive = () =>
+    Object.entries(activeCounts)
+      .filter(([, c]) => c > 0)
+      .map(([k]) => k)
+      .join(' ');
+
+  for (const ev of events) {
+    if (pos < ev.pos) {
+      const cls = joinActive();
+      const segment = escapeHtml(query.slice(pos, ev.pos));
+      html += cls ? `<span class="${cls}">${segment}</span>` : segment;
+      pos = ev.pos;
+    }
+    for (const c of ev.classes)
+      activeCounts[c] = (activeCounts[c] ?? 0) + (ev.open ? 1 : -1);
+  }
+
+  if (pos < query.length) {
+    const cls = joinActive();
+    const segment = escapeHtml(query.slice(pos));
+    html += cls ? `<span class="${cls}">${segment}</span>` : segment;
+  }
+
+  return html;
+}
+
+// ── Render ───────────────────────────────────────────────────
+
+function renderResults(query, result, impactedEntityField) {
+  const provContainer = document.getElementById('prov-container');
+
+  // Banners
+  const existenceMsg = result.messages.find(m => m.type === 'ImpactedEntityExistence');
+  const consistencyMsg = result.messages.find(m => m.type === 'ImpactedEntityConsistency');
+
+  const elExistence = document.getElementById('banner-existence');
+  elExistence.hidden = !existenceMsg;
+  if (existenceMsg) elExistence.textContent = existenceMsg.message;
+
+  const elConsistency = document.getElementById('banner-consistency');
+  elConsistency.hidden = !consistencyMsg;
+  if (consistencyMsg) elConsistency.textContent = consistencyMsg.message;
+
+  // Highlighted query
+  const spans = collectSpans(query, result, impactedEntityField);
+  document.getElementById('query-display').innerHTML = renderHighlightedQuery(query, spans);
+
+  // Diagnostics list
+  const diagSection = document.getElementById('diag-section');
+  const diagList = document.getElementById('diag-list');
+  diagList.innerHTML = '';
+  if (result.messages.length > 0) {
+    for (const msg of result.messages) {
+      const li = document.createElement('li');
+      const tagClass = msg.level === 'ERROR' ? 'tag-error' : 'tag-warn';
+      li.innerHTML = `<span class="diag-tag ${tagClass}">${escapeHtml(msg.type)}</span>${escapeHtml(msg.message)}`;
+      diagList.appendChild(li);
+    }
+    diagSection.hidden = false;
+  } else {
+    diagSection.hidden = true;
+  }
+
+  // Output columns table
+  const outputSection = document.getElementById('output-section');
+  const tbody = document.getElementById('output-tbody');
+  tbody.innerHTML = '';
+
+  if (result.outputColumns && result.outputColumns.length > 0) {
+    const provGroupMap = {
+      'Timestamp': '1',
+      'ReportId':  '2',
+      [impactedEntityField]: '3'
+    };
+    let hasProvRows = false;
+
+    for (const col of result.outputColumns) {
+      const tr = document.createElement('tr');
+      const group = provGroupMap[col.name];
+      if (group) {
+        tr.classList.add('prov-row');
+        tr.dataset.provGroup = group;
+        tr.addEventListener('mouseenter', () => provContainer.dataset.provActive = group);
+        tr.addEventListener('mouseleave', () => delete provContainer.dataset.provActive);
+        hasProvRows = true;
+      }
+      const operator = col.provenance?.operator ?? (col.provenance?.table ? '(source)' : '—');
+      const sources = col.provenance ? collectTables(col.provenance) : '—';
+      tr.innerHTML = `
+        <td>${escapeHtml(col.name)}</td>
+        <td><code>${escapeHtml(col.type)}</code></td>
+        <td>${escapeHtml(operator)}</td>
+        <td>${escapeHtml(sources)}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    outputSection.hidden = false;
+    document.getElementById('prov-hint').hidden = !hasProvRows;
+  } else {
+    outputSection.hidden = true;
+  }
+
+  document.getElementById('results').classList.add('visible');
+}
+
+// ── Init ─────────────────────────────────────────────────────
+
+async function loadEnvironments() {
+  try {
+    const envs = await fetch('/environments').then(r => r.json());
+    const sel = document.getElementById('environment');
+    sel.innerHTML = '';
+    for (const e of envs) {
+      const opt = document.createElement('option');
+      opt.value = opt.textContent = e;
+      sel.appendChild(opt);
+    }
+  } catch {
+    const sel = document.getElementById('environment');
+    sel.innerHTML = '<option value="" disabled selected>Failed to load</option>';
+  }
+}
+
+document.getElementById('form').addEventListener('submit', async e => {
+  e.preventDefault();
+
+  const query = document.getElementById('query').value;
+  const environment = document.getElementById('environment').value;
+  const impactedEntityField = document.getElementById('impactedEntityField').value.trim();
+  const namingConvention = document.getElementById('namingConvention').value.trim();
+
+  const req = { query, environment, impactedEntityField, provenance: true };
+  if (namingConvention) req.namingConvention = namingConvention;
+
+  const btn = document.getElementById('submit-btn');
+  const loading = document.getElementById('loading');
+  btn.disabled = true;
+  loading.classList.add('visible');
+
+  try {
+    const resp = await fetch('/analyse', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req)
+    });
+    const result = await resp.json();
+    if (!resp.ok) {
+      alert('Error: ' + (result.error ?? resp.statusText));
+      return;
+    }
+    renderResults(query, result, impactedEntityField);
+  } catch (err) {
+    alert('Request failed: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    loading.classList.remove('visible');
+  }
+});
+
+loadEnvironments();
+</script>
+</body>
+</html>
