@@ -104,7 +104,7 @@ public class QueryFactsTests
     }
 
     [Fact]
-    public void Build_UnionOfLookups_KeyColumnTracesAllLeftSideSources()
+    public void Build_UnionOfLookups_KeyColumnTracesBothSidesOfLookup()
     {
         var globals = ThreeTableEnv();
         var facts = QueryFacts.Build(UnionLookupQuery, globals);
@@ -116,7 +116,7 @@ public class QueryFactsTests
 
         Assert.Contains("DeviceEvents", sourceTableNames);
         Assert.Contains("DeviceProcessEvents", sourceTableNames);
-        Assert.DoesNotContain("DeviceFileEvents", sourceTableNames);
+        Assert.Contains("DeviceFileEvents", sourceTableNames);
     }
 
     const string LookupQuery =
@@ -124,16 +124,18 @@ public class QueryFactsTests
         "DeviceEvents | where FileName =~ \"evil.exe\" | lookup ExtraData on DeviceId";
 
     [Fact]
-    public void Build_LookupKeyColumn_ProvenanceTracesOnlyLeftSide()
+    public void Build_LookupKeyColumn_ProvenanceTracesBothSides()
     {
         var globals = TwoTableEnv();
         var facts = QueryFacts.Build(LookupQuery, globals);
 
         var deviceId = facts.Columns.Single(c => c.Name == "DeviceId");
-        var sources = facts.SourceMap[deviceId];
+        var sourceTableNames = facts.SourceMap[deviceId]
+            .Select(c => globals.GetTable(c)?.Name)
+            .ToHashSet();
 
-        Assert.Single(sources);
-        Assert.Equal("DeviceEvents", globals.GetTable(sources[0])?.Name);
+        Assert.Contains("DeviceEvents", sourceTableNames);
+        Assert.Contains("DeviceFileEvents", sourceTableNames);
     }
 
     [Fact]

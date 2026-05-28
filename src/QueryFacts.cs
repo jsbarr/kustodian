@@ -34,12 +34,12 @@ public record QueryFacts(
         var resultTable = code.ResultType as TableSymbol;
 
         var columns = resultTable?.Columns ?? (IReadOnlyList<ColumnSymbol>)[];
-        var (symbolInfoMap, lookupRhsKeys) = BuildSymbolInfoMap(code.Syntax);
+        var symbolInfoMap = BuildSymbolInfoMap(code.Syntax);
 
         var built = columns.Select(c =>
         {
             var leafSources = new HashSet<ColumnSymbol>();
-            var node = BuildProvenanceNode(c, globals, symbolInfoMap, lookupRhsKeys, query, [], leafSources);
+            var node = BuildProvenanceNode(c, globals, symbolInfoMap, query, [], leafSources);
             return (c, node, leafSources);
         }).ToList();
 
@@ -57,7 +57,6 @@ public record QueryFacts(
         ColumnSymbol col,
         GlobalState globals,
         Dictionary<Symbol, SymbolInfo> symbolInfoMap,
-        HashSet<ColumnSymbol> lookupRhsKeys,
         string query,
         HashSet<ColumnSymbol> path,
         HashSet<ColumnSymbol> leafSources)
@@ -73,7 +72,7 @@ public record QueryFacts(
 
         // Invoke case: column was introduced by an invoke operator.
         if (colInfo?.InvokeContext is { } ctx)
-            return BuildInvokeProvenance(col, ctx, globals, symbolInfoMap, lookupRhsKeys, query, path, leafSources);
+            return BuildInvokeProvenance(col, ctx, globals, symbolInfoMap, query, path, leafSources);
 
         // Base case: column belongs to a real table — it's a leaf, no further recursion needed.
         var table = globals.GetTable(col);
@@ -90,7 +89,7 @@ public record QueryFacts(
         // to anchor highlights at the wrong location.
         var position = colInfo != null ? BuildPosition(query, colInfo.FirstPosition) : null;
 
-        var originalColumns = GetProvenanceSources(col, colInfo, lookupRhsKeys);
+        var originalColumns = GetProvenanceSources(col, colInfo);
         // No upstream sources found (e.g. a literal or aggregate with no column references).
         if (originalColumns.Count == 0)
             return new ProvenanceNode(Column: col.Name, Operator: op, Position: position);
@@ -98,7 +97,7 @@ public record QueryFacts(
         // Recursive case: descend into each upstream column, collecting their provenance nodes.
         path.Add(col);
         var sources = originalColumns
-            .Select(orig => BuildProvenanceNode(orig, globals, symbolInfoMap, lookupRhsKeys, query, path, leafSources))
+            .Select(orig => BuildProvenanceNode(orig, globals, symbolInfoMap, query, path, leafSources))
             .ToArray();
         path.Remove(col);
 
@@ -109,23 +108,9 @@ public record QueryFacts(
     // Prefers the Kusto SDK's built-in OriginalColumns, but this is only populated for certain operators like project-rename.
     // For more complex operators like extend, summarize, etc, falls back to walking the AST expression for any column name references
     // (e.g. `extend foo = bar + baz` → [bar, baz]).
-    static IReadOnlyList<ColumnSymbol> GetProvenanceSources(ColumnSymbol col, SymbolInfo? info, HashSet<ColumnSymbol> lookupRhsKeys)
+    static IReadOnlyList<ColumnSymbol> GetProvenanceSources(ColumnSymbol col, SymbolInfo? info)
     {
-        var originals = col.OriginalColumns;
-        if (originals.Count > 0)
-        {
-            // Filter out lookup RHS key columns: the lookup binder merges [LHS, RHS] into one column
-            // (SDK VisitLookupOperator). Provenance follows only the LHS — the key value always comes
-            // from the driver table. lookupRhsKeys tracks which symbols are RHS keys across all lookup
-            // operators in this query, so the filter is exact rather than heuristic.
-            if (lookupRhsKeys.Count > 0)
-            {
-                var filtered = originals.Where(c => !lookupRhsKeys.Contains(c)).ToList();
-                if (filtered.Count != originals.Count)
-                    return filtered;
-            }
-            return originals;
-        }
+        if (col.OriginalColumns.Count > 0) return col.OriginalColumns;
 
         if (info?.NameDeclaration?.Parent is SimpleNamedExpression sne)
         {
@@ -159,12 +144,9 @@ public record QueryFacts(
     // Single AST walk that builds a unified symbol map used throughout provenance tracing.
     // For each symbol encountered, records: the earliest text position, the declaration node (columns only),
     // and invoke context (for columns introduced via an invoke operator).
-    // Also returns the set of lookup RHS key symbols — the right-hand side column from each lookup key
-    // merge — so GetProvenanceSources can filter them from any column's OriginalColumns.
-    static (Dictionary<Symbol, SymbolInfo> map, HashSet<ColumnSymbol> lookupRhsKeys) BuildSymbolInfoMap(SyntaxNode root)
+    static Dictionary<Symbol, SymbolInfo> BuildSymbolInfoMap(SyntaxNode root)
     {
         var map = new Dictionary<Symbol, SymbolInfo>();
-        var lookupRhsKeys = new HashSet<ColumnSymbol>();
 
         SyntaxElement.WalkNodes(root, n =>
         {
@@ -204,26 +186,10 @@ public record QueryFacts(
                         }
                     }
                 }
-                else if (pipe.Operator is LookupOperator)
-                {
-                    // Collect the RHS key symbol from each lookup-merged key column.
-                    // The lookup binder creates OriginalColumns = [LHS, RHS] for the merged key.
-                    // OriginalColumns[1] is the RHS symbol; we track it so GetProvenanceSources
-                    // can filter it out wherever it appears (including after union flattening).
-                    foreach (var col in (pipe.ResultType as TableSymbol)?.Columns ?? [])
-                    {
-                        if (col.OriginalColumns.Count == 2 &&
-                            string.Equals(col.OriginalColumns[0].Name, col.Name, StringComparison.OrdinalIgnoreCase) &&
-                            string.Equals(col.OriginalColumns[1].Name, col.Name, StringComparison.OrdinalIgnoreCase))
-                        {
-                            lookupRhsKeys.Add(col.OriginalColumns[1]);
-                        }
-                    }
-                }
             }
         });
 
-        return (map, lookupRhsKeys);
+        return map;
     }
 
     static InvokeContext BuildInvokeContext(InvokeOperator invoke, TableSymbol? resultTable)
@@ -251,7 +217,7 @@ public record QueryFacts(
     // Scalar param references → invoke-boundary leaves. Table column references → recurse into source.
     static ProvenanceNode BuildInvokeProvenance(
         ColumnSymbol col, InvokeContext ctx, GlobalState globals,
-        Dictionary<Symbol, SymbolInfo> symbolInfoMap, HashSet<ColumnSymbol> lookupRhsKeys,
+        Dictionary<Symbol, SymbolInfo> symbolInfoMap,
         string query, HashSet<ColumnSymbol> path, HashSet<ColumnSymbol> leafSources)
     {
         var invokePos = BuildPosition(query, ctx.InvokePos);
@@ -278,7 +244,7 @@ public record QueryFacts(
 
             var sourceCol = ctx.ResultTable?.Columns.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
             if (sourceCol != null)
-                sources.Add(BuildProvenanceNode(sourceCol, globals, symbolInfoMap, lookupRhsKeys, query, path, leafSources));
+                sources.Add(BuildProvenanceNode(sourceCol, globals, symbolInfoMap, query, path, leafSources));
         }
 
         path.Remove(col);
