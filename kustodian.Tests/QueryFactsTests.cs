@@ -178,6 +178,28 @@ public class QueryFactsTests
         Assert.NotEqual(reportIdLeafPos, deviceIdLeafPos);
     }
 
+    [Fact]
+    public void Build_ArgMinTupleAssignment_TracesSourceColumns()
+    {
+        // (A,B)=arg_min(Key,A,B) — both output columns should have sources from table T,
+        // not empty provenance (which would cause a false consistency error).
+        var globals = Env("T",
+            ("Key", ScalarTypes.Long),
+            ("A", ScalarTypes.Long),
+            ("B", ScalarTypes.Long));
+        var facts = QueryFacts.Build("T | summarize (A,B)=arg_min(Key,A,B) by Key", globals);
+
+        var aLeaves = AllProvenanceNodes(facts.Output.Single(c => c.Name == "A").Provenance)
+            .Where(n => n.Table != null).ToList();
+        var bLeaves = AllProvenanceNodes(facts.Output.Single(c => c.Name == "B").Provenance)
+            .Where(n => n.Table != null).ToList();
+
+        Assert.NotEmpty(aLeaves);
+        Assert.NotEmpty(bLeaves);
+        Assert.All(aLeaves, n => Assert.Equal("T", n.Table));
+        Assert.All(bLeaves, n => Assert.Equal("T", n.Table));
+    }
+
     static IEnumerable<ProvenanceNode> AllProvenanceNodes(ProvenanceNode? node)
     {
         if (node == null) yield break;

@@ -127,6 +127,18 @@ public record QueryFacts(
                 .Cast<ColumnSymbol>()
                 .ToList();
         }
+
+        if (info?.NameDeclaration?.GetFirstAncestor<CompoundNamedExpression>() is { } cne)
+        {
+            return cne.Expression
+                .GetDescendantsOrSelf<NameReference>()
+                .Select(nr => nr.ReferencedSymbol as ColumnSymbol)
+                .Where(c => c != null && c != col)
+                .Distinct()
+                .Cast<ColumnSymbol>()
+                .ToList();
+        }
+
         return [];
     }
 
