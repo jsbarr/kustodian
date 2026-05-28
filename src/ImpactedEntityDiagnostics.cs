@@ -20,12 +20,14 @@ public static class ImpactedEntityDiagnostics
         var present = facts.Columns.Where(c => required.Contains(c.Name)).ToList();
         if (present.Count < 2) yield break;
 
-        // All required columns must trace back to exactly the same set of source tables.
-        // Mixed provenance (e.g. Timestamp from DeviceEvents, AccountUpn from IdentityInfo)
-        // means the alert evidence spans multiple independent rows, which is misleading.
+        // All required columns must trace back to exactly the same set of source table instances.
+        // "Instance" = (table name, position in query) — this catches both cross-table mixing
+        // (e.g. Timestamp from DeviceEvents, AccountUpn from IdentityInfo) and same-table split
+        // branches (e.g. two union arms that each reference DeviceEvents independently).
+        var outputByName = facts.Output.ToDictionary(o => o.Name, StringComparer.OrdinalIgnoreCase);
         var sourceSets = present.ToDictionary(
             c => c.Name,
-            c => new HashSet<string>(facts.SourceMap[c].Select(s => facts.Globals.GetTable(s)!.Name)));
+            c => LeafSources(outputByName[c.Name].Provenance));
 
         var first = sourceSets.First().Value;
         var inconsistent = sourceSets
@@ -40,5 +42,19 @@ public static class ImpactedEntityDiagnostics
                 Type: "ImpactedEntityConsistency",
                 Message: $"Impacted entity columns have inconsistent provenance: {string.Join(", ", inconsistent)}",
                 AffectedColumns: inconsistent);
+    }
+
+    static HashSet<(string table, int pos)> LeafSources(ProvenanceNode? node)
+    {
+        var result = new HashSet<(string, int)>();
+        Collect(node, result);
+        return result;
+
+        static void Collect(ProvenanceNode? n, HashSet<(string, int)> acc)
+        {
+            if (n == null) return;
+            if (n.Table != null) { acc.Add((n.Table, n.Position?.Abs ?? 0)); return; }
+            foreach (var src in n.Sources ?? []) Collect(src, acc);
+        }
     }
 }

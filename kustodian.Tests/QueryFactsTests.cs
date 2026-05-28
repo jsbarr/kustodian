@@ -150,6 +150,34 @@ public class QueryFactsTests
         Assert.DoesNotContain(allNodes, n => n.Position?.Abs == 0);
     }
 
+    static GlobalState SingleTableWithThreeCols() =>
+        GlobalState.Default.WithDatabase(new DatabaseSymbol("db",
+            new TableSymbol("DeviceEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String),
+                new ColumnSymbol("ReportId", ScalarTypes.String),
+                new ColumnSymbol("Timestamp", ScalarTypes.DateTime))));
+
+    const string SameTableTwoBranchUnion =
+        "let Source1 = DeviceEvents | project ReportId, Timestamp;\n" +
+        "let Source2 = DeviceEvents | project DeviceId;\n" +
+        "union Source1, Source2";
+
+    [Fact]
+    public void Build_SameTableTwoBranches_LeafPositionsDifferAcrossBranches()
+    {
+        var globals = SingleTableWithThreeCols();
+        var facts = QueryFacts.Build(SameTableTwoBranchUnion, globals);
+
+        // ReportId comes from Source1's DeviceEvents; DeviceId comes from Source2's DeviceEvents.
+        // The leaf positions must differ so the consistency check can detect the split.
+        var reportIdLeafPos = AllProvenanceNodes(facts.Output.Single(c => c.Name == "ReportId").Provenance)
+            .First(n => n.Table != null).Position?.Abs;
+        var deviceIdLeafPos = AllProvenanceNodes(facts.Output.Single(c => c.Name == "DeviceId").Provenance)
+            .First(n => n.Table != null).Position?.Abs;
+
+        Assert.NotEqual(reportIdLeafPos, deviceIdLeafPos);
+    }
+
     static IEnumerable<ProvenanceNode> AllProvenanceNodes(ProvenanceNode? node)
     {
         if (node == null) yield break;

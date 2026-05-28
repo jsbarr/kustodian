@@ -34,12 +34,12 @@ public record QueryFacts(
         var resultTable = code.ResultType as TableSymbol;
 
         var columns = resultTable?.Columns ?? (IReadOnlyList<ColumnSymbol>)[];
-        var symbolInfoMap = BuildSymbolInfoMap(code.Syntax);
+        var (symbolInfoMap, columnTableRefPos) = BuildSymbolInfoMap(code.Syntax, globals);
 
         var built = columns.Select(c =>
         {
             var leafSources = new HashSet<ColumnSymbol>();
-            var node = BuildProvenanceNode(c, globals, symbolInfoMap, query, [], leafSources);
+            var node = BuildProvenanceNode(c, globals, symbolInfoMap, columnTableRefPos, query, [], leafSources);
             return (c, node, leafSources);
         }).ToList();
 
@@ -57,6 +57,7 @@ public record QueryFacts(
         ColumnSymbol col,
         GlobalState globals,
         Dictionary<Symbol, SymbolInfo> symbolInfoMap,
+        Dictionary<ColumnSymbol, int> columnTableRefPos,
         string query,
         HashSet<ColumnSymbol> path,
         HashSet<ColumnSymbol> leafSources)
@@ -72,14 +73,18 @@ public record QueryFacts(
 
         // Invoke case: column was introduced by an invoke operator.
         if (colInfo?.InvokeContext is { } ctx)
-            return BuildInvokeProvenance(col, ctx, globals, symbolInfoMap, query, path, leafSources);
+            return BuildInvokeProvenance(col, ctx, globals, symbolInfoMap, columnTableRefPos, query, path, leafSources);
 
         // Base case: column belongs to a real table — it's a leaf, no further recursion needed.
         var table = globals.GetTable(col);
         if (table != null)
         {
             leafSources.Add(col);
-            var pos = symbolInfoMap.TryGetValue(table, out var tblInfo) ? tblInfo.FirstPosition : 0;
+            // Use the specific table-occurrence position for this column if available; this distinguishes
+            // two references to the same table in separate union branches.
+            var pos = columnTableRefPos.TryGetValue(col, out var specificPos)
+                ? specificPos
+                : (symbolInfoMap.TryGetValue(table, out var tblInfo) ? tblInfo.FirstPosition : 0);
             return new ProvenanceNode(Column: col.Name, Table: table.Name, Position: BuildPosition(query, pos));
         }
 
@@ -97,7 +102,7 @@ public record QueryFacts(
         // Recursive case: descend into each upstream column, collecting their provenance nodes.
         path.Add(col);
         var sources = originalColumns
-            .Select(orig => BuildProvenanceNode(orig, globals, symbolInfoMap, query, path, leafSources))
+            .Select(orig => BuildProvenanceNode(orig, globals, symbolInfoMap, columnTableRefPos, query, path, leafSources))
             .ToArray();
         path.Remove(col);
 
@@ -144,9 +149,16 @@ public record QueryFacts(
     // Single AST walk that builds a unified symbol map used throughout provenance tracing.
     // For each symbol encountered, records: the earliest text position, the declaration node (columns only),
     // and invoke context (for columns introduced via an invoke operator).
-    static Dictionary<Symbol, SymbolInfo> BuildSymbolInfoMap(SyntaxNode root)
+    // Also computes columnTableRefPos: for each real table column referenced in the query, the position
+    // of the specific table occurrence that immediately precedes that column reference. This lets us
+    // distinguish e.g. "DeviceEvents@P1" from "DeviceEvents@P2" when the same table appears in two
+    // separate union branches.
+    static (Dictionary<Symbol, SymbolInfo> map, Dictionary<ColumnSymbol, int> columnTableRefPos)
+        BuildSymbolInfoMap(SyntaxNode root, GlobalState globals)
     {
         var map = new Dictionary<Symbol, SymbolInfo>();
+        var tableRefs = new List<(TableSymbol tbl, int pos)>();
+        var colRefs = new List<(ColumnSymbol col, int pos)>();
 
         SyntaxElement.WalkNodes(root, n =>
         {
@@ -157,8 +169,11 @@ public record QueryFacts(
                     case ColumnSymbol col:
                         if (n is NameDeclaration nd)
                             map[col] = new SymbolInfo(n.TextStart, NameDeclaration: nd);
+                        else
+                            colRefs.Add((col, n.TextStart));
                         break;
                     case TableSymbol tbl:
+                        tableRefs.Add((tbl, n.TextStart));
                         if (!map.TryGetValue(tbl, out var tblInfo) || n.TextStart < tblInfo.FirstPosition)
                             map[tbl] = new SymbolInfo(n.TextStart);
                         break;
@@ -189,7 +204,23 @@ public record QueryFacts(
             }
         });
 
-        return map;
+        // For each real table column referenced in the query, find the position of the specific
+        // table occurrence that immediately precedes it (the last table ref for that table at a
+        // position < the column ref). This distinguishes two references to the same table in
+        // separate union branches (e.g. Source1 = DeviceEvents | ... and Source2 = DeviceEvents | ...).
+        var columnTableRefPos = new Dictionary<ColumnSymbol, int>();
+        foreach (var (col, colPos) in colRefs)
+        {
+            if (globals.GetTable(col) is not { } tbl) continue;
+            int best = -1;
+            foreach (var (refTbl, refPos) in tableRefs)
+                if (refTbl == tbl && refPos < colPos && refPos > best)
+                    best = refPos;
+            if (best >= 0)
+                columnTableRefPos[col] = best;
+        }
+
+        return (map, columnTableRefPos);
     }
 
     static InvokeContext BuildInvokeContext(InvokeOperator invoke, TableSymbol? resultTable)
@@ -217,7 +248,7 @@ public record QueryFacts(
     // Scalar param references → invoke-boundary leaves. Table column references → recurse into source.
     static ProvenanceNode BuildInvokeProvenance(
         ColumnSymbol col, InvokeContext ctx, GlobalState globals,
-        Dictionary<Symbol, SymbolInfo> symbolInfoMap,
+        Dictionary<Symbol, SymbolInfo> symbolInfoMap, Dictionary<ColumnSymbol, int> columnTableRefPos,
         string query, HashSet<ColumnSymbol> path, HashSet<ColumnSymbol> leafSources)
     {
         var invokePos = BuildPosition(query, ctx.InvokePos);
@@ -244,7 +275,7 @@ public record QueryFacts(
 
             var sourceCol = ctx.ResultTable?.Columns.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
             if (sourceCol != null)
-                sources.Add(BuildProvenanceNode(sourceCol, globals, symbolInfoMap, query, path, leafSources));
+                sources.Add(BuildProvenanceNode(sourceCol, globals, symbolInfoMap, columnTableRefPos, query, path, leafSources));
         }
 
         path.Remove(col);
