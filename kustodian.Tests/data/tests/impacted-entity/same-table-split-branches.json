@@ -1,0 +1,17 @@
+{
+  "id": "IEF-04",
+  "name": "Provenance mismatch: same table used in different union branches",
+  "input": {
+    "query": "let Source1 = DeviceEvents | project ReportId, Timestamp;\nlet Source2 = DeviceEvents | project DeviceId;\nunion Source1, Source2",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityConsistency"
+      }
+    ]
+  }
+}

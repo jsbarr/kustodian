@@ -1,0 +1,12 @@
+{
+  "id": "IEF-05",
+  "name": "No error: arg_min tuple assignment — Timestamp/ReportId trace back to the same table as DeviceId",
+  "input": {
+    "query": "DeviceProcessEvents | summarize (Timestamp,ReportId)=arg_min(Timestamp, ReportId) by DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}

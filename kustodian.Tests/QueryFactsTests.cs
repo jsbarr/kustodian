@@ -104,7 +104,7 @@ public class QueryFactsTests
     }
 
     [Fact]
-    public void Build_UnionOfLookups_KeyColumnTracesAllLeftSideSources()
+    public void Build_UnionOfLookups_KeyColumnTracesBothSidesOfLookup()
     {
         var globals = ThreeTableEnv();
         var facts = QueryFacts.Build(UnionLookupQuery, globals);
@@ -116,7 +116,7 @@ public class QueryFactsTests
 
         Assert.Contains("DeviceEvents", sourceTableNames);
         Assert.Contains("DeviceProcessEvents", sourceTableNames);
-        Assert.DoesNotContain("DeviceFileEvents", sourceTableNames);
+        Assert.Contains("DeviceFileEvents", sourceTableNames);
     }
 
     const string LookupQuery =
@@ -124,16 +124,18 @@ public class QueryFactsTests
         "DeviceEvents | where FileName =~ \"evil.exe\" | lookup ExtraData on DeviceId";
 
     [Fact]
-    public void Build_LookupKeyColumn_ProvenanceTracesOnlyLeftSide()
+    public void Build_LookupKeyColumn_ProvenanceTracesBothSides()
     {
         var globals = TwoTableEnv();
         var facts = QueryFacts.Build(LookupQuery, globals);
 
         var deviceId = facts.Columns.Single(c => c.Name == "DeviceId");
-        var sources = facts.SourceMap[deviceId];
+        var sourceTableNames = facts.SourceMap[deviceId]
+            .Select(c => globals.GetTable(c)?.Name)
+            .ToHashSet();
 
-        Assert.Single(sources);
-        Assert.Equal("DeviceEvents", globals.GetTable(sources[0])?.Name);
+        Assert.Contains("DeviceEvents", sourceTableNames);
+        Assert.Contains("DeviceFileEvents", sourceTableNames);
     }
 
     [Fact]
@@ -146,6 +148,56 @@ public class QueryFactsTests
 
         var allNodes = facts.Output.SelectMany(c => AllProvenanceNodes(c.Provenance));
         Assert.DoesNotContain(allNodes, n => n.Position?.Abs == 0);
+    }
+
+    static GlobalState SingleTableWithThreeCols() =>
+        GlobalState.Default.WithDatabase(new DatabaseSymbol("db",
+            new TableSymbol("DeviceEvents",
+                new ColumnSymbol("DeviceId", ScalarTypes.String),
+                new ColumnSymbol("ReportId", ScalarTypes.String),
+                new ColumnSymbol("Timestamp", ScalarTypes.DateTime))));
+
+    const string SameTableTwoBranchUnion =
+        "let Source1 = DeviceEvents | project ReportId, Timestamp;\n" +
+        "let Source2 = DeviceEvents | project DeviceId;\n" +
+        "union Source1, Source2";
+
+    [Fact]
+    public void Build_SameTableTwoBranches_LeafPositionsDifferAcrossBranches()
+    {
+        var globals = SingleTableWithThreeCols();
+        var facts = QueryFacts.Build(SameTableTwoBranchUnion, globals);
+
+        // ReportId comes from Source1's DeviceEvents; DeviceId comes from Source2's DeviceEvents.
+        // The leaf positions must differ so the consistency check can detect the split.
+        var reportIdLeafPos = AllProvenanceNodes(facts.Output.Single(c => c.Name == "ReportId").Provenance)
+            .First(n => n.Table != null).Position?.Abs;
+        var deviceIdLeafPos = AllProvenanceNodes(facts.Output.Single(c => c.Name == "DeviceId").Provenance)
+            .First(n => n.Table != null).Position?.Abs;
+
+        Assert.NotEqual(reportIdLeafPos, deviceIdLeafPos);
+    }
+
+    [Fact]
+    public void Build_ArgMinTupleAssignment_TracesSourceColumns()
+    {
+        // (A,B)=arg_min(Key,A,B) — both output columns should have sources from table T,
+        // not empty provenance (which would cause a false consistency error).
+        var globals = Env("T",
+            ("Key", ScalarTypes.Long),
+            ("A", ScalarTypes.Long),
+            ("B", ScalarTypes.Long));
+        var facts = QueryFacts.Build("T | summarize (A,B)=arg_min(Key,A,B) by Key", globals);
+
+        var aLeaves = AllProvenanceNodes(facts.Output.Single(c => c.Name == "A").Provenance)
+            .Where(n => n.Table != null).ToList();
+        var bLeaves = AllProvenanceNodes(facts.Output.Single(c => c.Name == "B").Provenance)
+            .Where(n => n.Table != null).ToList();
+
+        Assert.NotEmpty(aLeaves);
+        Assert.NotEmpty(bLeaves);
+        Assert.All(aLeaves, n => Assert.Equal("T", n.Table));
+        Assert.All(bLeaves, n => Assert.Equal("T", n.Table));
     }
 
     static IEnumerable<ProvenanceNode> AllProvenanceNodes(ProvenanceNode? node)
