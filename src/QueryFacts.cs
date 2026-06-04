@@ -17,6 +17,11 @@ record SymbolInfo(
     NameDeclaration? NameDeclaration = null,
     InvokeContext? InvokeContext = null);
 
+// A lookup `on` key whose two source branches (left input, right enrichment) collapse into one
+// output column. Kind drives which branch the consistency check may follow; LeftPos/RightPos are
+// the corrected base-table positions of each branch (the SDK alone collapses both to one position).
+record LookupFork(string Kind, int LeftPos, int RightPos);
+
 public record QueryFacts(
     string Query,
     IReadOnlyList<ColumnSymbol> Columns,
@@ -34,12 +39,12 @@ public record QueryFacts(
         var resultTable = code.ResultType as TableSymbol;
 
         var columns = resultTable?.Columns ?? (IReadOnlyList<ColumnSymbol>)[];
-        var (symbolInfoMap, columnTableRefPos) = BuildSymbolInfoMap(code.Syntax, globals);
+        var (symbolInfoMap, columnTableRefPos, lookupForks) = BuildSymbolInfoMap(code.Syntax, globals);
 
         var built = columns.Select(c =>
         {
             var leafSources = new HashSet<ColumnSymbol>();
-            var node = BuildProvenanceNode(c, globals, symbolInfoMap, columnTableRefPos, query, [], leafSources);
+            var node = BuildProvenanceNode(c, globals, symbolInfoMap, columnTableRefPos, lookupForks, query, [], leafSources);
             return (c, node, leafSources);
         }).ToList();
 
@@ -58,6 +63,7 @@ public record QueryFacts(
         GlobalState globals,
         Dictionary<Symbol, SymbolInfo> symbolInfoMap,
         Dictionary<ColumnSymbol, int> columnTableRefPos,
+        Dictionary<(ColumnSymbol, ColumnSymbol), LookupFork> lookupForks,
         string query,
         HashSet<ColumnSymbol> path,
         HashSet<ColumnSymbol> leafSources)
@@ -73,7 +79,7 @@ public record QueryFacts(
 
         // Invoke case: column was introduced by an invoke operator.
         if (colInfo?.InvokeContext is { } ctx)
-            return BuildInvokeProvenance(col, ctx, globals, symbolInfoMap, columnTableRefPos, query, path, leafSources);
+            return BuildInvokeProvenance(col, ctx, globals, symbolInfoMap, columnTableRefPos, lookupForks, query, path, leafSources);
 
         // Base case: column belongs to a real table — it's a leaf, no further recursion needed.
         var table = globals.GetTable(col);
@@ -102,9 +108,20 @@ public record QueryFacts(
         // Recursive case: descend into each upstream column, collecting their provenance nodes.
         path.Add(col);
         var sources = originalColumns
-            .Select(orig => BuildProvenanceNode(orig, globals, symbolInfoMap, columnTableRefPos, query, path, leafSources))
+            .Select(orig => BuildProvenanceNode(orig, globals, symbolInfoMap, columnTableRefPos, lookupForks, query, path, leafSources))
             .ToArray();
         path.Remove(col);
+
+        // Lookup key fork: the SDK collapses both branches to a single position (and flattens a rename's
+        // OriginalColumns straight to this same left/right key pair), so match on the pair, fix each
+        // branch's base position from the extracted occurrences, and mark the node with the join kind.
+        // A bare key wrapper has no operator of its own → label it "lookup"; a rename keeps its operator.
+        if (originalColumns.Count == 2 && lookupForks.TryGetValue((originalColumns[0], originalColumns[1]), out var fork))
+        {
+            sources[0] = sources[0] with { Position = BuildPosition(query, fork.LeftPos) };
+            sources[1] = sources[1] with { Position = BuildPosition(query, fork.RightPos) };
+            return new ProvenanceNode(Column: col.Name, Operator: op ?? "lookup", Kind: fork.Kind, Position: position, Sources: sources);
+        }
 
         return new ProvenanceNode(Column: col.Name, Operator: op, Position: position, Sources: sources);
     }
@@ -165,12 +182,15 @@ public record QueryFacts(
     // of the specific table occurrence that immediately precedes that column reference. This lets us
     // distinguish e.g. "DeviceEvents@P1" from "DeviceEvents@P2" when the same table appears in two
     // separate union branches.
-    static (Dictionary<Symbol, SymbolInfo> map, Dictionary<ColumnSymbol, int> columnTableRefPos)
+    static (Dictionary<Symbol, SymbolInfo> map, Dictionary<ColumnSymbol, int> columnTableRefPos, Dictionary<(ColumnSymbol, ColumnSymbol), LookupFork> lookupForks)
         BuildSymbolInfoMap(SyntaxNode root, GlobalState globals)
     {
         var map = new Dictionary<Symbol, SymbolInfo>();
         var tableRefs = new List<(TableSymbol tbl, int pos)>();
         var colRefs = new List<(ColumnSymbol col, int pos)>();
+        // Lookup key forks: deferred until tableRefs is complete so we can resolve each branch's
+        // base position from the left-input and right-enrichment spans. (col, leftKey, rightKey, kind, spans).
+        var pendingForks = new List<(ColumnSymbol outCol, ColumnSymbol leftKey, ColumnSymbol rightKey, string kind, int leftStart, int leftEnd, int rightStart, int rightEnd)>();
 
         SyntaxElement.WalkNodes(root, n =>
         {
@@ -213,6 +233,22 @@ public record QueryFacts(
                         }
                     }
                 }
+
+                // A lookup coalesces each `on` key into one output column whose OriginalColumns are the
+                // left-input and right-enrichment branches. Record the branch spans so their distinct base
+                // positions can be resolved once tableRefs is complete.
+                if (pipe.Operator is LookupOperator lookup && pipe.ResultType is TableSymbol lookupOut)
+                {
+                    var kind = GetJoinKind(lookup.Parameters, defaultKind: "leftouter");
+                    foreach (var keyName in OnClauseKeyNames(lookup.LookupClause))
+                    {
+                        var outCol = lookupOut.Columns.FirstOrDefault(c => string.Equals(c.Name, keyName, StringComparison.OrdinalIgnoreCase));
+                        if (outCol == null || outCol.OriginalColumns.Count < 2) continue;
+                        pendingForks.Add((outCol, outCol.OriginalColumns[0], outCol.OriginalColumns[1], kind,
+                            pipe.Expression.TextStart, pipe.Expression.End,
+                            lookup.Expression.TextStart, lookup.Expression.End));
+                    }
+                }
             }
         });
 
@@ -232,7 +268,47 @@ public record QueryFacts(
                 columnTableRefPos[col] = best;
         }
 
-        return (map, columnTableRefPos);
+        // Resolve each fork branch to the occurrence of its base table within that branch's text span:
+        // the left key inside the left input, the right key inside the right enrichment. This recovers
+        // the distinct positions the SDK collapses for a same-table key.
+        var lookupForks = new Dictionary<(ColumnSymbol, ColumnSymbol), LookupFork>();
+        foreach (var f in pendingForks)
+        {
+            int leftPos = TableRefInSpan(tableRefs, globals.GetTable(f.leftKey), f.leftStart, f.leftEnd);
+            int rightPos = TableRefInSpan(tableRefs, globals.GetTable(f.rightKey), f.rightStart, f.rightEnd);
+            lookupForks[(f.leftKey, f.rightKey)] = new LookupFork(f.kind, leftPos, rightPos);
+        }
+
+        return (map, columnTableRefPos, lookupForks);
+    }
+
+    // The last occurrence of `table` whose position falls within [start, end) — the table reference
+    // feeding one branch of a join/lookup key.
+    static int TableRefInSpan(List<(TableSymbol tbl, int pos)> tableRefs, TableSymbol? table, int start, int end)
+    {
+        int best = -1;
+        foreach (var (refTbl, refPos) in tableRefs)
+            if (refTbl == table && refPos >= start && refPos < end && refPos > best)
+                best = refPos;
+        return best < 0 ? start : best;
+    }
+
+    // The join/lookup `kind=` parameter value, or the operator's default when unspecified.
+    static string GetJoinKind(SyntaxList<NamedParameter> parameters, string defaultKind)
+    {
+        foreach (var p in parameters)
+            if (string.Equals(p.Name.SimpleName, "kind", StringComparison.OrdinalIgnoreCase))
+                return (p.Expression.GetFirstToken()?.Text ?? defaultKind).Trim().ToLowerInvariant();
+        return defaultKind;
+    }
+
+    // The key column names of an `on K1, K2, ...` clause.
+    static IEnumerable<string> OnClauseKeyNames(JoinConditionClause? clause)
+    {
+        if (clause is not JoinOnClause on) yield break;
+        foreach (var sep in on.Expressions)
+            if (sep.Element is NameReference nr)
+                yield return nr.SimpleName;
     }
 
     static InvokeContext BuildInvokeContext(InvokeOperator invoke, TableSymbol? resultTable)
@@ -261,6 +337,7 @@ public record QueryFacts(
     static ProvenanceNode BuildInvokeProvenance(
         ColumnSymbol col, InvokeContext ctx, GlobalState globals,
         Dictionary<Symbol, SymbolInfo> symbolInfoMap, Dictionary<ColumnSymbol, int> columnTableRefPos,
+        Dictionary<(ColumnSymbol, ColumnSymbol), LookupFork> lookupForks,
         string query, HashSet<ColumnSymbol> path, HashSet<ColumnSymbol> leafSources)
     {
         var invokePos = BuildPosition(query, ctx.InvokePos);
@@ -287,7 +364,7 @@ public record QueryFacts(
 
             var sourceCol = ctx.ResultTable?.Columns.FirstOrDefault(c => string.Equals(c.Name, name, StringComparison.OrdinalIgnoreCase));
             if (sourceCol != null)
-                sources.Add(BuildProvenanceNode(sourceCol, globals, symbolInfoMap, columnTableRefPos, query, path, leafSources));
+                sources.Add(BuildProvenanceNode(sourceCol, globals, symbolInfoMap, columnTableRefPos, lookupForks, query, path, leafSources));
         }
 
         path.Remove(col);

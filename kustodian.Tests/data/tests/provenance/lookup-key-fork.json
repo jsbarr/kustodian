@@ -1,0 +1,45 @@
+{
+  "id": "PRV-LK-01",
+  "name": "Provenance: same-table lookup key node is marked operator=lookup + kind, with distinct branch positions",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId | lookup kind=leftouter (DeviceEvents | project DeviceId, FileName) on DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": { "column": "Timestamp", "table": "DeviceEvents", "position": { "abs": 0 } }
+      },
+      {
+        "name": "ReportId",
+        "provenance": { "column": "ReportId", "table": "DeviceEvents", "position": { "abs": 0 } }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "operator": "lookup",
+          "kind": "leftouter",
+          "sources": [
+            {
+              "column": "DeviceId",
+              "table": "DeviceEvents",
+              "position": { "abs": 0 }
+            },
+            {
+              "column": "DeviceId",
+              "table": "DeviceEvents",
+              "position": { "abs": 78 }
+            }
+          ]
+        }
+      },
+      {
+        "name": "FileName",
+        "provenance": { "column": "FileName", "table": "DeviceEvents", "position": { "abs": 78 } }
+      }
+    ]
+  }
+}

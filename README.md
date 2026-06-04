@@ -179,7 +179,7 @@ The query is structurally valid, so `outputColumns` is still populated. Naming v
 
 #### Inconsistent impacted entity provenance
 
-All three required columns must trace back to the same source tables. Here, `Timestamp` and `DeviceId` originate from `DeviceEvents`, but `ReportId` was projected from `AlertInfo` after the join — the evidence would span two independent rows.
+All three required columns must describe a single source record. They may diverge only where a matching `join`/`lookup` **key** proves the values equal (see the `kind` mark below); a non-key column pulled from a joined table proves nothing. Here, `Timestamp` and `DeviceId` originate from `DeviceEvents`, but `ReportId` was projected from `AlertInfo` after the join — a non-key column, so the evidence would span two independent rows.
 
 ```json
 {
@@ -295,7 +295,16 @@ For each column in the result schema, `BuildProvenanceNode` traces it back to it
   - For computed expressions (`extend foo = bar + baz`), the defining expression node from the AST index is walked to extract all column name references.
 - **Cycle guard** — a `path` set tracks the current recursion stack as a safeguard against infinite recursion. In practice this appears unreachable through valid KQL, because the SDK's sequential extend binding always resolves name references to pre-existing symbols rather than ones being defined in the same statement.
 
-The result for each output column is a `ProvenanceNode` tree showing the full derivation chain, and a flat `sourceMap` listing all the leaf table columns it ultimately depends on. The `sourceMap` is what the impacted entity consistency check uses to compare source table sets across `Timestamp`, `ReportId`, and the impacted entity field.
+The result for each output column is a `ProvenanceNode` tree showing the full derivation chain, and a flat `sourceMap` listing all the leaf table columns it ultimately depends on.
+
+**Join/lookup key forks** — when a `lookup` coalesces an `on` key into a single output column, that column's value can come from either input side. The node for such a key carries two extra fields:
+
+- `operator` — `"lookup"` (a bare key wrapper; a rename of the key keeps its own operator, e.g. `"project-rename"`).
+- `kind` — the join kind that governs how the value equality is read: `"leftouter"` (the default for `lookup`, and also for cross-table enrichment), `"inner"`, `"innerunique"`, `"rightouter"`, etc.
+
+For a same-table key the SDK reports the same physical column on both branches, collapsing them to one position; the mark restores each branch's true base position so the two sides are distinguishable. These are faithful facts of the query — `kind` is recorded, but the collapse *direction* it implies is not, since that is a conclusion the consistency check derives, not a property of the data flow.
+
+The consistency check uses these marks together with the leaf sets: each required column is reduced to the set of leaf-sets it could trace to — at a key fork it follows only the branch(es) the `kind` allows (`leftouter` → left, `rightouter` → right, `inner`/`innerunique` → either, `fullouter` → neither) — and the columns are consistent when they share a common achievable leaf-set across `Timestamp`, `ReportId`, and the impacted entity field.
 
 # Known Issues
 

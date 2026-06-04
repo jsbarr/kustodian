@@ -1,0 +1,12 @@
+{
+  "id": "IEF-06",
+  "name": "No error: same-table leftouter lookup on the impacted entity key — Timestamp/ReportId stay on the base side",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId | lookup kind=leftouter (DeviceEvents | project DeviceId, FileName) on DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}

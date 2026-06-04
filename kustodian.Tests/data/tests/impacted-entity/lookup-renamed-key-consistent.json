@@ -1,0 +1,12 @@
+{
+  "id": "IEF-10",
+  "name": "No error: impacted entity is a rename of the lookup key — the fork mark is found nested under project-rename",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId | lookup kind=leftouter (DeviceEvents | project DeviceId, FileName) on DeviceId | project-rename ImpactedDevice = DeviceId",
+    "impactedEntityField": "ImpactedDevice",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}
