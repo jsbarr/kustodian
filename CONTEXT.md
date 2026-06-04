@@ -53,7 +53,7 @@ An output column carried unchanged from a source table, or a plain rename of one
 _Avoid_: raw column, passthrough
 
 **Consistency**:
-The property that the required output columns all trace to the same set of table-column leaves (calculated leaves are not compared). When they don't — e.g. `Timestamp` from one table and `ReportId` from another after a join — their provenance is *inconsistent* and Kustodian errors.
+The property that the required output columns all describe a single source record — i.e. trace to the same table-column leaves (calculated leaves aside). They may diverge only where a matching `join`/`lookup` key proves the values equal: an inner join equates both sides, an outer attributes the key to its surviving side. A `union`, or a non-key column pulled in by a join, proves nothing and must share leaves outright; otherwise the provenance is *inconsistent* and Kustodian errors.
 _Avoid_: agreement, alignment
 
 **Diagnostic**:
