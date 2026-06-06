@@ -1,0 +1,12 @@
+{
+  "id": "IEF-19",
+  "name": "No error: inner join, impacted entity key taken from the left while Timestamp/ReportId come from the right — the key collapses either way",
+  "input": {
+    "query": "DeviceEvents | join kind=inner DeviceProcessEvents on DeviceId | project Timestamp=Timestamp1, ReportId=ReportId1, DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}

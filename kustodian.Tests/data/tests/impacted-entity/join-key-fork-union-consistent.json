@@ -1,0 +1,12 @@
+{
+  "id": "IEF-18",
+  "name": "No error: union of a join result and its re-pivot via the matched key — the join key may trace to either side (synthetic join fork)",
+  "input": {
+    "query": "let MainSearch = DeviceEvents | project DeviceId, ReportId, Timestamp | join (DeviceProcessEvents | project OtherReportId=ReportId, OtherTimestamp=Timestamp, DeviceId) on DeviceId;\nlet EnrichingResults = MainSearch | project DeviceId, ReportId=OtherReportId, Timestamp=OtherTimestamp;\nunion MainSearch, EnrichingResults",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}

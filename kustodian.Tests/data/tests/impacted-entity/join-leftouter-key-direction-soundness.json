@@ -1,0 +1,18 @@
+{
+  "id": "IEF-20",
+  "name": "Error: leftouter join, the left key cannot borrow the right side — Timestamp/ReportId from the enrichment are null for unmatched rows",
+  "input": {
+    "query": "DeviceEvents | join kind=leftouter DeviceProcessEvents on DeviceId | project Timestamp=Timestamp1, ReportId=ReportId1, DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityConsistency",
+        "affectedColumns": [ "DeviceId" ]
+      }
+    ]
+  }
+}

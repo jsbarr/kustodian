@@ -1,0 +1,12 @@
+{
+  "id": "IEF-21",
+  "name": "No error: leftouter join, the right key (impacted entity) may be attributed to the surviving left side alongside left Timestamp/ReportId",
+  "input": {
+    "query": "DeviceEvents | join kind=leftouter DeviceProcessEvents on DeviceId | project Timestamp, ReportId, DeviceId1",
+    "impactedEntityField": "DeviceId1",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}
