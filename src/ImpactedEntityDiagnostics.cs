@@ -33,7 +33,7 @@ public static class ImpactedEntityDiagnostics
         // other one — i.e. the three families share a common member (a single source record they all fit).
         var anchor = families[present[0].Name];
         var others = present.Skip(1).ToList();
-        var consistent = anchor.Any(cand => others.All(c => families[c.Name].Any(s => s.SetEquals(cand))));
+        var consistent = anchor.Any(cand => others.All(c => Agree([cand], families[c.Name])));
         if (consistent) yield break;
 
         // Report the columns that share no achievable leaf-set with the first required column (its odd ones
@@ -70,34 +70,30 @@ public static class ImpactedEntityDiagnostics
         if (sources.Length == 0)
             return [[]]; // calculated leaf — contributes nothing
 
+        // At a key fork, follow only the branch(es) the join kind allows. Kinds with no case
+        // (fullouter / semi / anti) are not collapsible and fall through to normal handling.
         if (n.Kind != null && sources.Length >= 2)
-            switch (CollapseKind(n.Kind))
+            switch (n.Kind)
             {
-                case "left": return Achievable(sources[0]);
-                case "right": return Achievable(sources[1]);
-                case "either": return [.. Achievable(sources[0]), .. Achievable(sources[1])];
+                case "leftouter": return Achievable(sources[0]);
+                case "rightouter": return Achievable(sources[1]);
+                case "inner" or "innerunique": return [.. Achievable(sources[0]), .. Achievable(sources[1])];
             }
 
-        // Normal node: a child may independently offer several leaf-sets, but all children combine.
-        var combos = new List<HashSet<(string, int)>> { new() };
+        // Normal node: every child contributes to the record, so the result is the Cartesian product
+        // of the children's leaf-sets — each child may independently offer several, and one from each
+        // combines into a full record. Fold the sources in: cross the running sets with the next child's,
+        // replacing the accumulator each round (start from one empty set so the first child seeds it).
+        var achievable = new List<HashSet<(string, int)>> { new() };
         foreach (var src in sources)
         {
             var childSets = Achievable(src);
             var next = new List<HashSet<(string, int)>>();
-            foreach (var acc in combos)
+            foreach (var acc in achievable)
                 foreach (var cs in childSets)
                     next.Add([.. acc, .. cs]);
-            combos = next;
+            achievable = next;
         }
-        return combos;
+        return achievable;
     }
-
-    // Which branch(es) of a key fork the check may follow, by join kind (null = not collapsible).
-    static string? CollapseKind(string kind) => kind switch
-    {
-        "inner" or "innerunique" => "either",
-        "leftouter" => "left",
-        "rightouter" => "right",
-        _ => null, // fullouter / semi / anti: not collapsible
-    };
 }

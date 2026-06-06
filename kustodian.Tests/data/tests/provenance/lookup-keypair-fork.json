@@ -1,0 +1,37 @@
+{
+  "id": "PRV-LK-02",
+  "name": "Provenance: differently-named lookup keys (on $left.DeviceId == $right.DevId) mark the kept left column as a lookup fork",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId | lookup kind=leftouter (DeviceProcessEvents | project DevId = DeviceId, FileName) on $left.DeviceId == $right.DevId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "outputColumns": [
+      {
+        "name": "Timestamp",
+        "provenance": { "column": "Timestamp", "table": "DeviceEvents", "position": { "abs": 0 } }
+      },
+      {
+        "name": "ReportId",
+        "provenance": { "column": "ReportId", "table": "DeviceEvents", "position": { "abs": 0 } }
+      },
+      {
+        "name": "DeviceId",
+        "provenance": {
+          "column": "DeviceId",
+          "operator": "lookup",
+          "kind": "leftouter",
+          "sources": [
+            { "column": "DeviceId", "table": "DeviceEvents", "position": { "abs": 0 } },
+            { "column": "DevId" }
+          ]
+        }
+      },
+      {
+        "name": "FileName",
+        "provenance": { "column": "FileName", "table": "DeviceProcessEvents" }
+      }
+    ]
+  }
+}

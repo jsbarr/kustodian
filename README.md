@@ -297,7 +297,7 @@ For each column in the result schema, `BuildProvenanceNode` traces it back to it
 
 The result for each output column is a `ProvenanceNode` tree showing the full derivation chain, and a flat `sourceMap` listing all the leaf table columns it ultimately depends on.
 
-**Join/lookup key forks** — when a `lookup` coalesces an `on` key into a single output column, that column's value can come from either input side. The node for such a key carries two extra fields:
+**Join/lookup key forks** — when a `lookup` coalesces an `on` key into a single output column, that column's value can come from either input side. This holds however the key is written — a bare `on K`, a multi-key `on K1, K2`, or an explicit equality `on $left.A == $right.B` whose sides name different columns (the output keeps the left name). The node for such a key carries two extra fields:
 
 - `operator` — `"lookup"` (a bare key wrapper; a rename of the key keeps its own operator, e.g. `"project-rename"`).
 - `kind` — the join kind that governs how the value equality is read: `"leftouter"` (the default for `lookup`, and also for cross-table enrichment), `"inner"`, `"innerunique"`, `"rightouter"`, etc.

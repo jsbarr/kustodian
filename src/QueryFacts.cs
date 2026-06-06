@@ -302,13 +302,29 @@ public record QueryFacts(
         return defaultKind;
     }
 
-    // The key column names of an `on K1, K2, ...` clause.
+    // The key column names of an `on` clause. Two forms:
+    //   bare           `on K1, K2`                 — each element is the key name itself.
+    //   equality       `on $left.A == $right.B`    — each element is an `==` BinaryExpression
+    //                  (optionally `and`-chained); yield the trailing name of each operand.
+    // A lookup keeps only the left key's name in its output, so the right name simply won't match
+    // an output column and is skipped by the caller.
     static IEnumerable<string> OnClauseKeyNames(JoinConditionClause? clause)
     {
         if (clause is not JoinOnClause on) yield break;
         foreach (var sep in on.Expressions)
+        {
             if (sep.Element is NameReference nr)
                 yield return nr.SimpleName;
+            else
+                foreach (var eq in sep.Element.GetDescendantsOrSelf<BinaryExpression>())
+                    if (eq.Kind == SyntaxKind.EqualExpression)
+                    {
+                        if (eq.Left.GetDescendantsOrSelf<NameReference>().LastOrDefault() is { } l)
+                            yield return l.SimpleName;
+                        if (eq.Right.GetDescendantsOrSelf<NameReference>().LastOrDefault() is { } r)
+                            yield return r.SimpleName;
+                    }
+        }
     }
 
     static InvokeContext BuildInvokeContext(InvokeOperator invoke, TableSymbol? resultTable)
