@@ -1,0 +1,20 @@
+{
+  "id": "IEF-09",
+  "name": "Error: impacted entity is a non-key column pulled from the joined table — only a matching key collapses",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId | lookup kind=leftouter (DeviceProcessEvents | project DeviceId, FileName) on DeviceId",
+    "impactedEntityField": "FileName",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityConsistency",
+        "affectedColumns": [
+          "FileName"
+        ]
+      }
+    ]
+  }
+}

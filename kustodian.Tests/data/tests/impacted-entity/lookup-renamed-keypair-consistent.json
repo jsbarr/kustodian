@@ -1,0 +1,12 @@
+{
+  "id": "IEF-12",
+  "name": "No error: cross-table leftouter lookup with differently-named keys (on $left.DeviceId == $right.DevId) — key collapses to the base side",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId | lookup kind=leftouter (DeviceProcessEvents | project DevId = DeviceId, FileName) on $left.DeviceId == $right.DevId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}

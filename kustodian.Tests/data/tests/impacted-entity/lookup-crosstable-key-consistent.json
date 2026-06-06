@@ -1,0 +1,12 @@
+{
+  "id": "IEF-07",
+  "name": "No error: cross-table leftouter lookup on the impacted entity key — key attributed to the base side",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId | lookup kind=leftouter (DeviceProcessEvents | project DeviceId, FileName) on DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}

@@ -14,6 +14,7 @@ public record ProvenanceNode(
     string Column,
     string? Table = null,
     string? Operator = null,
+    string? Kind = null,
     Position? Position = null,
     ProvenanceNode[]? Sources = null);
 

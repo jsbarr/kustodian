@@ -1,0 +1,17 @@
+{
+  "id": "IEF-08",
+  "name": "Error: leftouter lookup but Timestamp/ReportId come from the enrichment side — left-only collapse is not symmetric",
+  "input": {
+    "query": "DeviceEvents | project DeviceId | lookup kind=leftouter (DeviceEvents | project DeviceId, Timestamp, ReportId) on DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityConsistency"
+      }
+    ]
+  }
+}

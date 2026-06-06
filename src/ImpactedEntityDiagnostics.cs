@@ -20,41 +20,80 @@ public static class ImpactedEntityDiagnostics
         var present = facts.Columns.Where(c => required.Contains(c.Name)).ToList();
         if (present.Count < 2) yield break;
 
-        // All required columns must trace back to exactly the same set of source table instances.
-        // "Instance" = (table name, position in query) — this catches both cross-table mixing
-        // (e.g. Timestamp from DeviceEvents, AccountUpn from IdentityInfo) and same-table split
-        // branches (e.g. two union arms that each reference DeviceEvents independently).
+        // Each required column must be able to describe a single source record. We compute, per column,
+        // the set of leaf-sets it could trace to — at a matching join/lookup key fork the check may follow
+        // only the kind-allowed branch(es); everywhere else children's leaves combine outright. The columns
+        // are consistent iff they share a common achievable leaf-set (calculated leaves contribute nothing).
         var outputByName = facts.Output.ToDictionary(o => o.Name, StringComparer.OrdinalIgnoreCase);
-        var sourceSets = present.ToDictionary(
+        var families = present.ToDictionary(
             c => c.Name,
-            c => LeafSources(outputByName[c.Name].Provenance));
+            c => Achievable(outputByName[c.Name].Provenance));
 
-        var first = sourceSets.First().Value;
-        var inconsistent = sourceSets
-            .Where(kv => !kv.Value.SetEquals(first))
-            .Select(kv => kv.Key)
+        // Consistent iff some leaf-set achievable by the first required column is also achievable by every
+        // other one — i.e. the three families share a common member (a single source record they all fit).
+        var anchor = families[present[0].Name];
+        var others = present.Skip(1).ToList();
+        var consistent = anchor.Any(cand => others.All(c => Agree([cand], families[c.Name])));
+        if (consistent) yield break;
+
+        // Report the columns that share no achievable leaf-set with the first required column (its odd ones
+        // out). If the first column is itself the outlier, every other column disagrees with it.
+        var inconsistent = others
+            .Where(c => !Agree(anchor, families[c.Name]))
+            .Select(c => c.Name)
             .OrderBy(n => n)
             .ToArray();
+        if (inconsistent.Length == 0)
+            inconsistent = others.Select(c => c.Name).OrderBy(n => n).ToArray();
 
-        if (inconsistent.Length > 0)
-            yield return new DiagnosticMessage(
-                Level: "ERROR",
-                Type: "ImpactedEntityConsistency",
-                Message: $"Impacted entity columns have inconsistent provenance: {string.Join(", ", inconsistent)}",
-                AffectedColumns: inconsistent);
+        yield return new DiagnosticMessage(
+            Level: "ERROR",
+            Type: "ImpactedEntityConsistency",
+            Message: $"Impacted entity columns have inconsistent provenance: {string.Join(", ", inconsistent)}",
+            AffectedColumns: inconsistent);
     }
 
-    static HashSet<(string table, int pos)> LeafSources(ProvenanceNode? node)
-    {
-        var result = new HashSet<(string, int)>();
-        Collect(node, result);
-        return result;
+    // True when the two families share an achievable leaf-set (i.e. both columns can describe one record).
+    static bool Agree(List<HashSet<(string, int)>> a, List<HashSet<(string, int)>> b) =>
+        a.Any(x => b.Any(y => y.SetEquals(x)));
 
-        static void Collect(ProvenanceNode? n, HashSet<(string, int)> acc)
+    // The set of leaf-sets a column could trace to. At a collapsible key fork, follow only the
+    // kind-allowed branch(es); at any other node, every child contributes (leaves combine).
+    static List<HashSet<(string table, int pos)>> Achievable(ProvenanceNode? n)
+    {
+        if (n == null)
+            return [[]];
+        if (n.Table != null)
+            return [[(n.Table, n.Position?.Abs ?? 0)]];
+
+        var sources = n.Sources ?? [];
+        if (sources.Length == 0)
+            return [[]]; // calculated leaf — contributes nothing
+
+        // At a key fork, follow only the branch(es) the join kind allows. Kinds with no case
+        // (fullouter / semi / anti) are not collapsible and fall through to normal handling.
+        if (n.Kind != null && sources.Length >= 2)
+            switch (n.Kind)
+            {
+                case "leftouter": return Achievable(sources[0]);
+                case "rightouter": return Achievable(sources[1]);
+                case "inner" or "innerunique": return [.. Achievable(sources[0]), .. Achievable(sources[1])];
+            }
+
+        // Normal node: every child contributes to the record, so the result is the Cartesian product
+        // of the children's leaf-sets — each child may independently offer several, and one from each
+        // combines into a full record. Fold the sources in: cross the running sets with the next child's,
+        // replacing the accumulator each round (start from one empty set so the first child seeds it).
+        var achievable = new List<HashSet<(string, int)>> { new() };
+        foreach (var src in sources)
         {
-            if (n == null) return;
-            if (n.Table != null) { acc.Add((n.Table, n.Position?.Abs ?? 0)); return; }
-            foreach (var src in n.Sources ?? []) Collect(src, acc);
+            var childSets = Achievable(src);
+            var next = new List<HashSet<(string, int)>>();
+            foreach (var acc in achievable)
+                foreach (var cs in childSets)
+                    next.Add([.. acc, .. cs]);
+            achievable = next;
         }
+        return achievable;
     }
 }

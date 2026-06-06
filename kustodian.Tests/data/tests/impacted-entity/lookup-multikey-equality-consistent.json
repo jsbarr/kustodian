@@ -1,0 +1,12 @@
+{
+  "id": "IEF-13",
+  "name": "No error: leftouter lookup with an and-chained differently-named key pair — the impacted-entity key still collapses to the base side",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId, AccountSid | lookup kind=leftouter (DeviceProcessEvents | project DevId = DeviceId, Acct = AccountSid, FileName) on $left.DeviceId == $right.DevId and $left.AccountSid == $right.Acct",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}

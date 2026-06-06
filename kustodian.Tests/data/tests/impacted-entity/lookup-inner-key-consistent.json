@@ -1,0 +1,12 @@
+{
+  "id": "IEF-11",
+  "name": "No error: same-table inner lookup on the impacted entity key — either branch may be followed",
+  "input": {
+    "query": "DeviceEvents | project Timestamp, ReportId, DeviceId | lookup kind=inner (DeviceEvents | project DeviceId, FileName) on DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}
