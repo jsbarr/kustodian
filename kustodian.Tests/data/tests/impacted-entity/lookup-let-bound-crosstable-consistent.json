@@ -1,0 +1,12 @@
+{
+  "id": "IEF-16",
+  "name": "No error: leftouter lookup on the impacted entity key where the right input is a let-bound view of a different table",
+  "input": {
+    "query": "let Search1 = DeviceEvents | project Timestamp, DeviceId, ReportId;\nlet Search2 = AlertInfo | project DeviceId;\nSearch1 | lookup kind=leftouter Search2 on DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}
