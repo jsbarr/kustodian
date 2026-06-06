@@ -22,6 +22,14 @@ record SymbolInfo(
 // the corrected base-table positions of each branch (the SDK alone collapses both to one position).
 record LookupFork(string Kind, int LeftPos, int RightPos);
 
+// A single provenance leaf: a real table column at a specific syntactic occurrence.
+public record LeafRef(string Table, int Pos, string Column);
+
+// Two join key leaves proven equal by an `on` clause. A join keeps both keys as separate output
+// columns, so this is exposed as a sidecar — never folded into the returned provenance tree — letting
+// the consistency check attribute one key's leaf to the other side (which side(s) depends on Kind).
+public record JoinKeyEquivalence(LeafRef Left, LeafRef Right, string Kind);
+
 public record QueryFacts(
     string Query,
     IReadOnlyList<ColumnSymbol> Columns,
@@ -29,7 +37,8 @@ public record QueryFacts(
     IReadOnlyList<ColumnWithProvenance> Output,
     IReadOnlyList<Diagnostic> RawDiagnostics,
     GlobalState Globals,
-    Kusto.Language.Syntax.SyntaxNode RawSyntax)
+    Kusto.Language.Syntax.SyntaxNode RawSyntax,
+    IReadOnlyList<JoinKeyEquivalence> JoinKeyEquivalences)
 {
     // Parses and semantically analyzes the query, then builds provenance for each output column.
     public static QueryFacts Build(string query, GlobalState globals)
@@ -39,7 +48,7 @@ public record QueryFacts(
         var resultTable = code.ResultType as TableSymbol;
 
         var columns = resultTable?.Columns ?? (IReadOnlyList<ColumnSymbol>)[];
-        var (symbolInfoMap, columnTableRefPos, lookupForks) = BuildSymbolInfoMap(code.Syntax, globals);
+        var (symbolInfoMap, columnTableRefPos, lookupForks, joinKeys) = BuildSymbolInfoMap(code.Syntax, globals);
 
         var built = columns.Select(c =>
         {
@@ -51,7 +60,18 @@ public record QueryFacts(
         var sourceMap = built.ToDictionary(x => x.c, x => (IReadOnlyList<ColumnSymbol>)x.leafSources.ToList());
         var output = built.Select(x => new ColumnWithProvenance(Name: x.c.Name, Type: x.c.Type.Name, Provenance: x.node)).ToList();
 
-        return new QueryFacts(query, columns, sourceMap, output, code.GetDiagnostics(), globals, code.Syntax);
+        // Resolve each join key pair to its two provenance leaves (using the same tree builder, so leaf
+        // positions match what the output trees carry). A clean equivalence needs one distinct leaf per side.
+        var joinEquivalences = new List<JoinKeyEquivalence>();
+        foreach (var (leftKey, rightKey, kind) in joinKeys)
+        {
+            var leftLeaf = SingleLeaf(BuildProvenanceNode(leftKey, globals, symbolInfoMap, columnTableRefPos, lookupForks, query, [], []));
+            var rightLeaf = SingleLeaf(BuildProvenanceNode(rightKey, globals, symbolInfoMap, columnTableRefPos, lookupForks, query, [], []));
+            if (leftLeaf != null && rightLeaf != null && (leftLeaf.Table != rightLeaf.Table || leftLeaf.Pos != rightLeaf.Pos))
+                joinEquivalences.Add(new JoinKeyEquivalence(leftLeaf, rightLeaf, kind));
+        }
+
+        return new QueryFacts(query, columns, sourceMap, output, code.GetDiagnostics(), globals, code.Syntax, joinEquivalences);
     }
 
     // Recursively traces a column back through the query pipeline to its leaf sources (real table columns).
@@ -182,7 +202,7 @@ public record QueryFacts(
     // of the specific table occurrence that immediately precedes that column reference. This lets us
     // distinguish e.g. "DeviceEvents@P1" from "DeviceEvents@P2" when the same table appears in two
     // separate union branches.
-    static (Dictionary<Symbol, SymbolInfo> map, Dictionary<ColumnSymbol, int> columnTableRefPos, Dictionary<(ColumnSymbol, ColumnSymbol), LookupFork> lookupForks)
+    static (Dictionary<Symbol, SymbolInfo> map, Dictionary<ColumnSymbol, int> columnTableRefPos, Dictionary<(ColumnSymbol, ColumnSymbol), LookupFork> lookupForks, List<(ColumnSymbol leftKey, ColumnSymbol rightKey, string kind)> joinKeys)
         BuildSymbolInfoMap(SyntaxNode root, GlobalState globals)
     {
         var map = new Dictionary<Symbol, SymbolInfo>();
@@ -196,6 +216,9 @@ public record QueryFacts(
         // Lookup key forks: deferred until tableRefs is complete so we can resolve each branch's
         // base position from the left-input and right-enrichment spans. (col, leftKey, rightKey, kind, spans).
         var pendingForks = new List<(ColumnSymbol outCol, ColumnSymbol leftKey, ColumnSymbol rightKey, string kind, int leftStart, int leftEnd, int rightStart, int rightEnd)>();
+        // Join key pairs: a join keeps both keys as separate columns, so (unlike lookup) there is nothing
+        // to collapse in the tree — we just record the left/right key symbols and kind for the check.
+        var joinKeys = new List<(ColumnSymbol leftKey, ColumnSymbol rightKey, string kind)>();
 
         SyntaxElement.WalkNodes(root, n =>
         {
@@ -260,6 +283,22 @@ public record QueryFacts(
                             lookup.Expression.TextStart, lookup.Expression.End));
                     }
                 }
+
+                // A join leaves both `on` keys as separate output columns. Pair the left-input key with the
+                // right-enrichment key so the check can treat them as equal-valued (per kind).
+                if (pipe.Operator is JoinOperator join
+                    && pipe.Expression.ResultType is TableSymbol leftIn
+                    && join.Expression.ResultType is TableSymbol rightIn)
+                {
+                    var kind = GetJoinKind(join.Parameters, defaultKind: "innerunique");
+                    foreach (var (leftName, rightName) in OnClauseKeyPairs(join.ConditionClause))
+                    {
+                        var leftKey = leftIn.Columns.FirstOrDefault(c => string.Equals(c.Name, leftName, StringComparison.OrdinalIgnoreCase));
+                        var rightKey = rightIn.Columns.FirstOrDefault(c => string.Equals(c.Name, rightName, StringComparison.OrdinalIgnoreCase));
+                        if (leftKey != null && rightKey != null)
+                            joinKeys.Add((leftKey, rightKey, kind));
+                    }
+                }
             }
         });
 
@@ -290,7 +329,21 @@ public record QueryFacts(
             lookupForks[(f.leftKey, f.rightKey)] = new LookupFork(f.kind, leftPos < 0 ? f.leftStart : leftPos, rightPos < 0 ? f.rightStart : rightPos);
         }
 
-        return (map, columnTableRefPos, lookupForks);
+        return (map, columnTableRefPos, lookupForks, joinKeys);
+    }
+
+    // The single real-table leaf a provenance node traces to, or null when it has none or several
+    // (a clean join-key equivalence needs exactly one leaf per side).
+    static LeafRef? SingleLeaf(ProvenanceNode node)
+    {
+        var leaves = new List<LeafRef>();
+        void Walk(ProvenanceNode n)
+        {
+            if (n.Table != null) leaves.Add(new LeafRef(n.Table, n.Position?.Abs ?? 0, n.Column));
+            else if (n.Sources != null) foreach (var s in n.Sources) Walk(s);
+        }
+        Walk(node);
+        return leaves.Count == 1 ? leaves[0] : null;
     }
 
     // The base-table occurrence feeding one branch of a lookup key. Searches the branch's own text span
@@ -350,6 +403,25 @@ public record QueryFacts(
                         if (eq.Right.GetDescendantsOrSelf<NameReference>().LastOrDefault() is { } r)
                             yield return r.SimpleName;
                     }
+        }
+    }
+
+    // The left/right key name pairs of a join `on` clause. `on K` pairs K with itself; `on $left.A == $right.B`
+    // pairs the trailing name of each operand. Mirrors OnClauseKeyNames but keeps the two sides distinct,
+    // which a join needs (it retains both key columns) where a lookup keeps only the left name.
+    static IEnumerable<(string left, string right)> OnClauseKeyPairs(JoinConditionClause? clause)
+    {
+        if (clause is not JoinOnClause on) yield break;
+        foreach (var sep in on.Expressions)
+        {
+            if (sep.Element is NameReference nr)
+                yield return (nr.SimpleName, nr.SimpleName);
+            else
+                foreach (var eq in sep.Element.GetDescendantsOrSelf<BinaryExpression>())
+                    if (eq.Kind == SyntaxKind.EqualExpression
+                        && eq.Left.GetDescendantsOrSelf<NameReference>().LastOrDefault() is { } l
+                        && eq.Right.GetDescendantsOrSelf<NameReference>().LastOrDefault() is { } r)
+                        yield return (l.SimpleName, r.SimpleName);
         }
     }
 

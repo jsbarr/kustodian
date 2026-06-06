@@ -25,9 +25,10 @@ public static class ImpactedEntityDiagnostics
         // only the kind-allowed branch(es); everywhere else children's leaves combine outright. The columns
         // are consistent iff they share a common achievable leaf-set (calculated leaves contribute nothing).
         var outputByName = facts.Output.ToDictionary(o => o.Name, StringComparer.OrdinalIgnoreCase);
+        var joinPartners = BuildJoinPartners(facts.JoinKeyEquivalences);
         var families = present.ToDictionary(
             c => c.Name,
-            c => Achievable(outputByName[c.Name].Provenance));
+            c => Achievable(outputByName[c.Name].Provenance, joinPartners));
 
         // Consistent iff some leaf-set achievable by the first required column is also achievable by every
         // other one — i.e. the three families share a common member (a single source record they all fit).
@@ -59,12 +60,20 @@ public static class ImpactedEntityDiagnostics
 
     // The set of leaf-sets a column could trace to. At a collapsible key fork, follow only the
     // kind-allowed branch(es); at any other node, every child contributes (leaves combine).
-    static List<HashSet<(string table, int pos)>> Achievable(ProvenanceNode? n)
+    static List<HashSet<(string table, int pos)>> Achievable(
+        ProvenanceNode? n, Dictionary<(string, int, string), List<(string, int)>> joinPartners)
     {
         if (n == null)
             return [[]];
         if (n.Table != null)
-            return [[(n.Table, n.Position?.Abs ?? 0)]];
+        {
+            var self = (n.Table, n.Position?.Abs ?? 0);
+            // A join key leaf may also describe its matched partner's record (the equality the join proves).
+            // The faithful tree never carries this edge, so apply it here as extra single-leaf alternatives.
+            if (joinPartners.TryGetValue((n.Table, self.Item2, n.Column), out var partners))
+                return [[self], .. partners.Select(p => new HashSet<(string, int)> { p })];
+            return [[self]];
+        }
 
         var sources = n.Sources ?? [];
         if (sources.Length == 0)
@@ -75,9 +84,9 @@ public static class ImpactedEntityDiagnostics
         if (n.Kind != null && sources.Length >= 2)
             switch (n.Kind)
             {
-                case "leftouter": return Achievable(sources[0]);
-                case "rightouter": return Achievable(sources[1]);
-                case "inner" or "innerunique": return [.. Achievable(sources[0]), .. Achievable(sources[1])];
+                case "leftouter": return Achievable(sources[0], joinPartners);
+                case "rightouter": return Achievable(sources[1], joinPartners);
+                case "inner" or "innerunique": return [.. Achievable(sources[0], joinPartners), .. Achievable(sources[1], joinPartners)];
             }
 
         // Normal node: every child contributes to the record, so the result is the Cartesian product
@@ -87,7 +96,7 @@ public static class ImpactedEntityDiagnostics
         var achievable = new List<HashSet<(string, int)>> { new() };
         foreach (var src in sources)
         {
-            var childSets = Achievable(src);
+            var childSets = Achievable(src, joinPartners);
             var next = new List<HashSet<(string, int)>>();
             foreach (var acc in achievable)
                 foreach (var cs in childSets)
@@ -95,5 +104,29 @@ public static class ImpactedEntityDiagnostics
             achievable = next;
         }
         return achievable;
+    }
+
+    // Per join key leaf, the partner leaves it may also be attributed to. inner/innerunique prove the keys
+    // equal on every output row (either side); a leftouter/rightouter guarantees only the surviving side,
+    // so the non-surviving key may borrow the surviving leaf but not vice versa; fullouter/semi/anti prove
+    // no cross-row equality and add nothing.
+    static Dictionary<(string, int, string), List<(string, int)>> BuildJoinPartners(
+        IReadOnlyList<JoinKeyEquivalence> equivalences)
+    {
+        var partners = new Dictionary<(string, int, string), List<(string, int)>>();
+        void Add(LeafRef from, LeafRef to)
+        {
+            var key = (from.Table, from.Pos, from.Column);
+            if (!partners.TryGetValue(key, out var list)) partners[key] = list = [];
+            list.Add((to.Table, to.Pos));
+        }
+        foreach (var e in equivalences)
+            switch (e.Kind)
+            {
+                case "inner" or "innerunique": Add(e.Left, e.Right); Add(e.Right, e.Left); break;
+                case "leftouter": Add(e.Right, e.Left); break;
+                case "rightouter": Add(e.Left, e.Right); break;
+            }
+        return partners;
     }
 }
