@@ -188,14 +188,25 @@ public record QueryFacts(
         var map = new Dictionary<Symbol, SymbolInfo>();
         var tableRefs = new List<(TableSymbol tbl, int pos)>();
         var colRefs = new List<(ColumnSymbol col, int pos)>();
+        // Every name reference (with its span) and each let-bound view's body span. Together these let
+        // a lookup branch that is just a reference to a let view be followed into the view's body, where
+        // the real table occurrence lives (the branch's own span holds only the view name).
+        var nameRefs = new List<(Symbol sym, int start, int end)>();
+        var letBodySpans = new Dictionary<Symbol, (int start, int end)>();
         // Lookup key forks: deferred until tableRefs is complete so we can resolve each branch's
         // base position from the left-input and right-enrichment spans. (col, leftKey, rightKey, kind, spans).
         var pendingForks = new List<(ColumnSymbol outCol, ColumnSymbol leftKey, ColumnSymbol rightKey, string kind, int leftStart, int leftEnd, int rightStart, int rightEnd)>();
 
         SyntaxElement.WalkNodes(root, n =>
         {
+            if (n is LetStatement { Name.ReferencedSymbol: { } viewSym } let)
+                letBodySpans[viewSym] = (let.Expression.TextStart, let.Expression.End);
+
             if (n is NameDeclaration || n is NameReference)
             {
+                if (n is NameReference && n.ReferencedSymbol is { } refSym)
+                    nameRefs.Add((refSym, n.TextStart, n.End));
+
                 switch (n.ReferencedSymbol)
                 {
                     case ColumnSymbol col:
@@ -274,23 +285,38 @@ public record QueryFacts(
         var lookupForks = new Dictionary<(ColumnSymbol, ColumnSymbol), LookupFork>();
         foreach (var f in pendingForks)
         {
-            int leftPos = TableRefInSpan(tableRefs, globals.GetTable(f.leftKey), f.leftStart, f.leftEnd);
-            int rightPos = TableRefInSpan(tableRefs, globals.GetTable(f.rightKey), f.rightStart, f.rightEnd);
-            lookupForks[(f.leftKey, f.rightKey)] = new LookupFork(f.kind, leftPos, rightPos);
+            int leftPos = ResolveBranchTablePos(globals.GetTable(f.leftKey), f.leftStart, f.leftEnd, tableRefs, nameRefs, letBodySpans, []);
+            int rightPos = ResolveBranchTablePos(globals.GetTable(f.rightKey), f.rightStart, f.rightEnd, tableRefs, nameRefs, letBodySpans, []);
+            lookupForks[(f.leftKey, f.rightKey)] = new LookupFork(f.kind, leftPos < 0 ? f.leftStart : leftPos, rightPos < 0 ? f.rightStart : rightPos);
         }
 
         return (map, columnTableRefPos, lookupForks);
     }
 
-    // The last occurrence of `table` whose position falls within [start, end) — the table reference
-    // feeding one branch of a join/lookup key.
-    static int TableRefInSpan(List<(TableSymbol tbl, int pos)> tableRefs, TableSymbol? table, int start, int end)
+    // The base-table occurrence feeding one branch of a lookup key. Searches the branch's own text span
+    // for the last occurrence of `table`; if the branch holds no such occurrence it may be a reference to
+    // a let-bound view whose body lives elsewhere, so follow each let-view reference within the span into
+    // that view's body (recursively, through chained views). Returns -1 when no occurrence is found.
+    static int ResolveBranchTablePos(
+        TableSymbol? table, int start, int end,
+        List<(TableSymbol tbl, int pos)> tableRefs,
+        List<(Symbol sym, int start, int end)> nameRefs,
+        Dictionary<Symbol, (int start, int end)> letBodySpans,
+        HashSet<Symbol> seen)
     {
         int best = -1;
         foreach (var (refTbl, refPos) in tableRefs)
             if (refTbl == table && refPos >= start && refPos < end && refPos > best)
                 best = refPos;
-        return best < 0 ? start : best;
+        if (best >= 0) return best;
+
+        foreach (var (sym, refStart, _) in nameRefs)
+            if (refStart >= start && refStart < end && seen.Add(sym) && letBodySpans.TryGetValue(sym, out var body))
+            {
+                int pos = ResolveBranchTablePos(table, body.start, body.end, tableRefs, nameRefs, letBodySpans, seen);
+                if (pos >= 0) return pos;
+            }
+        return -1;
     }
 
     // The join/lookup `kind=` parameter value, or the operator's default when unspecified.

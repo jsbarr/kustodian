@@ -1,0 +1,12 @@
+{
+  "id": "IEF-15",
+  "name": "No error: inner lookup on the impacted entity key where both inputs are let-bound views of the same table",
+  "input": {
+    "query": "let Search1 = DeviceEvents | project Timestamp, DeviceId, ReportId;\nlet Search2 = DeviceEvents | project DeviceId;\nSearch1 | lookup kind=inner Search2 on DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": []
+  }
+}

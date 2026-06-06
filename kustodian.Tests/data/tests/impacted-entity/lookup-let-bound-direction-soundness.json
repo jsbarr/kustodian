@@ -1,0 +1,17 @@
+{
+  "id": "IEF-17",
+  "name": "Error: leftouter lookup over let-bound views where Timestamp/ReportId come from the right enrichment side, not the left-anchored key",
+  "input": {
+    "query": "let Base = DeviceEvents | project DeviceId;\nlet Enrich = DeviceEvents | project DeviceId, Timestamp, ReportId;\nBase | lookup kind=leftouter Enrich on DeviceId",
+    "impactedEntityField": "DeviceId",
+    "environment": "defender-xdr"
+  },
+  "expected": {
+    "messages": [
+      {
+        "level": "ERROR",
+        "type": "ImpactedEntityConsistency"
+      }
+    ]
+  }
+}
